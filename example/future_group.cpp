@@ -60,7 +60,8 @@ struct future_transform
             std::is_same<
                 decltype(boost::yap::value(boost::yap::left(or_expr))),
                 decltype(boost::yap::value(boost::yap::right(or_expr)))
-            >{}
+            >{},
+            "Types on both sides of operator|| must be compatible."
         );
         return boost::yap::transform(boost::yap::left(or_expr), *this);
     }

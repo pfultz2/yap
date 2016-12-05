@@ -800,7 +800,9 @@ namespace boost { namespace yap {
             (arity == detail::expr_arity::one && sizeof...(T) == 1) ||
             (arity == detail::expr_arity::two && sizeof...(T) == 2) ||
             (arity == detail::expr_arity::three && sizeof...(T) == 3) ||
-            arity == detail::expr_arity::n
+            arity == detail::expr_arity::n,
+            "The number of parameters passed to make_expression() must match the arity "
+            "implied by the expr_kind template parameter."
         );
         using tuple_type = hana::tuple<detail::operand_type_t<ExprTemplate, T>...>;
         return ExprTemplate<Kind, tuple_type>{

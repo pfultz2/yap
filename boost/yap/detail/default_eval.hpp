@@ -45,10 +45,10 @@ namespace boost { namespace yap {
             using namespace hana::literals;
 
             if constexpr (
-                !std::is_same_v<
+                !std::is_same<
                     decltype(transform_expression(static_cast<Expr &&>(expr), static_cast<T &&>(args)...)),
                     nonexistent_transform
-                >
+                >{}
             ) {
                 return transform_expression(static_cast<Expr &&>(expr), static_cast<T &&>(args)...);
             } else if constexpr (kind == expr_kind::expr_ref) {
@@ -165,7 +165,7 @@ namespace boost { namespace yap {
         template <typename Expr, typename Tuple, typename Transform>
         decltype(auto) transform_nonterminal (Expr const & expr, Tuple && tuple, Transform && transform);
 
-        template <typename Expr, typename Transform, expr_arity Arity, typename = std::void_t<>>
+        template <typename Expr, typename Transform, expr_arity Arity, typename = detail::void_t<>>
         struct default_transform_expression
         {
             decltype(auto) operator() (Expr && expr, Transform && transform)
@@ -201,7 +201,7 @@ namespace boost { namespace yap {
             Expr,
             Transform,
             Arity,
-            std::void_t<decltype(std::declval<Transform>()(std::declval<Expr>()))>
+            detail::void_t<decltype(std::declval<Transform>()(std::declval<Expr>()))>
         >
         {
             decltype(auto) operator() (Expr && expr, Transform && transform)
@@ -213,7 +213,7 @@ namespace boost { namespace yap {
             Expr,
             Transform,
             expr_arity::one,
-            std::void_t<decltype(
+            detail::void_t<decltype(
                 std::declval<Transform>()(
                     detail::tag_for<remove_cv_ref_t<Expr>::kind>(),
                     ::boost::yap::value(::boost::yap::value(std::declval<Expr>()))
@@ -235,7 +235,7 @@ namespace boost { namespace yap {
             Expr,
             Transform,
             expr_arity::two,
-            std::void_t<decltype(
+            detail::void_t<decltype(
                 std::declval<Transform>()(
                     detail::tag_for<remove_cv_ref_t<Expr>::kind>(),
                     ::boost::yap::value(::boost::yap::left(std::declval<Expr>())),
@@ -259,7 +259,7 @@ namespace boost { namespace yap {
             Expr,
             Transform,
             expr_arity::three,
-            std::void_t<decltype(
+            detail::void_t<decltype(
                 std::declval<Transform>()(
                     detail::tag_for<remove_cv_ref_t<Expr>::kind>(),
                     ::boost::yap::value(::boost::yap::cond(std::declval<Expr>())),
@@ -319,7 +319,7 @@ namespace boost { namespace yap {
             Expr,
             Transform,
             expr_arity::n,
-            std::void_t<decltype(
+            detail::void_t<decltype(
                 transform_call_unpacker<Expr, Transform>{}(
                     std::declval<Expr>(),
                     std::declval<Transform>(),

@@ -49,10 +49,10 @@ TEST(reference_returns, test_reference_returns)
     }
 
     static_assert(
-        std::is_same_v<
+        std::is_same<
             decltype(evaluate(plus_expr)),
             reference_returning::number const &
-        >
+        >{}, "type failure"
     );
 
     auto minus_expr = unity - reference_returning::number{1.0};
@@ -63,10 +63,10 @@ TEST(reference_returns, test_reference_returns)
     }
 
     static_assert(
-        std::is_same_v<
+        std::is_same<
             decltype(evaluate(minus_expr)),
             reference_returning::number &
-        >
+        >{}, "type failure"
     );
 
     using namespace yap::literals;
@@ -77,10 +77,10 @@ TEST(reference_returns, test_reference_returns)
     }
 
     static_assert(
-        std::is_same_v<
+        std::is_same<
             decltype(evaluate(1_p, reference_returning::a_result)),
             reference_returning::number &
-        >
+        >{}, "type failure"
     );
 
     {
@@ -89,9 +89,9 @@ TEST(reference_returns, test_reference_returns)
     }
 
     static_assert(
-        std::is_same_v<
+        std::is_same<
             decltype(evaluate(1_p, reference_returning::the_result)),
             reference_returning::number const &
-        >
+        >{}, "type failure"
     );
 }

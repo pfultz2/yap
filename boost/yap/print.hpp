@@ -15,7 +15,7 @@ namespace boost { namespace yap {
         inline std::ostream & print_kind (std::ostream & os, expr_kind kind)
         { return os << op_string(kind); }
 
-        template <typename T, typename = std::void_t<>>
+        template <typename T, typename = hana::when_valid<>>
         struct printer
         {
             std::ostream & operator() (std::ostream & os, T const &)
@@ -25,7 +25,7 @@ namespace boost { namespace yap {
         template <typename T>
         struct printer<
             T,
-            std::void_t<decltype(
+            hana::when_valid<decltype(
                 std::declval<std::ostream &>() << std::declval<T const &>()
             )>
         >
@@ -42,13 +42,13 @@ namespace boost { namespace yap {
         std::ostream & print_type (std::ostream & os, hana::tuple<T> const &)
         {
             os << typeindex::type_id<T>().pretty_name();
-            if (std::is_const_v<T>)
+            if (std::is_const<T>{})
                 os << " const";
-            if (std::is_volatile_v<T>)
+            if (std::is_volatile<T>{})
                 os << " volatile";
-            if (std::is_lvalue_reference_v<T>)
+            if (std::is_lvalue_reference<T>{})
                 os << " &";
-            if (std::is_rvalue_reference_v<T>)
+            if (std::is_rvalue_reference<T>{})
                 os << " &&";
             return os;
         }
