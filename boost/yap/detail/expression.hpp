@@ -13,19 +13,19 @@ namespace boost { namespace yap {
 
     namespace detail {
 
-        // identity
-
-        template <typename T>
-        struct identity
-        { using type = T; };
-
-        template <typename T>
-        using identity_t = typename identity<T>::type;
-
-
         // void_t
 
         template <class...> using void_t = void;
+
+
+        // static_const
+
+        template <typename T>
+        struct static_const
+        { static constexpr T value {}; };
+
+        template <typename T>
+        constexpr T static_const<T>::value;
 
 
         // partial_decay

@@ -29,9 +29,9 @@ namespace boost { namespace yap {
 
     using adl_detail::eval_expression_as_fn;
 
-    inline namespace function_objects {
+    inline namespace {
 
-        inline constexpr eval_expression_as_fn eval_expression_as{};
+        constexpr auto & eval_expression_as = detail::static_const<eval_expression_as_fn>::value;
 
     }
 
