@@ -7,24 +7,36 @@
 
 struct get_arity
 {
+    template <typename Tuple>
+    auto operator() (
+        boost::yap::expression<
+            boost::yap::expr_kind::placeholder,
+            Tuple
+        > const & expr
+    ) { return expr.value(); }
+
+    template <typename Tuple>
+    auto operator() (
+        boost::yap::expression<
+            boost::yap::expr_kind::terminal,
+            Tuple
+        > const & expr
+    ) {
+        using namespace boost::hana::literals;
+        return 0_c;
+    }
+
     template <typename Expr>
     auto operator() (Expr const & expr)
     {
-        if constexpr (Expr::kind == boost::yap::expr_kind::placeholder) {
-            return expr.value();
-        } else if constexpr (Expr::kind == boost::yap::expr_kind::terminal) {
-            using namespace boost::hana::literals;
-            return 0_c;
-        } else {
-            return boost::hana::maximum(
-                boost::hana::transform(
-                    expr.elements,
-                    [](auto const & element) {
-                        return boost::yap::transform(element, get_arity{});
-                    }
-                )
-            );
-        }
+        return boost::hana::maximum(
+            boost::hana::transform(
+                expr.elements,
+                [](auto const & element) {
+                    return boost::yap::transform(element, get_arity{});
+                }
+            )
+        );
     }
 };
 

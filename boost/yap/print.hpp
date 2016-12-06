@@ -58,17 +58,55 @@ namespace boost { namespace yap {
         bool is_const_expr_ref (expr_template<expr_kind::expr_ref, hana::tuple<T const *>> const &)
         { return true; }
 
-        template <typename Expr>
-        std::ostream & print_impl (
-            std::ostream & os,
-            Expr const & expr,
-            int indent,
-            char const * indent_str,
-            bool is_ref = false,
-            bool is_const_ref = false)
+        template <expr_kind Kind>
+        struct print_impl
         {
-            if constexpr (Expr::kind == expr_kind::expr_ref) {
-                print_impl(
+            template <typename Expr>
+            std::ostream & operator() (
+                std::ostream & os,
+                Expr const & expr,
+                int indent,
+                char const * indent_str,
+                bool is_ref = false,
+                bool is_const_ref = false)
+            {
+                for (int i = 0; i < indent; ++i) {
+                    os << indent_str;
+                }
+
+                os << "expr<";
+                print_kind(os, Expr::kind);
+                os << ">";
+                if (is_const_ref)
+                    os << " const &";
+                else if (is_ref)
+                    os << " &";
+                os << "\n";
+                hana::for_each(expr.elements, [&os, indent, indent_str](auto const & element) {
+                    using element_type = decltype(element);
+                    constexpr expr_kind kind = detail::remove_cv_ref_t<element_type>::kind;
+                    print_impl<kind>{}(os, element, indent + 1, indent_str);
+                });
+
+                return os;
+            }
+        };
+
+        template <>
+        struct print_impl<expr_kind::expr_ref>
+        {
+            template <typename Expr>
+            std::ostream & operator() (
+                std::ostream & os,
+                Expr const & expr,
+                int indent,
+                char const * indent_str,
+                bool is_ref = false,
+                bool is_const_ref = false)
+            {
+                using ref_type = decltype(::boost::yap::deref(expr));
+                constexpr expr_kind ref_kind = detail::remove_cv_ref_t<ref_type>::kind;
+                print_impl<ref_kind>{}(
                     os,
                     ::boost::yap::deref(expr),
                     indent,
@@ -76,53 +114,74 @@ namespace boost { namespace yap {
                     true,
                     is_const_expr_ref(expr)
                 );
-            } else {
+                return os;
+            }
+        };
+
+        template <>
+        struct print_impl<expr_kind::terminal>
+        {
+            template <typename Expr>
+            std::ostream & operator() (
+                std::ostream & os,
+                Expr const & expr,
+                int indent,
+                char const * indent_str,
+                bool is_ref = false,
+                bool is_const_ref = false)
+            {
                 for (int i = 0; i < indent; ++i) {
                     os << indent_str;
                 }
 
-                if constexpr (Expr::kind == expr_kind::terminal) {
-                    os << "term<";
-                    print_type(os, expr.elements);
-                    os << ">[=";
-                    print_value(os, ::boost::yap::value(expr));
-                    os << "]";
-                    if (is_const_ref)
-                        os << " const &";
-                    else if (is_ref)
-                        os << " &";
-                    os << "\n";
-                } else if constexpr (Expr::kind == expr_kind::placeholder) {
-                    os << "placeholder<" << (long long)::boost::yap::value(expr) << ">";
-                    if (is_const_ref)
-                        os << " const &";
-                    else if (is_ref)
-                        os << " &";
-                    os << "\n";
-                } else {
-                    os << "expr<";
-                    print_kind(os, Expr::kind);
-                    os << ">";
-                    if (is_const_ref)
-                        os << " const &";
-                    else if (is_ref)
-                        os << " &";
-                    os << "\n";
-                    hana::for_each(expr.elements, [&os, indent, indent_str](auto const & element) {
-                        print_impl(os, element, indent + 1, indent_str);
-                    });
-                }
-            }
+                os << "term<";
+                print_type(os, expr.elements);
+                os << ">[=";
+                print_value(os, ::boost::yap::value(expr));
+                os << "]";
+                if (is_const_ref)
+                    os << " const &";
+                else if (is_ref)
+                    os << " &";
+                os << "\n";
 
-            return os;
-        }
+                return os;
+            }
+        };
+
+        template <>
+        struct print_impl<expr_kind::placeholder>
+        {
+            template <typename Expr>
+            std::ostream & operator() (
+                std::ostream & os,
+                Expr const & expr,
+                int indent,
+                char const * indent_str,
+                bool is_ref = false,
+                bool is_const_ref = false)
+            {
+                for (int i = 0; i < indent; ++i) {
+                    os << indent_str;
+                }
+
+                os << "placeholder<" << (long long)::boost::yap::value(expr) << ">";
+                if (is_const_ref)
+                    os << " const &";
+                else if (is_ref)
+                    os << " &";
+                os << "\n";
+
+                return os;
+            }
+        };
 
     }
 
     /** Prints expression \a expr to stream \a os.  Returns \a os. */
     template <typename Expr>
     std::ostream & print (std::ostream & os, Expr const & expr)
-    { return detail::print_impl(os, expr, 0, "    "); }
+    { return detail::print_impl<Expr::kind>{}(os, expr, 0, "    "); }
 
 } }
 

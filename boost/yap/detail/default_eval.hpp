@@ -27,122 +27,165 @@ namespace boost { namespace yap {
             return static_cast<T &&>(arg);
         }
 
+        template <typename T, typename ...Ts>
+        decltype(auto) eval_placeholder (hana::llong<1>, T && arg, Ts && ... args)
+        { return static_cast<T &&>(arg); }
+
         template <typename I, typename T, typename ...Ts>
-        auto eval_placeholder (I, T && arg, Ts && ... args)
-        {
-            if constexpr (I::value == 1) {
-                return arg;
-            } else {
-                return eval_placeholder(hana::llong<I::value - 1>{}, static_cast<Ts &&>(args)...);
-            }
-        }
+        decltype(auto) eval_placeholder (I, T && arg, Ts && ... args)
+        { return eval_placeholder(hana::llong<I::value - 1>{}, static_cast<Ts &&>(args)...); }
 
         template <typename Expr, typename ...T>
-        decltype(auto) default_eval_expr (Expr && expr, T && ... args)
+        decltype(auto) default_eval_expr (Expr && expr, T && ... args);
+
+        template <expr_kind Kind>
+        struct default_eval_expr_impl;
+
+        template <>
+        struct default_eval_expr_impl<expr_kind::expr_ref>
         {
-            constexpr expr_kind kind = remove_cv_ref_t<Expr>::kind;
+            template <typename Expr, typename ...T>
+            decltype(auto) operator() (Expr && expr, T && ... args)
+            { return default_eval_expr(::boost::yap::deref(static_cast<Expr &&>(expr)), static_cast<T &&>(args)...); }
+        };
 
-            using namespace hana::literals;
+        template <>
+        struct default_eval_expr_impl<expr_kind(-1)>
+        {
+            template <typename Expr, typename ...T>
+            decltype(auto) operator() (Expr && expr, T && ... args)
+            { return transform_expression(static_cast<Expr &&>(expr), static_cast<T &&>(args)...); }
+        };
 
-            if constexpr (
-                !std::is_same<
-                    decltype(transform_expression(static_cast<Expr &&>(expr), static_cast<T &&>(args)...)),
-                    nonexistent_transform
-                >{}
-            ) {
-                return transform_expression(static_cast<Expr &&>(expr), static_cast<T &&>(args)...);
-            } else if constexpr (kind == expr_kind::expr_ref) {
-                return default_eval_expr(::boost::yap::deref(static_cast<Expr &&>(expr)), static_cast<T &&>(args)...);
-            } else if constexpr (kind == expr_kind::terminal) {
-                return ::boost::yap::value(static_cast<Expr &&>(expr));
-            } else if constexpr (kind == expr_kind::placeholder) {
-                return eval_placeholder(::boost::yap::value(static_cast<Expr &&>(expr)), static_cast<T &&>(args)...);
-            }
+        template <>
+        struct default_eval_expr_impl<expr_kind::terminal>
+        {
+            template <typename Expr, typename ...T>
+            decltype(auto) operator() (Expr && expr, T && ... args)
+            { return ::boost::yap::value(static_cast<Expr &&>(expr)); }
+        };
+
+        template <>
+        struct default_eval_expr_impl<expr_kind::placeholder>
+        {
+            template <typename Expr, typename ...T>
+            decltype(auto) operator() (Expr && expr, T && ... args)
+            { return eval_placeholder(::boost::yap::value(static_cast<Expr &&>(expr)), static_cast<T &&>(args)...); }
+        };
 
 #define BOOST_YAP_UNARY_OPERATOR_CASE(op_name)                          \
-            else if constexpr (kind == expr_kind:: op_name) {           \
-                return                                                  \
-                    eval_ ## op_name(                                   \
-                        default_eval_expr(static_cast<Expr &&>(expr).elements[0_c], static_cast<T &&>(args)...) \
-                    );                                                  \
-            }
+        template <>                                                     \
+        struct default_eval_expr_impl<expr_kind:: op_name>              \
+        {                                                               \
+            template <typename Expr, typename ...T>                     \
+            decltype(auto) operator() (Expr && expr, T && ... args)     \
+            {                                                           \
+                using namespace hana::literals;                         \
+                return eval_ ## op_name(                                \
+                    default_eval_expr(static_cast<Expr &&>(expr).elements[0_c], static_cast<T &&>(args)...) \
+                );                                                      \
+            }                                                           \
+        };
 
-            BOOST_YAP_UNARY_OPERATOR_CASE(unary_plus) // +
-            BOOST_YAP_UNARY_OPERATOR_CASE(negate) // -
-            BOOST_YAP_UNARY_OPERATOR_CASE(dereference) // *
-            BOOST_YAP_UNARY_OPERATOR_CASE(complement) // ~
-            BOOST_YAP_UNARY_OPERATOR_CASE(address_of) // &
-            BOOST_YAP_UNARY_OPERATOR_CASE(logical_not) // !
-            BOOST_YAP_UNARY_OPERATOR_CASE(pre_inc) // ++
-            BOOST_YAP_UNARY_OPERATOR_CASE(pre_dec) // --
-            BOOST_YAP_UNARY_OPERATOR_CASE(post_inc) // ++(int)
-            BOOST_YAP_UNARY_OPERATOR_CASE(post_dec) // --(int)
+        BOOST_YAP_UNARY_OPERATOR_CASE(unary_plus) // +
+        BOOST_YAP_UNARY_OPERATOR_CASE(negate) // -
+        BOOST_YAP_UNARY_OPERATOR_CASE(dereference) // *
+        BOOST_YAP_UNARY_OPERATOR_CASE(complement) // ~
+        BOOST_YAP_UNARY_OPERATOR_CASE(address_of) // &
+        BOOST_YAP_UNARY_OPERATOR_CASE(logical_not) // !
+        BOOST_YAP_UNARY_OPERATOR_CASE(pre_inc) // ++
+        BOOST_YAP_UNARY_OPERATOR_CASE(pre_dec) // --
+        BOOST_YAP_UNARY_OPERATOR_CASE(post_inc) // ++(int)
+        BOOST_YAP_UNARY_OPERATOR_CASE(post_dec) // --(int)
 
 #undef BOOST_YAP_UNARY_OPERATOR_CASE
 
 #define BOOST_YAP_BINARY_OPERATOR_CASE(op_name)                         \
-            else if constexpr (kind == expr_kind:: op_name) {           \
-                return                                                  \
-                    eval_ ## op_name(                                   \
-                        default_eval_expr(static_cast<Expr &&>(expr).elements[0_c], static_cast<T &&>(args)...), \
-                        default_eval_expr(static_cast<Expr &&>(expr).elements[1_c], static_cast<T &&>(args)...) \
-                    );                                                  \
+        template <>                                                     \
+        struct default_eval_expr_impl<expr_kind:: op_name>              \
+        {                                                               \
+            template <typename Expr, typename ...T>                     \
+            decltype(auto) operator() (Expr && expr, T && ... args)     \
+            {                                                           \
+                using namespace hana::literals;                         \
+                return eval_ ## op_name(                                \
+                    default_eval_expr(static_cast<Expr &&>(expr).elements[0_c], static_cast<T &&>(args)...), \
+                    default_eval_expr(static_cast<Expr &&>(expr).elements[1_c], static_cast<T &&>(args)...) \
+                );                                                      \
+            }                                                           \
+        };
+
+        BOOST_YAP_BINARY_OPERATOR_CASE(shift_left) // <<
+        BOOST_YAP_BINARY_OPERATOR_CASE(shift_right) // >>
+        BOOST_YAP_BINARY_OPERATOR_CASE(multiplies) // *
+        BOOST_YAP_BINARY_OPERATOR_CASE(divides) // /
+        BOOST_YAP_BINARY_OPERATOR_CASE(modulus) // %
+        BOOST_YAP_BINARY_OPERATOR_CASE(plus) // +
+        BOOST_YAP_BINARY_OPERATOR_CASE(minus) // -
+        BOOST_YAP_BINARY_OPERATOR_CASE(less) // <
+        BOOST_YAP_BINARY_OPERATOR_CASE(greater) // >
+        BOOST_YAP_BINARY_OPERATOR_CASE(less_equal) // <=
+        BOOST_YAP_BINARY_OPERATOR_CASE(greater_equal) // >=
+        BOOST_YAP_BINARY_OPERATOR_CASE(equal_to) // ==
+        BOOST_YAP_BINARY_OPERATOR_CASE(not_equal_to) // !=
+        BOOST_YAP_BINARY_OPERATOR_CASE(logical_or) // ||
+        BOOST_YAP_BINARY_OPERATOR_CASE(logical_and) // &&
+        BOOST_YAP_BINARY_OPERATOR_CASE(bitwise_and) // &
+        BOOST_YAP_BINARY_OPERATOR_CASE(bitwise_or) // |
+        BOOST_YAP_BINARY_OPERATOR_CASE(bitwise_xor) // ^
+
+        template <>
+        struct default_eval_expr_impl<expr_kind::comma>
+        {
+            template <typename Expr, typename ...T>
+            decltype(auto) operator() (Expr && expr, T && ... args)
+            {
+                using namespace hana::literals;
+                return eval_comma(
+                    default_eval_expr(static_cast<Expr &&>(expr).elements[0_c], static_cast<T &&>(args)...),
+                    default_eval_expr(static_cast<Expr &&>(expr).elements[1_c], static_cast<T &&>(args)...)
+                );
             }
+        };
 
-            BOOST_YAP_BINARY_OPERATOR_CASE(shift_left) // <<
-            BOOST_YAP_BINARY_OPERATOR_CASE(shift_right) // >>
-            BOOST_YAP_BINARY_OPERATOR_CASE(multiplies) // *
-            BOOST_YAP_BINARY_OPERATOR_CASE(divides) // /
-            BOOST_YAP_BINARY_OPERATOR_CASE(modulus) // %
-            BOOST_YAP_BINARY_OPERATOR_CASE(plus) // +
-            BOOST_YAP_BINARY_OPERATOR_CASE(minus) // -
-            BOOST_YAP_BINARY_OPERATOR_CASE(less) // <
-            BOOST_YAP_BINARY_OPERATOR_CASE(greater) // >
-            BOOST_YAP_BINARY_OPERATOR_CASE(less_equal) // <=
-            BOOST_YAP_BINARY_OPERATOR_CASE(greater_equal) // >=
-            BOOST_YAP_BINARY_OPERATOR_CASE(equal_to) // ==
-            BOOST_YAP_BINARY_OPERATOR_CASE(not_equal_to) // !=
-            BOOST_YAP_BINARY_OPERATOR_CASE(logical_or) // ||
-            BOOST_YAP_BINARY_OPERATOR_CASE(logical_and) // &&
-            BOOST_YAP_BINARY_OPERATOR_CASE(bitwise_and) // &
-            BOOST_YAP_BINARY_OPERATOR_CASE(bitwise_or) // |
-            BOOST_YAP_BINARY_OPERATOR_CASE(bitwise_xor) // ^
-
-            else if constexpr (kind == expr_kind::comma) {
-                return
-                    eval_comma(
-                        default_eval_expr(static_cast<Expr &&>(expr).elements[0_c], static_cast<T &&>(args)...),
-                        default_eval_expr(static_cast<Expr &&>(expr).elements[1_c], static_cast<T &&>(args)...)
-                    );
-            }
-
-            BOOST_YAP_BINARY_OPERATOR_CASE(mem_ptr) // ->*
-            BOOST_YAP_BINARY_OPERATOR_CASE(assign) // =
-            BOOST_YAP_BINARY_OPERATOR_CASE(shift_left_assign) // <<=
-            BOOST_YAP_BINARY_OPERATOR_CASE(shift_right_assign) // >>=
-            BOOST_YAP_BINARY_OPERATOR_CASE(multiplies_assign) // *=
-            BOOST_YAP_BINARY_OPERATOR_CASE(divides_assign) // /=
-            BOOST_YAP_BINARY_OPERATOR_CASE(modulus_assign) // %=
-            BOOST_YAP_BINARY_OPERATOR_CASE(plus_assign) // +=
-            BOOST_YAP_BINARY_OPERATOR_CASE(minus_assign) // -=
-            BOOST_YAP_BINARY_OPERATOR_CASE(bitwise_and_assign) // &=
-            BOOST_YAP_BINARY_OPERATOR_CASE(bitwise_or_assign) // |=
-            BOOST_YAP_BINARY_OPERATOR_CASE(bitwise_xor_assign) // ^=
-            BOOST_YAP_BINARY_OPERATOR_CASE(subscript) // []
-
-            else if constexpr (kind == expr_kind::if_else) {
-                return
-                    eval_if_else(
-                        default_eval_expr(static_cast<Expr &&>(expr).elements[0_c], static_cast<T &&>(args)...),
-                        default_eval_expr(static_cast<Expr &&>(expr).elements[1_c], static_cast<T &&>(args)...),
-                        default_eval_expr(static_cast<Expr &&>(expr).elements[2_c], static_cast<T &&>(args)...)
-                    );
-            }
+        BOOST_YAP_BINARY_OPERATOR_CASE(mem_ptr) // ->*
+        BOOST_YAP_BINARY_OPERATOR_CASE(assign) // =
+        BOOST_YAP_BINARY_OPERATOR_CASE(shift_left_assign) // <<=
+        BOOST_YAP_BINARY_OPERATOR_CASE(shift_right_assign) // >>=
+        BOOST_YAP_BINARY_OPERATOR_CASE(multiplies_assign) // *=
+        BOOST_YAP_BINARY_OPERATOR_CASE(divides_assign) // /=
+        BOOST_YAP_BINARY_OPERATOR_CASE(modulus_assign) // %=
+        BOOST_YAP_BINARY_OPERATOR_CASE(plus_assign) // +=
+        BOOST_YAP_BINARY_OPERATOR_CASE(minus_assign) // -=
+        BOOST_YAP_BINARY_OPERATOR_CASE(bitwise_and_assign) // &=
+        BOOST_YAP_BINARY_OPERATOR_CASE(bitwise_or_assign) // |=
+        BOOST_YAP_BINARY_OPERATOR_CASE(bitwise_xor_assign) // ^=
+        BOOST_YAP_BINARY_OPERATOR_CASE(subscript) // []
 
 #undef BOOST_YAP_BINARY_OPERATOR_CASE
 
-            else if constexpr (kind == expr_kind::call) {
-                decltype(auto) expand_args = [&](auto && element) {
+        template <>
+        struct default_eval_expr_impl<expr_kind::if_else>
+        {
+            template <typename Expr, typename ...T>
+            decltype(auto) operator() (Expr && expr, T && ... args)
+            {
+                using namespace hana::literals;
+                return eval_if_else(
+                    default_eval_expr(static_cast<Expr &&>(expr).elements[0_c], static_cast<T &&>(args)...),
+                    default_eval_expr(static_cast<Expr &&>(expr).elements[1_c], static_cast<T &&>(args)...),
+                    default_eval_expr(static_cast<Expr &&>(expr).elements[2_c], static_cast<T &&>(args)...)
+                );
+            }
+        };
+
+        template <>
+        struct default_eval_expr_impl<expr_kind::call>
+        {
+            template <typename Expr, typename ...T>
+            decltype(auto) operator() (Expr && expr, T && ... args)
+            {
+                auto expand_args = [&](auto && element) {
                     return default_eval_expr(
                         static_cast<decltype(element) &&>(element),
                         static_cast<T &&>(args)...
@@ -155,44 +198,110 @@ namespace boost { namespace yap {
                         return eval_call(
                             expand_args(static_cast<decltype(elements) &&>(elements))...
                         );
-                    });
-            } else {
-                assert(false && "Unhandled expr_kind in default_evaluate!");
-                return;
+                    }
+                );
             }
+        };
+
+        template <typename Expr, typename ...T>
+        decltype(auto) default_eval_expr (Expr && expr, T && ... args)
+        {
+            constexpr bool transform_exists = !std::is_same<
+                decltype(transform_expression(static_cast<Expr &&>(expr), static_cast<T &&>(args)...)),
+                nonexistent_transform
+            >{};
+            constexpr expr_kind kind = transform_exists ?
+                expr_kind(-1) :
+                remove_cv_ref_t<Expr>::kind;
+            return default_eval_expr_impl<kind>{}(static_cast<Expr &&>(expr), static_cast<T &&>(args)...);
         }
 
         template <typename Expr, typename Tuple, typename Transform>
-        decltype(auto) transform_nonterminal (Expr const & expr, Tuple && tuple, Transform && transform);
+        auto transform_nonterminal (Expr const & expr, Tuple && tuple, Transform && transform);
+
+        template <
+            typename Expr,
+            typename Transform,
+            expr_kind Kind,
+            bool IsExprRef = Kind == expr_kind::expr_ref,
+            bool IsTerminalOrPlaceholder = Kind == expr_kind::terminal || Kind == expr_kind::placeholder,
+            bool IsLvalueRef = std::is_lvalue_reference<Expr>{}
+        >
+        struct default_transform_expression_impl;
+
+        template <
+            typename Expr,
+            typename Transform,
+            expr_kind Kind,
+            bool IsTerminalOrPlaceholder,
+            bool IsLvalueRef
+        >
+        struct default_transform_expression_impl <
+            Expr,
+            Transform,
+            Kind,
+            true,
+            IsTerminalOrPlaceholder,
+            IsLvalueRef
+        > {
+            auto operator() (Expr && expr, Transform && transform)
+            {
+                return ::boost::yap::transform(
+                    ::boost::yap::deref(expr),
+                    static_cast<Transform &&>(transform)
+                );
+            }
+        };
+
+        template <typename Expr, typename Transform, expr_kind Kind, bool IsLvalueRef>
+        struct default_transform_expression_impl <
+            Expr,
+            Transform,
+            Kind,
+            false,
+            true,
+            IsLvalueRef
+        > {
+            auto operator() (Expr && expr, Transform && transform)
+            { return static_cast<Expr &&>(expr); }
+        };
+
+        template <typename Expr, typename Transform, expr_kind Kind>
+        struct default_transform_expression_impl <Expr, Transform, Kind, false, false, true>
+        {
+            auto operator() (Expr && expr, Transform && transform)
+            {
+                return transform_nonterminal(
+                    expr,
+                    expr.elements,
+                    static_cast<Transform &&>(transform)
+                );
+            }
+        };
+
+        template <typename Expr, typename Transform, expr_kind Kind>
+        struct default_transform_expression_impl <Expr, Transform, Kind, false, false, false>
+        {
+            auto operator() (Expr && expr, Transform && transform)
+            {
+                return transform_nonterminal(
+                    expr,
+                    std::move(expr.elements),
+                    static_cast<Transform &&>(transform)
+                );
+            }
+        };
 
         template <typename Expr, typename Transform, expr_arity Arity, typename = detail::void_t<>>
         struct default_transform_expression
         {
-            decltype(auto) operator() (Expr && expr, Transform && transform)
+            auto operator() (Expr && expr, Transform && transform)
             {
                 constexpr expr_kind kind = remove_cv_ref_t<Expr>::kind;
-                if constexpr (kind == expr_kind::expr_ref) {
-                    decltype(auto) ref = ::boost::yap::deref(expr);
-                    constexpr expr_kind kind = remove_cv_ref_t<decltype(ref)>::kind;
-                    default_transform_expression<decltype(ref), Transform, detail::arity_of<kind>()> transformer;
-                    return transformer(ref, static_cast<Transform &&>(transform));
-                } else if constexpr (kind == expr_kind::terminal || kind == expr_kind::placeholder) {
-                    return static_cast<Expr &&>(expr);
-                } else {
-                    if constexpr (std::is_lvalue_reference<Expr>{}) {
-                        return transform_nonterminal(
-                            expr,
-                            expr.elements,
-                            static_cast<Transform &&>(transform)
-                        );
-                    } else {
-                        return transform_nonterminal(
-                            expr,
-                            std::move(expr.elements),
-                            static_cast<Transform &&>(transform)
-                        );
-                    }
-                }
+                return default_transform_expression_impl<Expr, Transform, kind>{}(
+                    static_cast<Expr &&>(expr),
+                    static_cast<Transform &&>(transform)
+                );
             }
         };
 
@@ -348,7 +457,7 @@ namespace boost { namespace yap {
         { return ExprTemplate<Kind, NewTuple>{std::move(tuple)}; }
 
         template <typename Expr, typename Tuple, typename Transform>
-        decltype(auto) transform_nonterminal (Expr const & expr, Tuple && tuple, Transform && transform)
+        auto transform_nonterminal (Expr const & expr, Tuple && tuple, Transform && transform)
         {
             auto transformed_tuple = hana::transform(
                 static_cast<Tuple &&>(tuple),
