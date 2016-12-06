@@ -185,7 +185,7 @@ namespace boost { namespace yap {
             template <typename Expr, typename ...T>
             decltype(auto) operator() (Expr && expr, T && ... args)
             {
-                auto expand_args = [&](auto && element) {
+                decltype(auto) expand_args = [&](auto && element) {
                     return default_eval_expr(
                         static_cast<decltype(element) &&>(element),
                         static_cast<T &&>(args)...
@@ -217,7 +217,7 @@ namespace boost { namespace yap {
         }
 
         template <typename Expr, typename Tuple, typename Transform>
-        auto transform_nonterminal (Expr const & expr, Tuple && tuple, Transform && transform);
+        decltype(auto) transform_nonterminal (Expr const & expr, Tuple && tuple, Transform && transform);
 
         template <
             typename Expr,
@@ -244,7 +244,7 @@ namespace boost { namespace yap {
             IsTerminalOrPlaceholder,
             IsLvalueRef
         > {
-            auto operator() (Expr && expr, Transform && transform)
+            decltype(auto) operator() (Expr && expr, Transform && transform)
             {
                 return ::boost::yap::transform(
                     ::boost::yap::deref(expr),
@@ -262,14 +262,14 @@ namespace boost { namespace yap {
             true,
             IsLvalueRef
         > {
-            auto operator() (Expr && expr, Transform && transform)
+            decltype(auto) operator() (Expr && expr, Transform && transform)
             { return static_cast<Expr &&>(expr); }
         };
 
         template <typename Expr, typename Transform, expr_kind Kind>
         struct default_transform_expression_impl <Expr, Transform, Kind, false, false, true>
         {
-            auto operator() (Expr && expr, Transform && transform)
+            decltype(auto) operator() (Expr && expr, Transform && transform)
             {
                 return transform_nonterminal(
                     expr,
@@ -282,7 +282,7 @@ namespace boost { namespace yap {
         template <typename Expr, typename Transform, expr_kind Kind>
         struct default_transform_expression_impl <Expr, Transform, Kind, false, false, false>
         {
-            auto operator() (Expr && expr, Transform && transform)
+            decltype(auto) operator() (Expr && expr, Transform && transform)
             {
                 return transform_nonterminal(
                     expr,
@@ -295,7 +295,7 @@ namespace boost { namespace yap {
         template <typename Expr, typename Transform, expr_arity Arity, typename = detail::void_t<>>
         struct default_transform_expression
         {
-            auto operator() (Expr && expr, Transform && transform)
+            decltype(auto) operator() (Expr && expr, Transform && transform)
             {
                 constexpr expr_kind kind = remove_cv_ref_t<Expr>::kind;
                 return default_transform_expression_impl<Expr, Transform, kind>{}(
@@ -457,7 +457,7 @@ namespace boost { namespace yap {
         { return ExprTemplate<Kind, NewTuple>{std::move(tuple)}; }
 
         template <typename Expr, typename Tuple, typename Transform>
-        auto transform_nonterminal (Expr const & expr, Tuple && tuple, Transform && transform)
+        decltype(auto) transform_nonterminal (Expr const & expr, Tuple && tuple, Transform && transform)
         {
             auto transformed_tuple = hana::transform(
                 static_cast<Tuple &&>(tuple),
