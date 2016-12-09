@@ -1,0 +1,209 @@
+sudo: required
+dist: trusty
+language: cpp
+script: cmake
+
+matrix:
+    include:
+        # OSX
+        - env: ASAN=off LIBCXX=off
+          os: osx
+          compiler: clang
+
+        # Clang
+        # - env: CLANG_VERSION=3.4 ASAN=on LIBCXX=off
+        #   os: linux
+        #   compiler: clang
+        #   addons: &clang34
+        #     apt:
+        #       packages:
+        #         - g++-4.9
+        #         - clang-3.4
+        #         - valgrind
+        #       sources:
+        #         - ubuntu-toolchain-r-test
+
+        # - env: CLANG_VERSION=3.4 ASAN=on LIBCXX=off
+        #   os: linux
+        #   compiler: clang
+        #   addons: *clang34
+
+        - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=on
+          os: linux
+          compiler: clang-3.5
+          addons: &clang35
+            apt:
+              packages:
+                - util-linux
+                - g++-4.9
+                - clang-3.5
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
+
+        - env: CLANG_VERSION=3.5 ASAN=on LIBCXX=off
+          os: linux
+          compiler: clang-3.5
+          addons: *clang35
+
+        - env: CLANG_VERSION=3.8 ASAN=off LIBCXX=on BUILD_EXAMPLES=on
+          os: linux
+          compiler: clang-3.8
+          addons: &clang38
+            apt:
+              packages:
+                - util-linux
+                - g++-4.9
+                - clang-3.8
+                - valgrind
+                - python
+              sources:
+                - ubuntu-toolchain-r-test
+
+        - env: CLANG_VERSION=3.8 ASAN=off LIBCXX=off BUILD_EXAMPLES=on
+          os: linux
+          compiler: clang-3.8
+          addons: *clang38
+
+        # Gcc
+        - env: GCC_VERSION=6 ASAN=off LIBCXX=off
+          os: linux
+          compiler: gcc-6
+          addons: &gcc6
+            apt:
+              packages:
+                - g++-6
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
+
+        - env: GCC_VERSION=5 ASAN=off LIBCXX=off
+          os: linux
+          compiler: gcc-5
+          addons: &gcc5
+            apt:
+              packages:
+                - g++-5
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
+
+        - env: GCC_VERSION=4.9 ASAN=off LIBCXX=off
+          os: linux
+          compiler: gcc-4.9
+          addons: &gcc49
+            apt:
+              packages:
+                - g++-4.9
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
+
+        - env: GCC_VERSION=4.8 ASAN=off LIBCXX=off
+          os: linux
+          compiler: gcc-4.8
+          addons: &gcc48
+            apt:
+              packages:
+                - g++-4.8
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
+
+
+        - env: GCC_VERSION=4.7 ASAN=off LIBCXX=off
+          os: linux
+          compiler: gcc-4.7
+          addons: &gcc47
+            apt:
+              packages:
+                - g++-4.7
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
+
+        - env: GCC_VERSION=4.6 ASAN=off LIBCXX=off
+          os: linux
+          compiler: gcc-4.6
+          addons: &gcc46
+            apt:
+              packages:
+                - g++-4.6
+                - valgrind
+              sources:
+                - ubuntu-toolchain-r-test
+
+install:
+    - export CHECKOUT_PATH=`pwd`;
+    - if [ -n "$GCC_VERSION" ]; then export CXX="g++-${GCC_VERSION}" CC="gcc-${GCC_VERSION}"; fi
+    - if [ -n "$CLANG_VERSION" ]; then export CXX="clang++-${CLANG_VERSION}" CC="clang-${CLANG_VERSION}"; fi
+    # - if [[ "$CLANG_VERSION" == "3.4" ]]; then export CXX="/usr/local/clang-3.4/bin/clang++" CC="/usr/local/clang-3.4/bin/clang"; fi
+    # Setup deps directory
+    - export DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+    - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
+    - mkdir usr
+    - export PATH=${DEPS_DIR}/usr/bin:${PATH}
+    # Install cmake
+    - CMAKE_URL="http://www.cmake.org/files/v3.7/cmake-3.7.0-Linux-x86_64.tar.gz"
+    - travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C usr
+    - travis_retry wget https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.tar.bz2
+    - tar xjf boost_1_62_0.tar.bz2
+    # Show compiler info
+    - $CXX --version
+    - which $CXX
+    - $CC --version
+    - which $CC
+    - which cmake
+    - cmake --version
+    # Install libc++
+    - |
+      if [[ "$LIBCXX" == "on" ]]; then
+        if [[ "${CLANG_VERSION}" == "3.5" ]]; then LLVM_VERSION="3.5.2"; fi
+        if [[ "${CLANG_VERSION}" == "3.6" ]]; then LLVM_VERSION="3.6.2"; fi
+        if [[ "${CLANG_VERSION}" == "3.7" ]]; then LLVM_VERSION="3.7.0"; fi
+        if [[ "${CLANG_VERSION}" == "3.8" ]]; then LLVM_VERSION="3.8.1"; fi
+        LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
+        LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
+        LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
+
+        mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi
+        travis_retry wget --quiet -O - ${LLVM_URL} | tar --strip-components=1 -x --xz -C llvm
+        travis_retry wget --quiet -O - ${LIBCXX_URL} | tar --strip-components=1 -x --xz -C llvm/projects/libcxx
+        travis_retry wget --quiet -O - ${LIBCXXABI_URL} | tar --strip-components=1 -x --xz -C llvm/projects/libcxxabi
+        export LDFLAGS="-L${DEPS_DIR}/usr/lib -lc++ -lc++abi"
+        export CFLAGS="${CFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"
+        export CXXFLAGS="${CXXFLAGS} -stdlib=libc++ -I${DEPS_DIR}/usr/include/c++/v1"
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/usr/lib"
+        ls -lR llvm
+      fi
+    # Show files that have been installed
+    #- ls -lR ${DEPS_DIR}/usr
+    # Add warnings
+    - export CXXFLAGS="${CXXFLAGS} -Wall"
+
+script:
+    - cd $CHECKOUT_PATH
+    - export ASANFLAGS="-fsanitize=address,undefined,integer -fno-omit-frame-pointer -fno-sanitize=unsigned-integer-overflow"
+    - export ASANVARIANT="off"
+    - if [[ "$ASAN" == "on" ]]; then export ASANVARIANT="${ASANVARIANT} on"; fi
+    
+    - |
+      for build_type in debug release; do
+        for asan_type in $ASANVARIANT; do
+          build_dir="build-$build_type-asan-$asan_type"
+          mkdir $build_dir
+          cd $build_dir
+          if [[ "$asan_type" == "on" ]]; then 
+            CXXFLAGS="$CXXFLAGS $ASANFLAGS" cmake -DBOOST_ROOT=${DEPS_DIR}/boost_1_62_0 -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_EXAMPLES=$BUILD_EXAMPLES ..
+          else
+            cmake -DBOOST_ROOT=${DEPS_DIR}/boost_1_62_ -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DBUILD_EXAMPLES=$BUILD_EXAMPLES ..
+          fi
+          make -j4 && CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=4 make check
+          if [ $? -ne 0 ]
+          then
+            exit 1
+          fi
+          cd ..
+          rm -rf $build_dir
+        done
+      done
