@@ -292,8 +292,11 @@ namespace boost { namespace yap {
             }
         };
 
-        template <typename Expr, typename Transform, expr_arity Arity, typename = detail::void_t<>>
-        struct default_transform_expression
+
+        // Expression-matching; attempted second.
+
+        template <typename Expr, typename Transform, typename = detail::void_t<>>
+        struct default_transform_expression_expr
         {
             decltype(auto) operator() (Expr && expr, Transform && transform)
             {
@@ -305,11 +308,10 @@ namespace boost { namespace yap {
             }
         };
 
-        template <typename Expr, typename Transform, expr_arity Arity>
-        struct default_transform_expression<
+        template <typename Expr, typename Transform>
+        struct default_transform_expression_expr<
             Expr,
             Transform,
-            Arity,
             detail::void_t<decltype(std::declval<Transform>()(std::declval<Expr>()))>
         >
         {
@@ -317,8 +319,23 @@ namespace boost { namespace yap {
             { return static_cast<Transform &&>(transform)(static_cast<Expr &&>(expr)); }
         };
 
+
+        // Tag-matching; attempted first.
+
+        template <typename Expr, typename Transform, expr_arity Arity, typename = detail::void_t<>>
+        struct default_transform_expression_tag
+        {
+            decltype(auto) operator() (Expr && expr, Transform && transform)
+            {
+                return default_transform_expression_expr<Expr, Transform>{}(
+                    static_cast<Expr &&>(expr),
+                    static_cast<Transform &&>(transform)
+                );
+            }
+        };
+
         template <typename Expr, typename Transform>
-        struct default_transform_expression<
+        struct default_transform_expression_tag<
             Expr,
             Transform,
             expr_arity::one,
@@ -340,7 +357,7 @@ namespace boost { namespace yap {
         };
 
         template <typename Expr, typename Transform>
-        struct default_transform_expression<
+        struct default_transform_expression_tag<
             Expr,
             Transform,
             expr_arity::two,
@@ -364,7 +381,7 @@ namespace boost { namespace yap {
         };
 
         template <typename Expr, typename Transform>
-        struct default_transform_expression<
+        struct default_transform_expression_tag<
             Expr,
             Transform,
             expr_arity::three,
@@ -424,7 +441,7 @@ namespace boost { namespace yap {
         }
 
         template <typename Expr, typename Transform>
-        struct default_transform_expression<
+        struct default_transform_expression_tag<
             Expr,
             Transform,
             expr_arity::n,
@@ -464,7 +481,7 @@ namespace boost { namespace yap {
                 [&transform](auto && element) {
                     using element_t = decltype(element);
                     constexpr expr_kind kind = remove_cv_ref_t<element_t>::kind;
-                    default_transform_expression<element_t, Transform, detail::arity_of<kind>()> transformer;
+                    default_transform_expression_tag<element_t, Transform, detail::arity_of<kind>()> transformer;
                     return transformer(
                         static_cast<element_t &&>(element),
                         static_cast<Transform &&>(transform)

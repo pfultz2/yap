@@ -1046,7 +1046,7 @@ namespace boost { namespace yap {
             decltype(auto) operator() (Expr && expr, Transform && transform)
             {
                 constexpr expr_kind kind = detail::remove_cv_ref_t<Expr>::kind;
-                return detail::default_transform_expression<Expr, Transform, detail::arity_of<kind>()>{}(
+                return detail::default_transform_expression_tag<Expr, Transform, detail::arity_of<kind>()>{}(
                     static_cast<Expr &&>(expr),
                     static_cast<Transform &&>(transform)
                 );
