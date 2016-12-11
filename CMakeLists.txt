@@ -27,10 +27,11 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL Clang)
     endif ()
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     add_definitions(-std=c++14 -g -Wall)
-elseif (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.10.24629.0 OR CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL 19.10.24629.0) # MSVC 2017 RC
-    add_definitions(/W3)
+# It was worth a shot, but it doesn't work at all.
+#elseif (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.10.24629.0 OR CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL 19.10.24629.0) # MSVC 2017 RC
+#    add_definitions(/W3)
 else ()
-    message(FATAL_ERROR "Only Clang or GCC with -std=c++14, or MSVC >= 2017 will work")
+    message(FATAL_ERROR "Only Clang or GCC with -std=c++14 will work")
 endif ()
 
 add_subdirectory(googletest-release-1.8.0)
