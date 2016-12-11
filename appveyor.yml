@@ -16,11 +16,11 @@ environment:
   - GENERATOR: "Visual Studio 15 2017 Win64"
     CONFIG: Release
 
-  - GENERATOR: "Visual Studio 15 2017"
-    CONFIG: Debug
-
-  - GENERATOR: "Visual Studio 15 2017"
-    CONFIG: Release
+  #- GENERATOR: "Visual Studio 15 2017"
+  #  CONFIG: Debug
+  #
+  #- GENERATOR: "Visual Studio 15 2017"
+  #  CONFIG: Release
 
 matrix:
   fast_finish: true
@@ -28,7 +28,7 @@ matrix:
 build_script:
  - cmd: set PATH=C:\Program Files (x86)\CMake\bin;%PATH%
  - cmd: set PATH=C:\Program Files (x86)\MSBuild\15.0\Bin;%PATH%
- - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 15.0\Common7\Tools\VsDevCmd.bat"
+ - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\VsDevCmd.bat"
  - cmd: set CTEST_OUTPUT_ON_FAILURE=1
  - cmd: cmake --version
  - cmd: mkdir build
