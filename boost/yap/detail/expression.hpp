@@ -495,7 +495,6 @@ namespace boost { namespace yap {
             case expr_kind::expr_ref:
 
             case expr_kind::terminal:
-            case expr_kind::placeholder:
 
             // unary
             case expr_kind::unary_plus: // +
@@ -572,7 +571,6 @@ namespace boost { namespace yap {
         CASE(expr_ref);
 
         CASE(terminal);
-        CASE(placeholder);
 
         // unary
         CASE(unary_plus); // +

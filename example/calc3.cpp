@@ -7,21 +7,13 @@
 
 struct get_arity
 {
-    template <typename Tuple>
-    auto operator() (
-        boost::yap::expression<
-            boost::yap::expr_kind::placeholder,
-            Tuple
-        > const & expr
-    ) { return expr.value(); }
+    template <long long I>
+    boost::hana::llong<I> operator() (boost::yap::terminal_tag, boost::yap::placeholder<I>)
+    { return boost::hana::llong_c<I>; }
 
-    template <typename Tuple>
-    auto operator() (
-        boost::yap::expression<
-            boost::yap::expr_kind::terminal,
-            Tuple
-        > const & expr
-    ) {
+    template <typename T>
+    auto operator() (boost::yap::terminal_tag, T &&)
+    {
         using namespace boost::hana::literals;
         return 0_c;
     }

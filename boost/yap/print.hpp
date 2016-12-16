@@ -38,6 +38,10 @@ namespace boost { namespace yap {
         inline std::ostream & print_value (std::ostream & os, T const & x)
         { return printer<T>{}(os, x); }
 
+        template <long long I>
+        inline std::ostream & print_value (std::ostream & os, hana::llong<I>)
+        { return os << I << "_p"; }
+
         template <typename T>
         std::ostream & print_type (std::ostream & os, hana::tuple<T> const &)
         {
@@ -139,33 +143,6 @@ namespace boost { namespace yap {
                 os << ">[=";
                 print_value(os, ::boost::yap::value(expr));
                 os << "]";
-                if (is_const_ref)
-                    os << " const &";
-                else if (is_ref)
-                    os << " &";
-                os << "\n";
-
-                return os;
-            }
-        };
-
-        template <>
-        struct print_impl<expr_kind::placeholder>
-        {
-            template <typename Expr>
-            std::ostream & operator() (
-                std::ostream & os,
-                Expr const & expr,
-                int indent,
-                char const * indent_str,
-                bool is_ref = false,
-                bool is_const_ref = false)
-            {
-                for (int i = 0; i < indent; ++i) {
-                    os << indent_str;
-                }
-
-                os << "placeholder<" << (long long)::boost::yap::value(expr) << ">";
                 if (is_const_ref)
                     os << " const &";
                 else if (is_ref)

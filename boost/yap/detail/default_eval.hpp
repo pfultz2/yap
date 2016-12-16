@@ -35,6 +35,14 @@ namespace boost { namespace yap {
         decltype(auto) eval_placeholder (I, T && arg, Ts && ... args)
         { return eval_placeholder(hana::llong<I::value - 1>{}, static_cast<Ts &&>(args)...); }
 
+        template <long long I, typename ...T>
+        decltype(auto) eval_terminal (placeholder<I>, T && ... args)
+        { return eval_placeholder(hana::llong_c<I>, static_cast<T &&>(args)...); }
+
+        template <typename T, typename ...Ts>
+        decltype(auto) eval_terminal (T && value, Ts && ... args)
+        { return static_cast<T &&>(value); }
+
         template <typename Expr, typename ...T>
         decltype(auto) default_eval_expr (Expr && expr, T && ... args);
 
@@ -62,15 +70,7 @@ namespace boost { namespace yap {
         {
             template <typename Expr, typename ...T>
             decltype(auto) operator() (Expr && expr, T && ... args)
-            { return ::boost::yap::value(static_cast<Expr &&>(expr)); }
-        };
-
-        template <>
-        struct default_eval_expr_impl<expr_kind::placeholder>
-        {
-            template <typename Expr, typename ...T>
-            decltype(auto) operator() (Expr && expr, T && ... args)
-            { return eval_placeholder(::boost::yap::value(static_cast<Expr &&>(expr)), static_cast<T &&>(args)...); }
+            { return eval_terminal(::boost::yap::value(static_cast<Expr &&>(expr)), static_cast<T &&>(args)...); }
         };
 
 #define BOOST_YAP_UNARY_OPERATOR_CASE(op_name)                          \
@@ -224,7 +224,7 @@ namespace boost { namespace yap {
             typename Transform,
             expr_kind Kind,
             bool IsExprRef = Kind == expr_kind::expr_ref,
-            bool IsTerminalOrPlaceholder = Kind == expr_kind::terminal || Kind == expr_kind::placeholder,
+            bool IsTerminal = Kind == expr_kind::terminal,
             bool IsLvalueRef = std::is_lvalue_reference<Expr>{}
         >
         struct default_transform_expression_impl;
@@ -233,7 +233,7 @@ namespace boost { namespace yap {
             typename Expr,
             typename Transform,
             expr_kind Kind,
-            bool IsTerminalOrPlaceholder,
+            bool IsTerminal,
             bool IsLvalueRef
         >
         struct default_transform_expression_impl <
@@ -241,7 +241,7 @@ namespace boost { namespace yap {
             Transform,
             Kind,
             true,
-            IsTerminalOrPlaceholder,
+            IsTerminal,
             IsLvalueRef
         > {
             decltype(auto) operator() (Expr && expr, Transform && transform)
