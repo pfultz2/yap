@@ -596,39 +596,42 @@ namespace boost { namespace yap {
 
     namespace detail {
 
-        template <typename T, bool IsExprRef, bool ArityOne, bool IsLvalueRef>
+        template <bool ValueOfTerminalsOnly, typename T>
+        decltype(auto) value_impl (T && x);
+
+        template <typename T, bool IsExprRef, bool ValueOfTerminalsOnly, bool TakeValue, bool IsLvalueRef>
         struct value_expr_impl;
 
-        template <typename T, bool ArityOne, bool IsLvalueRef>
-        struct value_expr_impl<T, true, ArityOne, IsLvalueRef>
+        template <typename T, bool ValueOfTerminalsOnly, bool TakeValue, bool IsLvalueRef>
+        struct value_expr_impl<T, true, ValueOfTerminalsOnly, TakeValue, IsLvalueRef>
         {
             decltype(auto) operator() (T && x)
-            { return ::boost::yap::value(::boost::yap::deref(static_cast<T &&>(x))); }
+            { return value_impl<ValueOfTerminalsOnly>(::boost::yap::deref(static_cast<T &&>(x))); }
         };
 
-        template <typename T>
-        struct value_expr_impl<T, false, true, true>
+        template <typename T, bool ValueOfTerminalsOnly>
+        struct value_expr_impl<T, false, ValueOfTerminalsOnly, true, true>
         {
             decltype(auto) operator() (T && x)
             { return x.elements[hana::llong_c<0>]; }
         };
 
-        template <typename T>
-        struct value_expr_impl<T, false, true, false>
+        template <typename T, bool ValueOfTerminalsOnly>
+        struct value_expr_impl<T, false, ValueOfTerminalsOnly, true, false>
         {
             decltype(auto) operator() (T && x)
             { return std::move(x.elements[hana::llong_c<0>]); }
         };
 
-        template <typename T, bool IsLvalueRef>
-        struct value_expr_impl<T, false, false, IsLvalueRef>
+        template <typename T, bool ValueOfTerminalsOnly, bool IsLvalueRef>
+        struct value_expr_impl<T, false, ValueOfTerminalsOnly, false, IsLvalueRef>
         {
             decltype(auto) operator() (T && x)
             { return static_cast<T &&>(x); }
         };
 
-        template <typename T, bool IsExpr>
-        struct value_impl
+        template <typename T, bool IsExpr, bool ValueOfTerminalsOnly>
+        struct value_impl_t
         {
             decltype(auto) operator() (T && x)
             {
@@ -637,18 +640,28 @@ namespace boost { namespace yap {
                 return value_expr_impl<
                     T,
                     kind == expr_kind::expr_ref,
-                    arity == detail::expr_arity::one,
+                    ValueOfTerminalsOnly,
+                    (ValueOfTerminalsOnly && kind == expr_kind::terminal) ||
+                    (!ValueOfTerminalsOnly && arity == detail::expr_arity::one),
                     std::is_lvalue_reference<T>{}
                 >{}(static_cast<T &&>(x));
             }
         };
 
-        template <typename T>
-        struct value_impl<T, false>
+        template <typename T, bool ValueOfTerminalsOnly>
+        struct value_impl_t<T, false, ValueOfTerminalsOnly>
         {
             decltype(auto) operator() (T && x)
             { return static_cast<T &&>(x); }
         };
+
+        template <bool ValueOfTerminalsOnly, typename T>
+        decltype(auto) value_impl (T && x)
+        {
+            return detail::value_impl_t<T, detail::is_expr<T>::value, ValueOfTerminalsOnly>{}(
+                static_cast<T &&>(x)
+            );
+        }
 
     }
 
@@ -670,11 +683,7 @@ namespace boost { namespace yap {
         - Otherwise, \a x is forwarded to the caller. */
     template <typename T>
     decltype(auto) value (T && x)
-    {
-        return detail::value_impl<T, detail::is_expr<T>::value>{}(
-            static_cast<T &&>(x)
-        );
-    }
+    { return detail::value_impl<false>(static_cast<T &&>(x)); }
 
     template <long long I, typename Expr>
     decltype(auto) get (Expr && expr, hana::llong<I> i);
