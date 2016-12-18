@@ -1,3 +1,4 @@
+//[ calc3
 #include <boost/yap/expression.hpp>
 
 #include <boost/hana/maximum.hpp>
@@ -5,6 +6,8 @@
 #include <iostream>
 
 
+// Look! A transform!  This one transforms the expression tree into the arity
+// of the expression, based on its placeholders.
 struct get_arity
 {
     template <long long I>
@@ -35,6 +38,9 @@ struct get_arity
 int main ()
 {
     using namespace boost::yap::literals;
+
+    // These lambdas wrap our expressions as callables, and allow us to check
+    // the arity of each as we call it.
 
     auto expr_1 = 1_p + 2.0;
 
@@ -77,3 +83,4 @@ int main ()
 
     return 0;
 }
+//]
