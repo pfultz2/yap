@@ -15,29 +15,29 @@ macro(add_test_executable name)
 endmacro()
 
 
-include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/googletest-release-1.8.0/googletest/include)
-add_compile_options(-Weverything
-                -Wno-c++98-compat
-                -Wno-c++98-compat-pedantic
-                -Wno-conversion
-                -Wno-double-promotion
-                -Wno-exit-time-destructors
-                -Wno-extra-semi
-                -Wno-float-conversion
-                -Wno-gnu-anonymous-struct
-                -Wno-gnu-zero-variadic-macro-arguments
-                -Wno-missing-prototypes
-                -Wno-nested-anon-types
-                -Wno-padded
-                -Wno-shorten-64-to-32
-                -Wno-sign-conversion
-                -Wno-unused-command-line-argument
-                -Wno-weak-vtables
-                -Wno-shadow
-                -Wno-covered-switch-default
-                -Wno-unused-parameter
-                -Wno-old-style-cast
-)
+# include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/googletest-release-1.8.0/googletest/include)
+# add_compile_options(-Weverything
+#                 -Wno-c++98-compat
+#                 -Wno-c++98-compat-pedantic
+#                 -Wno-conversion
+#                 -Wno-double-promotion
+#                 -Wno-exit-time-destructors
+#                 -Wno-extra-semi
+#                 -Wno-float-conversion
+#                 -Wno-gnu-anonymous-struct
+#                 -Wno-gnu-zero-variadic-macro-arguments
+#                 -Wno-missing-prototypes
+#                 -Wno-nested-anon-types
+#                 -Wno-padded
+#                 -Wno-shorten-64-to-32
+#                 -Wno-sign-conversion
+#                 -Wno-unused-command-line-argument
+#                 -Wno-weak-vtables
+#                 -Wno-shadow
+#                 -Wno-covered-switch-default
+#                 -Wno-unused-parameter
+#                 -Wno-old-style-cast
+# )
 
 add_test_executable(deref)
 add_test_executable(value)
