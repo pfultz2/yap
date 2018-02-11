@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - stepcode_no_usr.lcov - cget/include/boost/hana/fwd/core/make.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../../../../index.html">top level</a> - <a href="index.html">cget/include/boost/hana/fwd/core</a> - make.hpp<span style="font-size: 80%;"> (source / <a href="make.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">stepcode_no_usr.lcov</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntry">2</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-02-10 21:13:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /*!</a>
+<span class="lineNum">       2 </span>            : @file
+<span class="lineNum">       3 </span>            : Forward declares `boost::hana::make`.
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            : @copyright Louis Dionne 2013-2017
+<span class="lineNum">       6 </span>            : Distributed under the Boost Software License, Version 1.0.
+<span class="lineNum">       7 </span>            : (See accompanying file LICENSE.md or copy at http://boost.org/LICENSE_1_0.txt)
+<span class="lineNum">       8 </span>            :  */
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            : #ifndef BOOST_HANA_FWD_CORE_MAKE_HPP
+<span class="lineNum">      11 </span>            : #define BOOST_HANA_FWD_CORE_MAKE_HPP
+<span class="lineNum">      12 </span>            : 
+<span class="lineNum">      13 </span>            : #include &lt;boost/hana/config.hpp&gt;
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            : BOOST_HANA_NAMESPACE_BEGIN
+<span class="lineNum">      17 </span>            :     //! @ingroup group-core
+<span class="lineNum">      18 </span>            :     //! Create an object of the given tag with the given arguments.
+<span class="lineNum">      19 </span>            :     //!
+<span class="lineNum">      20 </span>            :     //! This function serves the same purpose as constructors in usual C++.
+<span class="lineNum">      21 </span>            :     //! However, instead of creating an object of a specific C++ type, it
+<span class="lineNum">      22 </span>            :     //! creates an object of a specific tag, regardless of the C++ type
+<span class="lineNum">      23 </span>            :     //! of that object.
+<span class="lineNum">      24 </span>            :     //!
+<span class="lineNum">      25 </span>            :     //! This function is actually a variable template, so `make&lt;T&gt;` can be
+<span class="lineNum">      26 </span>            :     //! passed around as a function object creating an object of tag `T`.
+<span class="lineNum">      27 </span>            :     //! Also, it uses tag-dispatching so this is how it should be customized
+<span class="lineNum">      28 </span>            :     //! for user-defined tags.
+<span class="lineNum">      29 </span>            :     //!
+<span class="lineNum">      30 </span>            :     //! Finally, the default implementation of `make` is equivalent to calling
+<span class="lineNum">      31 </span>            :     //! the constructor of the given tag with the corresponding arguments.
+<span class="lineNum">      32 </span>            :     //! In other words, by default,
+<span class="lineNum">      33 </span>            :     //! @code
+<span class="lineNum">      34 </span>            :     //!     make&lt;T&gt;(args...) == T(args...)
+<span class="lineNum">      35 </span>            :     //! @endcode
+<span class="lineNum">      36 </span>            :     //!
+<span class="lineNum">      37 </span>            :     //! Note that the arguments are perfectly forwarded and the form of
+<span class="lineNum">      38 </span>            :     //! construction which is used is exactly as documented, i.e. `T(args...)`.
+<span class="lineNum">      39 </span>            :     //! However, if `T(args...)` is not a valid expression, a compilation
+<span class="lineNum">      40 </span>            :     //! error is triggered. This default behavior is useful because it makes
+<span class="lineNum">      41 </span>            :     //! foreign C++ types that have no notion of tag constructible with `make`
+<span class="lineNum">      42 </span>            :     //! out-of-the-box, since their tag is exactly themselves.
+<span class="lineNum">      43 </span>            :     //!
+<span class="lineNum">      44 </span>            :     //!
+<span class="lineNum">      45 </span>            :     //! Example
+<span class="lineNum">      46 </span>            :     //! -------
+<span class="lineNum">      47 </span>            :     //! @include example/core/make.cpp
+<span class="lineNum">      48 </span>            : #ifdef BOOST_HANA_DOXYGEN_INVOKED
+<span class="lineNum">      49 </span>            :     template &lt;typename Tag&gt;
+<span class="lineNum">      50 </span>            :     constexpr auto make = [](auto&amp;&amp; ...x) -&gt; decltype(auto) {
+<span class="lineNum">      51 </span>            :         return tag-dispatched;
+<span class="lineNum">      52 </span>            :     };
+<span class="lineNum">      53 </span>            : #else
+<span class="lineNum">      54 </span>            :     template &lt;typename Tag, typename = void&gt;
+<span class="lineNum">      55 </span>            :     struct make_impl;
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            :     template &lt;typename Tag&gt;
+<a name="58"><span class="lineNum">      58 </span>            :     struct make_t {</a>
+<span class="lineNum">      59 </span>            :         template &lt;typename ...X&gt;
+<span class="lineNum">      60 </span><span class="lineCov">        102 :         constexpr decltype(auto) operator()(X&amp;&amp; ...x) const {</span>
+<span class="lineNum">      61 </span><span class="lineCov">        108 :             return make_impl&lt;Tag&gt;::apply(static_cast&lt;X&amp;&amp;&gt;(x)...);</span>
+<span class="lineNum">      62 </span>            :         }
+<span class="lineNum">      63 </span>            :     };
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            :     template &lt;typename Tag&gt;
+<span class="lineNum">      66 </span>            :     constexpr make_t&lt;Tag&gt; make{};
+<span class="lineNum">      67 </span>            : #endif
+<span class="lineNum">      68 </span>            : BOOST_HANA_NAMESPACE_END
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span>            : #endif // !BOOST_HANA_FWD_CORE_MAKE_HPP
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

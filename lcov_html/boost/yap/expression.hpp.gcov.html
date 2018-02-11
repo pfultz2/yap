@@ -1,0 +1,560 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - stepcode_no_usr.lcov - boost/yap/expression.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">boost/yap</a> - expression.hpp<span style="font-size: 80%;"> (source / <a href="expression.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">stepcode_no_usr.lcov</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">46</td>
+            <td class="headerCovTableEntry">46</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-02-10 21:13:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">561</td>
+            <td class="headerCovTableEntry">561</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #ifndef BOOST_YAP_EXPRESSION_HPP_INCLUDED</a>
+<span class="lineNum">       2 </span>            : #define BOOST_YAP_EXPRESSION_HPP_INCLUDED
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &lt;boost/yap/algorithm.hpp&gt;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            : namespace boost { namespace yap {
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :     /** Reference expression template that provides all operator overloads.
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            :         \note Due to a limitation of Doxygen, each of the
+<span class="lineNum">      12 </span>            :         &lt;code&gt;value()&lt;/code&gt;, &lt;code&gt;left()&lt;/code&gt;, &lt;code&gt;right()&lt;/code&gt;, and
+<span class="lineNum">      13 </span>            :         operator overloads listed here is a stand-in for three member
+<span class="lineNum">      14 </span>            :         functions.  For each function &lt;code&gt;f&lt;/code&gt;, the listing here is:
+<span class="lineNum">      15 </span>            :         \code return_type f (); \endcode  However, there are actually three
+<span class="lineNum">      16 </span>            :         functions:
+<span class="lineNum">      17 </span>            :         \code
+<span class="lineNum">      18 </span>            :         return_type f () const &amp;;
+<span class="lineNum">      19 </span>            :         return_type f () &amp;;
+<span class="lineNum">      20 </span>            :         return_type f () &amp;&amp;;
+<span class="lineNum">      21 </span>            :         \endcode
+<a name="22"><span class="lineNum">      22 </span>            :     */</a>
+<span class="lineNum">      23 </span>            :     template &lt;expr_kind Kind, typename Tuple&gt;
+<span class="lineNum">      24 </span><span class="lineCov">         20 :     struct expression</span>
+<span class="lineNum">      25 </span>            :     {
+<span class="lineNum">      26 </span>            :         using tuple_type = Tuple;
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            :         static const expr_kind kind = Kind;
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            :         /** Default constructor.  Does nothing. */
+<span class="lineNum">      31 </span>            :         expression () {}
+<a name="32"><span class="lineNum">      32 </span>            : </a>
+<span class="lineNum">      33 </span>            :         /** Moves \a rhs into the only data mamber, \c elements. */
+<span class="lineNum">      34 </span><span class="lineCov">        799 :         expression (tuple_type &amp;&amp; rhs) :</span>
+<span class="lineNum">      35 </span><span class="lineCov">        799 :             elements (std::move(rhs))</span>
+<span class="lineNum">      36 </span><span class="lineCov">        799 :         {}</span>
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            :         tuple_type elements;
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : #if BOOST_YAP_CONVERSION_OPERATOR_TEMPLATE || defined(BOOST_YAP_DOXYGEN)
+<span class="lineNum">      41 </span>            :         /** Conversion operator.  Attempts to convert \c *this to any type \a
+<span class="lineNum">      42 </span>            :             R with a call to the &lt;code&gt;eval_expression_as()&lt;/code&gt;
+<span class="lineNum">      43 </span>            :             customization point.  This function is only defined if the
+<span class="lineNum">      44 </span>            :             configuration macro
+<span class="lineNum">      45 </span>            :             &lt;code&gt;BOOST_YAP_CONVERSION_OPERATOR_TEMPLATE&lt;/code&gt; has been
+<a name="46"><span class="lineNum">      46 </span>            :             defined by the user to be nonzero. */</a>
+<span class="lineNum">      47 </span>            :         template &lt;typename R&gt;
+<span class="lineNum">      48 </span><span class="lineCov">         21 :         operator R ()</span>
+<span class="lineNum">      49 </span><span class="lineCov">         21 :         { return eval_expression_as(*this, hana::basic_type&lt;R&gt;{}); }</span>
+<span class="lineNum">      50 </span>            : #endif
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            :         /** A convenience member function that dispatches to the free function
+<span class="lineNum">      53 </span>            :             &lt;code&gt;value()&lt;/code&gt;. */
+<span class="lineNum">      54 </span>            :         decltype(auto) value () &amp;
+<span class="lineNum">      55 </span>            :         { return ::boost::yap::value(*this); }
+<span class="lineNum">      56 </span>            : 
+<a name="57"><span class="lineNum">      57 </span>            : #ifndef BOOST_YAP_DOXYGEN</a>
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span><span class="lineCov">          6 :         decltype(auto) value () const &amp;</span>
+<span class="lineNum">      60 </span><span class="lineCov">          6 :         { return ::boost::yap::value(*this); }</span>
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            :         decltype(auto) value () &amp;&amp;
+<span class="lineNum">      63 </span>            :         { return ::boost::yap::value(std::move(*this)); }
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            : #endif
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            :         /** A convenience member function that dispatches to the free function
+<span class="lineNum">      68 </span>            :             &lt;code&gt;left()&lt;/code&gt;. */
+<span class="lineNum">      69 </span>            :         decltype(auto) left () &amp;
+<span class="lineNum">      70 </span>            :         { return ::boost::yap::left(*this); }
+<span class="lineNum">      71 </span>            : 
+<a name="72"><span class="lineNum">      72 </span>            : #ifndef BOOST_YAP_DOXYGEN</a>
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span><span class="lineCov">         51 :         decltype(auto) left () const &amp;</span>
+<span class="lineNum">      75 </span><span class="lineCov">         51 :         { return ::boost::yap::left(*this); }</span>
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            :         decltype(auto) left () &amp;&amp;
+<span class="lineNum">      78 </span>            :         { return ::boost::yap::left(std::move(*this)); }
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span>            : #endif
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span>            :         /** A convenience member function that dispatches to the free function
+<span class="lineNum">      83 </span>            :             &lt;code&gt;right()&lt;/code&gt;. */
+<span class="lineNum">      84 </span>            :         decltype(auto) right () &amp;
+<span class="lineNum">      85 </span>            :         { return ::boost::yap::right(*this); }
+<span class="lineNum">      86 </span>            : 
+<a name="87"><span class="lineNum">      87 </span>            : #ifndef BOOST_YAP_DOXYGEN</a>
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span><span class="lineCov">         34 :         decltype(auto) right () const &amp;</span>
+<span class="lineNum">      90 </span><span class="lineCov">         34 :         { return ::boost::yap::right(*this); }</span>
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            :         decltype(auto) right () &amp;&amp;
+<span class="lineNum">      93 </span>            :         { return ::boost::yap::right(std::move(*this)); }
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span>            : #endif
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span>            : #ifdef BOOST_YAP_DOXYGEN
+<span class="lineNum">      98 </span>            : 
+<span class="lineNum">      99 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     100 </span>            :         auto operator+ ();
+<span class="lineNum">     101 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     102 </span>            :         auto operator- ();
+<span class="lineNum">     103 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     104 </span>            :         auto operator* ();
+<span class="lineNum">     105 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     106 </span>            :         auto operator~ ();
+<span class="lineNum">     107 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     108 </span>            :         auto operator&amp; ();
+<span class="lineNum">     109 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     110 </span>            :         auto operator! ();
+<span class="lineNum">     111 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     112 </span>            :         auto operator++ ();
+<span class="lineNum">     113 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     114 </span>            :         auto operator-- ();
+<span class="lineNum">     115 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     116 </span>            :         auto operator++ (int);
+<span class="lineNum">     117 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     118 </span>            :         auto operator-- (int);
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     121 </span>            :         template &lt;typename T&gt; auto operator&lt;&lt; (T &amp;&amp; t);
+<span class="lineNum">     122 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     123 </span>            :         template &lt;typename T&gt; auto operator&gt;&gt; (T &amp;&amp; t);
+<span class="lineNum">     124 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     125 </span>            :         template &lt;typename T&gt; auto operator* (T &amp;&amp; t);
+<span class="lineNum">     126 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     127 </span>            :         template &lt;typename T&gt; auto operator/ (T &amp;&amp; t);
+<span class="lineNum">     128 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     129 </span>            :         template &lt;typename T&gt; auto operator% (T &amp;&amp; t);
+<span class="lineNum">     130 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     131 </span>            :         template &lt;typename T&gt; auto operator+ (T &amp;&amp; t);
+<span class="lineNum">     132 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     133 </span>            :         template &lt;typename T&gt; auto operator- (T &amp;&amp; t);
+<span class="lineNum">     134 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     135 </span>            :         template &lt;typename T&gt; auto operator&lt; (T &amp;&amp; t);
+<span class="lineNum">     136 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     137 </span>            :         template &lt;typename T&gt; auto operator&gt; (T &amp;&amp; t);
+<span class="lineNum">     138 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     139 </span>            :         template &lt;typename T&gt; auto operator&lt;= (T &amp;&amp; t);
+<span class="lineNum">     140 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     141 </span>            :         template &lt;typename T&gt; auto operator&gt;= (T &amp;&amp; t);
+<span class="lineNum">     142 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     143 </span>            :         template &lt;typename T&gt; auto operator== (T &amp;&amp; t);
+<span class="lineNum">     144 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     145 </span>            :         template &lt;typename T&gt; auto operator!= (T &amp;&amp; t);
+<span class="lineNum">     146 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     147 </span>            :         template &lt;typename T&gt; auto operator|| (T &amp;&amp; t);
+<span class="lineNum">     148 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     149 </span>            :         template &lt;typename T&gt; auto operator&amp;&amp; (T &amp;&amp; t);
+<span class="lineNum">     150 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     151 </span>            :         template &lt;typename T&gt; auto operator&amp; (T &amp;&amp; t);
+<span class="lineNum">     152 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     153 </span>            :         template &lt;typename T&gt; auto operator| (T &amp;&amp; t);
+<span class="lineNum">     154 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     155 </span>            :         template &lt;typename T&gt; auto operator^ (T &amp;&amp; t);
+<span class="lineNum">     156 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     157 </span>            :         template &lt;typename T&gt; auto operator, (T &amp;&amp; t);
+<span class="lineNum">     158 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     159 </span>            :         template &lt;typename T&gt; auto operator-&gt;* (T &amp;&amp; t);
+<span class="lineNum">     160 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     161 </span>            :         template &lt;typename T&gt; auto operator= (T &amp;&amp; t);
+<span class="lineNum">     162 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     163 </span>            :         template &lt;typename T&gt; auto operator&lt;&lt;= (T &amp;&amp; t);
+<span class="lineNum">     164 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     165 </span>            :         template &lt;typename T&gt; auto operator&gt;&gt;= (T &amp;&amp; t);
+<span class="lineNum">     166 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     167 </span>            :         template &lt;typename T&gt; auto operator*= (T &amp;&amp; t);
+<span class="lineNum">     168 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     169 </span>            :         template &lt;typename T&gt; auto operator/= (T &amp;&amp; t);
+<span class="lineNum">     170 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     171 </span>            :         template &lt;typename T&gt; auto operator%= (T &amp;&amp; t);
+<span class="lineNum">     172 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     173 </span>            :         template &lt;typename T&gt; auto operator+= (T &amp;&amp; t);
+<span class="lineNum">     174 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     175 </span>            :         template &lt;typename T&gt; auto operator-= (T &amp;&amp; t);
+<span class="lineNum">     176 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     177 </span>            :         template &lt;typename T&gt; auto operator&amp;= (T &amp;&amp; t);
+<span class="lineNum">     178 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     179 </span>            :         template &lt;typename T&gt; auto operator|= (T &amp;&amp; t);
+<span class="lineNum">     180 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     181 </span>            :         template &lt;typename T&gt; auto operator^= (T &amp;&amp; t);
+<span class="lineNum">     182 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     183 </span>            :         template &lt;typename T&gt; auto operator[] (T &amp;&amp; t);
+<span class="lineNum">     184 </span>            : 
+<span class="lineNum">     185 </span>            :         /** \see BOOST_YAP_USER_MEMBER_CALL_OPERATOR for full semantics. */
+<span class="lineNum">     186 </span>            :         template &lt;typename ...T&gt; auto operator() (T &amp;&amp; ... t);
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span>            : #else
+<span class="lineNum">     189 </span>            : 
+<span class="lineNum">     190 </span>            : #define BOOST_YAP_UNARY_MEMBER_OPERATOR(op_name)                    \
+<span class="lineNum">     191 </span>            :         BOOST_YAP_USER_UNARY_OPERATOR_MEMBER(op_name, ::boost::yap::expression)
+<a name="192"><span class="lineNum">     192 </span>            : </a>
+<span class="lineNum">     193 </span>            :         BOOST_YAP_UNARY_MEMBER_OPERATOR(unary_plus) // +
+<span class="lineNum">     194 </span><span class="lineCov">         13 :         BOOST_YAP_UNARY_MEMBER_OPERATOR(negate) // -</span>
+<span class="lineNum">     195 </span>            :         BOOST_YAP_UNARY_MEMBER_OPERATOR(dereference) // *
+<span class="lineNum">     196 </span>            :         BOOST_YAP_UNARY_MEMBER_OPERATOR(complement) // ~
+<span class="lineNum">     197 </span>            :         BOOST_YAP_UNARY_MEMBER_OPERATOR(address_of) // &amp;
+<span class="lineNum">     198 </span>            :         BOOST_YAP_UNARY_MEMBER_OPERATOR(logical_not) // !
+<span class="lineNum">     199 </span>            :         BOOST_YAP_UNARY_MEMBER_OPERATOR(pre_inc) // ++
+<span class="lineNum">     200 </span>            :         BOOST_YAP_UNARY_MEMBER_OPERATOR(pre_dec) // --
+<span class="lineNum">     201 </span>            :         BOOST_YAP_UNARY_MEMBER_OPERATOR(post_inc) // ++(int)
+<span class="lineNum">     202 </span>            :         BOOST_YAP_UNARY_MEMBER_OPERATOR(post_dec) // --(int)
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span>            : #undef BOOST_YAP_UNARY_MEMBER_OPERATOR
+<span class="lineNum">     205 </span>            : 
+<span class="lineNum">     206 </span>            :         // TODO: Add test coverage for all the operators (with all three qual
+<span class="lineNum">     207 </span>            :         // types), for expression and terminal.  Don't forget the free
+<span class="lineNum">     208 </span>            :         // operators.
+<span class="lineNum">     209 </span>            : #define BOOST_YAP_BINARY_MEMBER_OPERATOR(op_name)                   \
+<span class="lineNum">     210 </span>            :         BOOST_YAP_USER_BINARY_OPERATOR_MEMBER(op_name, ::boost::yap::expression)
+<span class="lineNum">     211 </span>            : 
+<a name="212"><span class="lineNum">     212 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(shift_left) // &lt;&lt;</a>
+<span class="lineNum">     213 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(shift_right) // &gt;&gt;
+<span class="lineNum">     214 </span><span class="lineCov">          4 :         BOOST_YAP_BINARY_MEMBER_OPERATOR(multiplies) // *</span>
+<a name="215"><span class="lineNum">     215 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(divides) // /</a>
+<span class="lineNum">     216 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(modulus) // %
+<span class="lineNum">     217 </span><span class="lineCov">        115 :         BOOST_YAP_BINARY_MEMBER_OPERATOR(plus) // +</span>
+<span class="lineNum">     218 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(minus) // -
+<span class="lineNum">     219 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(less) // &lt;
+<span class="lineNum">     220 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(greater) // &gt;
+<span class="lineNum">     221 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(less_equal) // &lt;=
+<span class="lineNum">     222 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(greater_equal) // &gt;=
+<span class="lineNum">     223 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(equal_to) // ==
+<span class="lineNum">     224 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(not_equal_to) // !=
+<span class="lineNum">     225 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(logical_or) // ||
+<span class="lineNum">     226 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(logical_and) // &amp;&amp;
+<span class="lineNum">     227 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(bitwise_and) // &amp;
+<span class="lineNum">     228 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(bitwise_or) // |
+<span class="lineNum">     229 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(bitwise_xor) // ^
+<span class="lineNum">     230 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(comma) // ,
+<span class="lineNum">     231 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(mem_ptr) // -&gt;*
+<span class="lineNum">     232 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(assign) // =
+<span class="lineNum">     233 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(shift_left_assign) // &lt;&lt;=
+<span class="lineNum">     234 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(shift_right_assign) // &gt;&gt;=
+<span class="lineNum">     235 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(multiplies_assign) // *=
+<span class="lineNum">     236 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(divides_assign) // /=
+<span class="lineNum">     237 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(modulus_assign) // %=
+<span class="lineNum">     238 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(plus_assign) // +=
+<span class="lineNum">     239 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(minus_assign) // -=
+<span class="lineNum">     240 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(bitwise_and_assign) // &amp;=
+<span class="lineNum">     241 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(bitwise_or_assign) // |=
+<span class="lineNum">     242 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(bitwise_xor_assign) // ^=
+<span class="lineNum">     243 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(subscript) // []
+<span class="lineNum">     244 </span>            : 
+<span class="lineNum">     245 </span>            : #undef BOOST_YAP_BINARY_MEMBER_OPERATOR
+<span class="lineNum">     246 </span>            : 
+<span class="lineNum">     247 </span>            :         BOOST_YAP_USER_MEMBER_CALL_OPERATOR(::boost::yap::expression)
+<span class="lineNum">     248 </span>            : 
+<span class="lineNum">     249 </span>            : #endif // BOOST_YAP_DOXYGEN
+<span class="lineNum">     250 </span>            :     };
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span>            :     /** Terminal expression specialization of the reference expression
+<span class="lineNum">     253 </span>            :         template.
+<span class="lineNum">     254 </span>            : 
+<span class="lineNum">     255 </span>            :         \note Due to a limitation of Doxygen, the &lt;code&gt;value()&lt;/code&gt; member
+<span class="lineNum">     256 </span>            :         and each of the operator overloads listed here is a stand-in for three
+<span class="lineNum">     257 </span>            :         member functions.  For each function &lt;code&gt;f&lt;/code&gt;, the listing here
+<span class="lineNum">     258 </span>            :         is: \code return_type f (); \endcode However, there are actually three
+<span class="lineNum">     259 </span>            :         functions:
+<span class="lineNum">     260 </span>            :         \code
+<span class="lineNum">     261 </span>            :         return_type f () const &amp;;
+<span class="lineNum">     262 </span>            :         return_type f () &amp;;
+<span class="lineNum">     263 </span>            :         return_type f () &amp;&amp;;
+<span class="lineNum">     264 </span>            :         \endcode
+<a name="265"><span class="lineNum">     265 </span>            :     */</a>
+<span class="lineNum">     266 </span>            :     template &lt;typename T&gt;
+<span class="lineNum">     267 </span><span class="lineCov">         38 :     struct expression&lt;expr_kind::terminal, hana::tuple&lt;T&gt;&gt;</span>
+<span class="lineNum">     268 </span>            :     {
+<span class="lineNum">     269 </span>            :         using tuple_type = hana::tuple&lt;T&gt;;
+<span class="lineNum">     270 </span>            : 
+<span class="lineNum">     271 </span>            :         static const expr_kind kind = expr_kind::terminal;
+<a name="272"><span class="lineNum">     272 </span>            : </a>
+<span class="lineNum">     273 </span>            :         /** Default constructor.  Does nothing. */
+<span class="lineNum">     274 </span><span class="lineCov">         19 :         expression () {}</span>
+<a name="275"><span class="lineNum">     275 </span>            : </a>
+<span class="lineNum">     276 </span>            :         /** Forwards \a t into \c elements. */
+<span class="lineNum">     277 </span><span class="lineCov">        169 :         expression (T &amp;&amp; t) :</span>
+<span class="lineNum">     278 </span><span class="lineCov">        169 :             elements (static_cast&lt;T &amp;&amp;&gt;(t))</span>
+<span class="lineNum">     279 </span><span class="lineCov">        169 :         {}</span>
+<a name="280"><span class="lineNum">     280 </span>            : </a>
+<span class="lineNum">     281 </span>            :         /** Moves \a rhs into the only data mamber, \c elements. */
+<span class="lineNum">     282 </span><span class="lineCov">        159 :         expression (hana::tuple&lt;T&gt; &amp;&amp; rhs) :</span>
+<span class="lineNum">     283 </span><span class="lineCov">        159 :             elements (std::move(rhs))</span>
+<span class="lineNum">     284 </span><span class="lineCov">        159 :         {}</span>
+<span class="lineNum">     285 </span>            : 
+<span class="lineNum">     286 </span>            :         tuple_type elements;
+<span class="lineNum">     287 </span>            : 
+<span class="lineNum">     288 </span>            : #if BOOST_YAP_CONVERSION_OPERATOR_TEMPLATE || defined(BOOST_YAP_DOXYGEN)
+<span class="lineNum">     289 </span>            :         /** Conversion operator.  Attempts to convert \c *this to any type \a
+<span class="lineNum">     290 </span>            :             R with a call to the &lt;code&gt;eval_expression_as()&lt;/code&gt;
+<span class="lineNum">     291 </span>            :             cutomization point.  This function is only defined if the
+<span class="lineNum">     292 </span>            :             configuration macro
+<span class="lineNum">     293 </span>            :             &lt;code&gt;BOOST_YAP_CONVERSION_OPERATOR_TEMPLATE&lt;/code&gt; has been
+<a name="294"><span class="lineNum">     294 </span>            :             defined by the user to be nonzero. */</a>
+<span class="lineNum">     295 </span>            :         template &lt;typename R&gt;
+<span class="lineNum">     296 </span><span class="lineCov">          4 :         operator R ()</span>
+<span class="lineNum">     297 </span><span class="lineCov">          4 :         { return eval_expression_as(*this, hana::basic_type&lt;R&gt;{}); }</span>
+<span class="lineNum">     298 </span>            : #endif
+<span class="lineNum">     299 </span>            : 
+<a name="300"><span class="lineNum">     300 </span>            :         /** A convenience member function that dispatches to the free function</a>
+<span class="lineNum">     301 </span>            :             &lt;code&gt;value()&lt;/code&gt;. */
+<span class="lineNum">     302 </span><span class="lineCov">          2 :         decltype(auto) value () &amp;</span>
+<span class="lineNum">     303 </span><span class="lineCov">          2 :         { return ::boost::yap::value(*this); }</span>
+<span class="lineNum">     304 </span>            : 
+<a name="305"><span class="lineNum">     305 </span>            : #ifndef BOOST_YAP_DOXYGEN</a>
+<span class="lineNum">     306 </span>            : 
+<span class="lineNum">     307 </span><span class="lineCov">          3 :         decltype(auto) value () const &amp;</span>
+<span class="lineNum">     308 </span><span class="lineCov">          3 :         { return ::boost::yap::value(*this); }</span>
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span>            :         decltype(auto) value () &amp;&amp;
+<span class="lineNum">     311 </span>            :         { return ::boost::yap::value(std::move(*this)); }
+<span class="lineNum">     312 </span>            : 
+<span class="lineNum">     313 </span>            : #endif
+<span class="lineNum">     314 </span>            : 
+<span class="lineNum">     315 </span>            : #ifdef BOOST_YAP_DOXYGEN
+<span class="lineNum">     316 </span>            : 
+<span class="lineNum">     317 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     318 </span>            :         auto operator+ ();
+<span class="lineNum">     319 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     320 </span>            :         auto operator- ();
+<span class="lineNum">     321 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     322 </span>            :         auto operator* ();
+<span class="lineNum">     323 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     324 </span>            :         auto operator~ ();
+<span class="lineNum">     325 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     326 </span>            :         auto operator&amp; ();
+<span class="lineNum">     327 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     328 </span>            :         auto operator! ();
+<span class="lineNum">     329 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     330 </span>            :         auto operator++ ();
+<span class="lineNum">     331 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     332 </span>            :         auto operator-- ();
+<span class="lineNum">     333 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     334 </span>            :         auto operator++ (int);
+<span class="lineNum">     335 </span>            :         /** \see BOOST_YAP_USER_UNARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     336 </span>            :         auto operator-- (int);
+<span class="lineNum">     337 </span>            : 
+<span class="lineNum">     338 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     339 </span>            :         template &lt;typename T&gt; auto operator&lt;&lt; (T &amp;&amp; t);
+<span class="lineNum">     340 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     341 </span>            :         template &lt;typename T&gt; auto operator&gt;&gt; (T &amp;&amp; t);
+<span class="lineNum">     342 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     343 </span>            :         template &lt;typename T&gt; auto operator* (T &amp;&amp; t);
+<span class="lineNum">     344 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     345 </span>            :         template &lt;typename T&gt; auto operator/ (T &amp;&amp; t);
+<span class="lineNum">     346 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     347 </span>            :         template &lt;typename T&gt; auto operator% (T &amp;&amp; t);
+<span class="lineNum">     348 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     349 </span>            :         template &lt;typename T&gt; auto operator+ (T &amp;&amp; t);
+<span class="lineNum">     350 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     351 </span>            :         template &lt;typename T&gt; auto operator- (T &amp;&amp; t);
+<span class="lineNum">     352 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     353 </span>            :         template &lt;typename T&gt; auto operator&lt; (T &amp;&amp; t);
+<span class="lineNum">     354 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     355 </span>            :         template &lt;typename T&gt; auto operator&gt; (T &amp;&amp; t);
+<span class="lineNum">     356 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     357 </span>            :         template &lt;typename T&gt; auto operator&lt;= (T &amp;&amp; t);
+<span class="lineNum">     358 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     359 </span>            :         template &lt;typename T&gt; auto operator&gt;= (T &amp;&amp; t);
+<span class="lineNum">     360 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     361 </span>            :         template &lt;typename T&gt; auto operator== (T &amp;&amp; t);
+<span class="lineNum">     362 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     363 </span>            :         template &lt;typename T&gt; auto operator!= (T &amp;&amp; t);
+<span class="lineNum">     364 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     365 </span>            :         template &lt;typename T&gt; auto operator|| (T &amp;&amp; t);
+<span class="lineNum">     366 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     367 </span>            :         template &lt;typename T&gt; auto operator&amp;&amp; (T &amp;&amp; t);
+<span class="lineNum">     368 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     369 </span>            :         template &lt;typename T&gt; auto operator&amp; (T &amp;&amp; t);
+<span class="lineNum">     370 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     371 </span>            :         template &lt;typename T&gt; auto operator| (T &amp;&amp; t);
+<span class="lineNum">     372 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     373 </span>            :         template &lt;typename T&gt; auto operator^ (T &amp;&amp; t);
+<span class="lineNum">     374 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     375 </span>            :         template &lt;typename T&gt; auto operator, (T &amp;&amp; t);
+<span class="lineNum">     376 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     377 </span>            :         template &lt;typename T&gt; auto operator-&gt;* (T &amp;&amp; t);
+<span class="lineNum">     378 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     379 </span>            :         template &lt;typename T&gt; auto operator= (T &amp;&amp; t);
+<span class="lineNum">     380 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     381 </span>            :         template &lt;typename T&gt; auto operator&lt;&lt;= (T &amp;&amp; t);
+<span class="lineNum">     382 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     383 </span>            :         template &lt;typename T&gt; auto operator&gt;&gt;= (T &amp;&amp; t);
+<span class="lineNum">     384 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     385 </span>            :         template &lt;typename T&gt; auto operator*= (T &amp;&amp; t);
+<span class="lineNum">     386 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     387 </span>            :         template &lt;typename T&gt; auto operator/= (T &amp;&amp; t);
+<span class="lineNum">     388 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     389 </span>            :         template &lt;typename T&gt; auto operator%= (T &amp;&amp; t);
+<span class="lineNum">     390 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     391 </span>            :         template &lt;typename T&gt; auto operator+= (T &amp;&amp; t);
+<span class="lineNum">     392 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     393 </span>            :         template &lt;typename T&gt; auto operator-= (T &amp;&amp; t);
+<span class="lineNum">     394 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     395 </span>            :         template &lt;typename T&gt; auto operator&amp;= (T &amp;&amp; t);
+<span class="lineNum">     396 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     397 </span>            :         template &lt;typename T&gt; auto operator|= (T &amp;&amp; t);
+<span class="lineNum">     398 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     399 </span>            :         template &lt;typename T&gt; auto operator^= (T &amp;&amp; t);
+<span class="lineNum">     400 </span>            :         /** \see BOOST_YAP_USER_BINARY_OPERATOR_MEMBER for full semantics. */
+<span class="lineNum">     401 </span>            :         template &lt;typename T&gt; auto operator[] (T &amp;&amp; t);
+<span class="lineNum">     402 </span>            : 
+<span class="lineNum">     403 </span>            :         /** \see BOOST_YAP_USER_MEMBER_CALL_OPERATOR for full semantics. */
+<span class="lineNum">     404 </span>            :         template &lt;typename ...T&gt; auto operator() (T &amp;&amp; ... t);
+<span class="lineNum">     405 </span>            : 
+<span class="lineNum">     406 </span>            : #else
+<span class="lineNum">     407 </span>            : 
+<span class="lineNum">     408 </span>            : #define BOOST_YAP_UNARY_MEMBER_OPERATOR(op_name)                    \
+<a name="409"><span class="lineNum">     409 </span>            :         BOOST_YAP_USER_UNARY_OPERATOR_MEMBER(op_name, ::boost::yap::expression)</a>
+<a name="410"><span class="lineNum">     410 </span>            : </a>
+<a name="411"><span class="lineNum">     411 </span><span class="lineCov">          3 :         BOOST_YAP_UNARY_MEMBER_OPERATOR(unary_plus) // +</span></a>
+<a name="412"><span class="lineNum">     412 </span><span class="lineCov">         18 :         BOOST_YAP_UNARY_MEMBER_OPERATOR(negate) // -</span></a>
+<a name="413"><span class="lineNum">     413 </span><span class="lineCov">          3 :         BOOST_YAP_UNARY_MEMBER_OPERATOR(dereference) // *</span></a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineCov">          3 :         BOOST_YAP_UNARY_MEMBER_OPERATOR(complement) // ~</span></a>
+<a name="415"><span class="lineNum">     415 </span><span class="lineCov">          3 :         BOOST_YAP_UNARY_MEMBER_OPERATOR(address_of) // &amp;</span></a>
+<span class="lineNum">     416 </span><span class="lineCov">          3 :         BOOST_YAP_UNARY_MEMBER_OPERATOR(logical_not) // !</span>
+<span class="lineNum">     417 </span><span class="lineCov">          3 :         BOOST_YAP_UNARY_MEMBER_OPERATOR(pre_inc) // ++</span>
+<span class="lineNum">     418 </span>            :         BOOST_YAP_UNARY_MEMBER_OPERATOR(pre_dec) // --
+<span class="lineNum">     419 </span>            :         BOOST_YAP_UNARY_MEMBER_OPERATOR(post_inc) // ++(int)
+<span class="lineNum">     420 </span>            :         BOOST_YAP_UNARY_MEMBER_OPERATOR(post_dec) // --(int)
+<span class="lineNum">     421 </span>            : 
+<span class="lineNum">     422 </span>            : #undef BOOST_YAP_UNARY_MEMBER_OPERATOR
+<span class="lineNum">     423 </span>            : 
+<span class="lineNum">     424 </span>            : #define BOOST_YAP_BINARY_MEMBER_OPERATOR(op_name)                   \
+<span class="lineNum">     425 </span>            :         BOOST_YAP_USER_BINARY_OPERATOR_MEMBER(op_name, ::boost::yap::expression)
+<span class="lineNum">     426 </span>            : 
+<a name="427"><span class="lineNum">     427 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(shift_left) // &lt;&lt;</a>
+<span class="lineNum">     428 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(shift_right) // &gt;&gt;
+<span class="lineNum">     429 </span><span class="lineCov">         19 :         BOOST_YAP_BINARY_MEMBER_OPERATOR(multiplies) // *</span>
+<a name="430"><span class="lineNum">     430 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(divides) // /</a>
+<a name="431"><span class="lineNum">     431 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(modulus) // %</a>
+<span class="lineNum">     432 </span><span class="lineCov">        121 :         BOOST_YAP_BINARY_MEMBER_OPERATOR(plus) // +</span>
+<span class="lineNum">     433 </span><span class="lineCov">          2 :         BOOST_YAP_BINARY_MEMBER_OPERATOR(minus) // -</span>
+<span class="lineNum">     434 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(less) // &lt;
+<span class="lineNum">     435 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(greater) // &gt;
+<span class="lineNum">     436 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(less_equal) // &lt;=
+<span class="lineNum">     437 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(greater_equal) // &gt;=
+<span class="lineNum">     438 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(equal_to) // ==
+<span class="lineNum">     439 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(not_equal_to) // !=
+<span class="lineNum">     440 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(logical_or) // ||
+<span class="lineNum">     441 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(logical_and) // &amp;&amp;
+<span class="lineNum">     442 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(bitwise_and) // &amp;
+<span class="lineNum">     443 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(bitwise_or) // |
+<span class="lineNum">     444 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(bitwise_xor) // ^
+<span class="lineNum">     445 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(comma) // ,
+<span class="lineNum">     446 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(mem_ptr) // -&gt;*
+<span class="lineNum">     447 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(assign) // =
+<span class="lineNum">     448 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(shift_left_assign) // &lt;&lt;=
+<span class="lineNum">     449 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(shift_right_assign) // &gt;&gt;=
+<span class="lineNum">     450 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(multiplies_assign) // *=
+<span class="lineNum">     451 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(divides_assign) // /=
+<span class="lineNum">     452 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(modulus_assign) // %=
+<span class="lineNum">     453 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(plus_assign) // +=
+<span class="lineNum">     454 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(minus_assign) // -=
+<span class="lineNum">     455 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(bitwise_and_assign) // &amp;=
+<span class="lineNum">     456 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(bitwise_or_assign) // |=
+<span class="lineNum">     457 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(bitwise_xor_assign) // ^=
+<span class="lineNum">     458 </span>            :         BOOST_YAP_BINARY_MEMBER_OPERATOR(subscript) // []
+<span class="lineNum">     459 </span>            : 
+<a name="460"><span class="lineNum">     460 </span>            : #undef BOOST_YAP_BINARY_MEMBER_OPERATOR</a>
+<span class="lineNum">     461 </span>            : 
+<span class="lineNum">     462 </span><span class="lineCov">         21 :         BOOST_YAP_USER_MEMBER_CALL_OPERATOR(::boost::yap::expression)</span>
+<span class="lineNum">     463 </span>            : 
+<span class="lineNum">     464 </span>            : #endif // BOOST_YAP_DOXYGEN
+<span class="lineNum">     465 </span>            :     };
+<span class="lineNum">     466 </span>            : 
+<a name="467"><span class="lineNum">     467 </span>            :     /** Returns &lt;code&gt;make_expression&lt;boost::yap::expression, Kind&gt;(...)&lt;/code&gt;. */</a>
+<span class="lineNum">     468 </span>            :     template &lt;expr_kind Kind, typename ...T&gt;
+<span class="lineNum">     469 </span><span class="lineCov">         14 :     auto make_expression (T &amp;&amp; ... t)</span>
+<span class="lineNum">     470 </span><span class="lineCov">         14 :     { return make_expression&lt;expression, Kind&gt;(static_cast&lt;T &amp;&amp;&gt;(t)...); }</span>
+<span class="lineNum">     471 </span>            : 
+<a name="472"><span class="lineNum">     472 </span>            :     /** Returns &lt;code&gt;make_terminal&lt;boost::yap::expression&gt;(t)&lt;/code&gt;. */</a>
+<span class="lineNum">     473 </span>            :     template &lt;typename T&gt;
+<span class="lineNum">     474 </span><span class="lineCov">        137 :     auto make_terminal (T &amp;&amp; t)</span>
+<span class="lineNum">     475 </span><span class="lineCov">        137 :     { return make_terminal&lt;expression&gt;(static_cast&lt;T &amp;&amp;&gt;(t)); }</span>
+<span class="lineNum">     476 </span>            : 
+<a name="477"><span class="lineNum">     477 </span>            :     /** Returns &lt;code&gt;as_expr&lt;boost::yap::expression&gt;(t)&lt;/code&gt;. */</a>
+<span class="lineNum">     478 </span>            :     template &lt;typename T&gt;
+<span class="lineNum">     479 </span><span class="lineCov">          5 :     decltype(auto) as_expr (T &amp;&amp; t)</span>
+<span class="lineNum">     480 </span><span class="lineCov">          5 :     { return as_expr&lt;expression&gt;(static_cast&lt;T &amp;&amp;&gt;(t)); }</span>
+<span class="lineNum">     481 </span>            : 
+<span class="lineNum">     482 </span>            : } }
+<span class="lineNum">     483 </span>            : 
+<span class="lineNum">     484 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

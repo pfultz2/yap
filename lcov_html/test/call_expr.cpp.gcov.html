@@ -1,0 +1,276 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - stepcode_no_usr.lcov - test/call_expr.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">test</a> - call_expr.cpp<span style="font-size: 80%;"> (source / <a href="call_expr.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">stepcode_no_usr.lcov</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">49</td>
+            <td class="headerCovTableEntry">49</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-02-10 21:13:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #include &lt;boost/yap/expression.hpp&gt;</a>
+<span class="lineNum">       2 </span>            : 
+<span class="lineNum">       3 </span>            : #include &lt;gtest/gtest.h&gt;
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            : #include &lt;sstream&gt;
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            : template &lt;typename T&gt;
+<span class="lineNum">       9 </span>            : using term = boost::yap::terminal&lt;boost::yap::expression, T&gt;;
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            : template &lt;typename T&gt;
+<span class="lineNum">      12 </span>            : using ref = boost::yap::expression_ref&lt;boost::yap::expression, T&gt;;
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : namespace yap = boost::yap;
+<span class="lineNum">      15 </span>            : namespace bh = boost::hana;
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span>            : namespace user {
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            :     struct number
+<span class="lineNum">      21 </span>            :     {
+<span class="lineNum">      22 </span>            :         explicit operator double () const { return value; }
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            :         double value;
+<a name="25"><span class="lineNum">      25 </span>            :     };</a>
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span><span class="lineCov">          1 :     number naxpy (number a, number x, number y)</span>
+<span class="lineNum">      28 </span><span class="lineCov">          1 :     { return number{a.value * x.value + y.value + 10.0}; }</span>
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            :     inline auto max (int a, int b)
+<span class="lineNum">      31 </span>            :     { return a &lt; b ? b : a; };
+<span class="lineNum">      32 </span>            : 
+<a name="33"><span class="lineNum">      33 </span>            :     struct tag_type {};</a>
+<span class="lineNum">      34 </span>            : 
+<span class="lineNum">      35 </span><span class="lineCov">          6 :     inline number tag_function (double a, double b)</span>
+<span class="lineNum">      36 </span><span class="lineCov">          6 :     { return number{a + b}; }</span>
+<span class="lineNum">      37 </span>            : 
+<a name="38"><span class="lineNum">      38 </span>            :     struct eval_xform_tag</a>
+<span class="lineNum">      39 </span>            :     {
+<span class="lineNum">      40 </span><span class="lineCov">          2 :         decltype(auto) operator() (yap::call_tag, tag_type, number a, double b)</span>
+<span class="lineNum">      41 </span><span class="lineCov">          2 :         { return tag_function(a.value, b); }</span>
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            :         int operator() (yap::terminal_tag, tag_type, double a, double b)
+<span class="lineNum">      44 </span>            :         { return 42; }
+<span class="lineNum">      45 </span>            : 
+<span class="lineNum">      46 </span>            :         char const * operator() ()
+<span class="lineNum">      47 </span>            :         { return &quot;42&quot;; }
+<span class="lineNum">      48 </span>            :     };
+<span class="lineNum">      49 </span>            : 
+<span class="lineNum">      50 </span>            :     struct empty_xform {};
+<span class="lineNum">      51 </span>            : 
+<a name="52"><span class="lineNum">      52 </span>            :     struct eval_xform_expr</a>
+<span class="lineNum">      53 </span>            :     {
+<span class="lineNum">      54 </span><span class="lineCov">          1 :         decltype(auto) operator() (</span>
+<span class="lineNum">      55 </span>            :             yap::expression&lt;
+<span class="lineNum">      56 </span>            :                 yap::expr_kind::call,
+<span class="lineNum">      57 </span>            :                 bh::tuple&lt;
+<span class="lineNum">      58 </span>            :                     ref&lt;term&lt;user::tag_type&gt; &gt;,
+<span class="lineNum">      59 </span>            :                     term&lt;user::number&gt;,
+<span class="lineNum">      60 </span>            :                     term&lt;int&gt;
+<span class="lineNum">      61 </span>            :                 &gt;
+<span class="lineNum">      62 </span>            :             &gt; const &amp; expr
+<span class="lineNum">      63 </span>            :         ) {
+<span class="lineNum">      64 </span>            :             using namespace boost::hana::literals;
+<span class="lineNum">      65 </span>            :             return tag_function(
+<span class="lineNum">      66 </span><span class="lineCov">          2 :                 (double)yap::value(expr.elements[1_c]).value,</span>
+<span class="lineNum">      67 </span><span class="lineCov">          2 :                 (double)yap::value(expr.elements[2_c])</span>
+<span class="lineNum">      68 </span><span class="lineCov">          3 :             );</span>
+<a name="69"><span class="lineNum">      69 </span>            :         }</a>
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span><span class="lineCov">          1 :         decltype(auto) operator() (</span>
+<span class="lineNum">      72 </span>            :             yap::expression&lt;
+<span class="lineNum">      73 </span>            :                 yap::expr_kind::call,
+<span class="lineNum">      74 </span>            :                 bh::tuple&lt;
+<span class="lineNum">      75 </span>            :                     ref&lt;term&lt;user::tag_type&gt; &gt;,
+<span class="lineNum">      76 </span>            :                     ref&lt;term&lt;user::number&gt;&gt;,
+<span class="lineNum">      77 </span>            :                     term&lt;int&gt;
+<span class="lineNum">      78 </span>            :                 &gt;
+<span class="lineNum">      79 </span>            :             &gt; const &amp; expr
+<span class="lineNum">      80 </span>            :         ) {
+<span class="lineNum">      81 </span>            :             using namespace boost::hana::literals;
+<span class="lineNum">      82 </span>            :             return tag_function(
+<span class="lineNum">      83 </span><span class="lineCov">          2 :                 (double)yap::value(expr.elements[1_c]).value,</span>
+<span class="lineNum">      84 </span><span class="lineCov">          2 :                 (double)yap::value(expr.elements[2_c])</span>
+<span class="lineNum">      85 </span><span class="lineCov">          3 :             );</span>
+<span class="lineNum">      86 </span>            :         }
+<span class="lineNum">      87 </span>            :     };
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span>            :     struct eval_xform_both
+<span class="lineNum">      90 </span>            :     {
+<span class="lineNum">      91 </span>            :         decltype(auto) operator() (yap::call_tag, tag_type, double a, double b)
+<span class="lineNum">      92 </span>            :         {
+<span class="lineNum">      93 </span>            :             // TODO: Document that this differs from the behavior for
+<span class="lineNum">      94 </span>            :             // non-call_tag tagged overloads, which will always be preferred
+<span class="lineNum">      95 </span>            :             // to expr-overloads.  Moreover, document that mixing expr- and
+<span class="lineNum">      96 </span>            :             // tag-based overloads is usually a bad idea.
+<span class="lineNum">      97 </span>            :             throw std::logic_error(&quot;Oops!  Picked the wrong overload!&quot;);
+<span class="lineNum">      98 </span>            :             return tag_function(a, b);
+<a name="99"><span class="lineNum">      99 </span>            :         }</a>
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span><span class="lineCov">          1 :         decltype(auto) operator() (</span>
+<span class="lineNum">     102 </span>            :             yap::expression&lt;
+<span class="lineNum">     103 </span>            :                 yap::expr_kind::call,
+<span class="lineNum">     104 </span>            :                 bh::tuple&lt;
+<span class="lineNum">     105 </span>            :                     ref&lt;term&lt;user::tag_type&gt; &gt;,
+<span class="lineNum">     106 </span>            :                     term&lt;user::number&gt;,
+<span class="lineNum">     107 </span>            :                     term&lt;int&gt;
+<span class="lineNum">     108 </span>            :                 &gt;
+<span class="lineNum">     109 </span>            :             &gt; const &amp; expr
+<span class="lineNum">     110 </span>            :         ) {
+<span class="lineNum">     111 </span>            :             using namespace boost::hana::literals;
+<span class="lineNum">     112 </span>            :             return tag_function(
+<span class="lineNum">     113 </span><span class="lineCov">          2 :                 (double)yap::value(expr.elements[1_c]).value,</span>
+<span class="lineNum">     114 </span><span class="lineCov">          2 :                 (double)yap::value(expr.elements[2_c])</span>
+<span class="lineNum">     115 </span><span class="lineCov">          3 :             );</span>
+<a name="116"><span class="lineNum">     116 </span>            :         }</a>
+<span class="lineNum">     117 </span>            : 
+<span class="lineNum">     118 </span><span class="lineCov">          1 :         decltype(auto) operator() (</span>
+<span class="lineNum">     119 </span>            :             yap::expression&lt;
+<span class="lineNum">     120 </span>            :                 yap::expr_kind::call,
+<span class="lineNum">     121 </span>            :                 bh::tuple&lt;
+<span class="lineNum">     122 </span>            :                     ref&lt;term&lt;user::tag_type&gt; &gt;,
+<span class="lineNum">     123 </span>            :                     ref&lt;term&lt;user::number&gt;&gt;,
+<span class="lineNum">     124 </span>            :                     term&lt;int&gt;
+<span class="lineNum">     125 </span>            :                 &gt;
+<span class="lineNum">     126 </span>            :             &gt; const &amp; expr
+<span class="lineNum">     127 </span>            :         ) {
+<span class="lineNum">     128 </span>            :             using namespace boost::hana::literals;
+<span class="lineNum">     129 </span>            :             return tag_function(
+<span class="lineNum">     130 </span><span class="lineCov">          2 :                 (double)yap::value(expr.elements[1_c]).value,</span>
+<span class="lineNum">     131 </span><span class="lineCov">          2 :                 (double)yap::value(expr.elements[2_c])</span>
+<span class="lineNum">     132 </span><span class="lineCov">          3 :             );</span>
+<span class="lineNum">     133 </span>            :         }
+<span class="lineNum">     134 </span>            :     };
+<span class="lineNum">     135 </span>            : 
+<span class="lineNum">     136 </span>            : }
+<a name="137"><span class="lineNum">     137 </span>            : </a>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineCov">          5 : TEST(call_expr, test_call_expr)</span>
+<span class="lineNum">     140 </span>            : {
+<span class="lineNum">     141 </span>            :     using namespace boost::yap::literals;
+<span class="lineNum">     142 </span>            : 
+<span class="lineNum">     143 </span>            :     {
+<span class="lineNum">     144 </span><span class="lineCov">          1 :         auto plus = yap::make_terminal(user::tag_type{});</span>
+<span class="lineNum">     145 </span><span class="lineCov">          1 :         auto expr = plus(user::number{13}, 1);</span>
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span>            :         {
+<span class="lineNum">     148 </span><span class="lineCov">          1 :             transform(expr, user::empty_xform{});</span>
+<span class="lineNum">     149 </span>            :         }
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span>            :         {
+<span class="lineNum">     152 </span><span class="lineCov">          1 :             user::number result = transform(expr, user::eval_xform_tag{});</span>
+<span class="lineNum">     153 </span><span class="lineCov">          1 :             EXPECT_EQ(result.value, 14);</span>
+<span class="lineNum">     154 </span>            :         }
+<span class="lineNum">     155 </span>            : 
+<span class="lineNum">     156 </span>            :         {
+<span class="lineNum">     157 </span><span class="lineCov">          1 :             user::number result = transform(expr, user::eval_xform_expr{});</span>
+<span class="lineNum">     158 </span><span class="lineCov">          1 :             EXPECT_EQ(result.value, 14);</span>
+<span class="lineNum">     159 </span>            :         }
+<span class="lineNum">     160 </span>            : 
+<span class="lineNum">     161 </span>            :         {
+<span class="lineNum">     162 </span><span class="lineCov">          1 :             user::number result = transform(expr, user::eval_xform_both{});</span>
+<span class="lineNum">     163 </span><span class="lineCov">          1 :             EXPECT_EQ(result.value, 14);</span>
+<span class="lineNum">     164 </span>            :         }
+<span class="lineNum">     165 </span>            :     }
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span>            :     {
+<span class="lineNum">     168 </span><span class="lineCov">          1 :         auto plus = yap::make_terminal(user::tag_type{});</span>
+<span class="lineNum">     169 </span><span class="lineCov">          1 :         auto thirteen = yap::make_terminal(user::number{13});</span>
+<span class="lineNum">     170 </span><span class="lineCov">          1 :         auto expr = plus(thirteen, 1);</span>
+<span class="lineNum">     171 </span>            : 
+<span class="lineNum">     172 </span>            :         {
+<span class="lineNum">     173 </span><span class="lineCov">          1 :             user::number result = transform(expr, user::eval_xform_tag{});</span>
+<span class="lineNum">     174 </span><span class="lineCov">          1 :             EXPECT_EQ(result.value, 14);</span>
+<span class="lineNum">     175 </span>            :         }
+<span class="lineNum">     176 </span>            : 
+<span class="lineNum">     177 </span>            :         {
+<span class="lineNum">     178 </span><span class="lineCov">          1 :             user::number result = transform(expr, user::eval_xform_expr{});</span>
+<span class="lineNum">     179 </span><span class="lineCov">          1 :             EXPECT_EQ(result.value, 14);</span>
+<span class="lineNum">     180 </span>            :         }
+<span class="lineNum">     181 </span>            : 
+<span class="lineNum">     182 </span>            :         {
+<span class="lineNum">     183 </span><span class="lineCov">          1 :             user::number result = transform(expr, user::eval_xform_both{});</span>
+<span class="lineNum">     184 </span><span class="lineCov">          1 :             EXPECT_EQ(result.value, 14);</span>
+<span class="lineNum">     185 </span>            :         }
+<span class="lineNum">     186 </span>            :     }
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span>            :     {
+<span class="lineNum">     189 </span><span class="lineCov">          1 :         term&lt;user::number&gt; a{{1.0}};</span>
+<span class="lineNum">     190 </span><span class="lineCov">          1 :         term&lt;user::number&gt; x{{42.0}};</span>
+<span class="lineNum">     191 </span><span class="lineCov">          1 :         term&lt;user::number&gt; y{{3.0}};</span>
+<span class="lineNum">     192 </span><span class="lineCov">          1 :         auto n = yap::make_terminal(user::naxpy);</span>
+<span class="lineNum">     193 </span>            : 
+<span class="lineNum">     194 </span><span class="lineCov">          1 :         auto expr = n(a, x, y);</span>
+<span class="lineNum">     195 </span>            :         {
+<span class="lineNum">     196 </span><span class="lineCov">          1 :             user::number result = evaluate(expr);</span>
+<span class="lineNum">     197 </span><span class="lineCov">          1 :             EXPECT_EQ(result.value, 55);</span>
+<a name="198"><span class="lineNum">     198 </span>            :         }</a>
+<span class="lineNum">     199 </span>            :     }
+<span class="lineNum">     200 </span><span class="lineCov">          4 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

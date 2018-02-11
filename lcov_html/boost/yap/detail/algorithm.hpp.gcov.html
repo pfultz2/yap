@@ -1,0 +1,664 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - stepcode_no_usr.lcov - boost/yap/detail/algorithm.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../index.html">top level</a> - <a href="index.html">boost/yap/detail</a> - algorithm.hpp<span style="font-size: 80%;"> (source / <a href="algorithm.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">stepcode_no_usr.lcov</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-02-10 21:13:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">125</td>
+            <td class="headerCovTableEntry">125</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #ifndef BOOST_YAP_DETAIL_EXPRESSION_HPP_INCLUDED</a>
+<span class="lineNum">       2 </span>            : #define BOOST_YAP_DETAIL_EXPRESSION_HPP_INCLUDED
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &lt;boost/yap/algorithm_fwd.hpp&gt;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;boost/hana/size.hpp&gt;
+<span class="lineNum">       7 </span>            : #include &lt;boost/hana/tuple.hpp&gt;
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            : #include &lt;memory&gt;
+<span class="lineNum">      10 </span>            : #include &lt;type_traits&gt;
+<span class="lineNum">      11 </span>            : 
+<span class="lineNum">      12 </span>            : 
+<span class="lineNum">      13 </span>            : namespace boost { namespace yap {
+<span class="lineNum">      14 </span>            : 
+<span class="lineNum">      15 </span>            :     namespace detail {
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            :         // static_const
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">      20 </span>            :         struct static_const
+<span class="lineNum">      21 </span>            :         { static constexpr T value {}; };
+<span class="lineNum">      22 </span>            : 
+<span class="lineNum">      23 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">      24 </span>            :         constexpr T static_const&lt;T&gt;::value;
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            :         // partial_decay
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">      30 </span>            :         struct partial_decay
+<span class="lineNum">      31 </span>            :         { using type = T; };
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">      34 </span>            :         struct partial_decay&lt;T[]&gt; { using type = T *; };
+<span class="lineNum">      35 </span>            :         template &lt;typename T, std::size_t N&gt;
+<span class="lineNum">      36 </span>            :         struct partial_decay&lt;T[N]&gt; { using type = T *; };
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">      39 </span>            :         struct partial_decay&lt;T(&amp;)[]&gt; { using type = T *; };
+<span class="lineNum">      40 </span>            :         template &lt;typename T, std::size_t N&gt;
+<span class="lineNum">      41 </span>            :         struct partial_decay&lt;T(&amp;)[N]&gt; { using type = T *; };
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            :         template &lt;typename R, typename ...A&gt;
+<span class="lineNum">      44 </span>            :         struct partial_decay&lt;R(A...)&gt; { using type = R(*)(A...); };
+<span class="lineNum">      45 </span>            :         template &lt;typename R, typename ...A&gt;
+<span class="lineNum">      46 </span>            :         struct partial_decay&lt;R(A..., ...)&gt; { using type = R(*)(A..., ...); };
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : 
+<span class="lineNum">      49 </span>            :         // operand_value_type_phase_1
+<span class="lineNum">      50 </span>            :         
+<span class="lineNum">      51 </span>            :         template &lt;
+<span class="lineNum">      52 </span>            :             typename T,
+<span class="lineNum">      53 </span>            :             typename U = typename detail::partial_decay&lt;T&gt;::type,
+<span class="lineNum">      54 </span>            :             bool AddRValueRef = std::is_same&lt;T, U&gt;{} &amp;&amp; !std::is_const&lt;U&gt;{}
+<span class="lineNum">      55 </span>            :         &gt;
+<span class="lineNum">      56 </span>            :         struct operand_value_type_phase_1;
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">      59 </span>            :         struct operand_value_type_phase_1&lt;T, U, true&gt;
+<span class="lineNum">      60 </span>            :         { using type = U &amp;&amp;; };
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">      63 </span>            :         struct operand_value_type_phase_1&lt;T, U, false&gt;
+<span class="lineNum">      64 </span>            :         { using type = U; };
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            :         // expr_ref
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T&gt;
+<span class="lineNum">      70 </span>            :         struct expr_ref
+<span class="lineNum">      71 </span>            :         { using type = expression_ref&lt;ExprTemplate, T&gt;; };
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename Tuple&gt;
+<span class="lineNum">      74 </span>            :         struct expr_ref&lt;ExprTemplate, ExprTemplate&lt;expr_kind::expr_ref, Tuple&gt; &amp;&gt;
+<span class="lineNum">      75 </span>            :         { using type = ExprTemplate&lt;expr_kind::expr_ref, Tuple&gt;; };
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename Tuple&gt;
+<span class="lineNum">      78 </span>            :         struct expr_ref&lt;ExprTemplate, ExprTemplate&lt;expr_kind::expr_ref, Tuple&gt; const &amp;&gt;
+<span class="lineNum">      79 </span>            :         { using type = ExprTemplate&lt;expr_kind::expr_ref, Tuple&gt;; };
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T&gt;
+<span class="lineNum">      82 </span>            :         using expr_ref_t = typename expr_ref&lt;ExprTemplate, T&gt;::type;
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T&gt;
+<span class="lineNum">      85 </span>            :         struct expr_ref_tuple;
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename Tuple&gt;
+<span class="lineNum">      88 </span>            :         struct expr_ref_tuple&lt;ExprTemplate, ExprTemplate&lt;expr_kind::expr_ref, Tuple&gt;&gt;
+<span class="lineNum">      89 </span>            :         { using type = Tuple; };
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T&gt;
+<span class="lineNum">      92 </span>            :         using expr_ref_tuple_t = typename expr_ref_tuple&lt;ExprTemplate, T&gt;::type;
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span>            :         // operand_type
+<span class="lineNum">      96 </span>            : 
+<span class="lineNum">      97 </span>            :         template &lt;
+<span class="lineNum">      98 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">      99 </span>            :             typename T,
+<span class="lineNum">     100 </span>            :             typename U = typename operand_value_type_phase_1&lt;T&gt;::type,
+<span class="lineNum">     101 </span>            :             bool RemoveRefs = std::is_rvalue_reference&lt;U&gt;{},
+<span class="lineNum">     102 </span>            :             bool IsExpr = is_expr&lt;T&gt;::value,
+<span class="lineNum">     103 </span>            :             bool IsLRef = std::is_lvalue_reference&lt;T&gt;{}
+<span class="lineNum">     104 </span>            :         &gt;
+<span class="lineNum">     105 </span>            :         struct operand_type;
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T, typename U, bool RemoveRefs&gt;
+<span class="lineNum">     108 </span>            :         struct operand_type&lt;ExprTemplate, T, U, RemoveRefs, true, false&gt;
+<span class="lineNum">     109 </span>            :         { using type = remove_cv_ref_t&lt;T&gt;; };
+<span class="lineNum">     110 </span>            : 
+<span class="lineNum">     111 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T, typename U, bool RemoveRefs&gt;
+<span class="lineNum">     112 </span>            :         struct operand_type&lt;ExprTemplate, T, U, RemoveRefs, true, true&gt;
+<span class="lineNum">     113 </span>            :         { using type = expr_ref_t&lt;ExprTemplate, T&gt;; };
+<span class="lineNum">     114 </span>            : 
+<span class="lineNum">     115 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T, typename U, bool RemoveRefs, bool IsLRef&gt;
+<span class="lineNum">     116 </span>            :         struct operand_type&lt;ExprTemplate, T, U, RemoveRefs, true, IsLRef&gt;
+<span class="lineNum">     117 </span>            :         { using type = remove_cv_ref_t&lt;T&gt;; };
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T, typename U, bool IsLRef&gt;
+<span class="lineNum">     120 </span>            :         struct operand_type&lt;ExprTemplate, T, U, true, false, IsLRef&gt;
+<span class="lineNum">     121 </span>            :         { using type = terminal&lt;ExprTemplate, std::remove_reference_t&lt;U&gt;&gt;; };
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T, typename U, bool IsLRef&gt;
+<span class="lineNum">     124 </span>            :         struct operand_type&lt;ExprTemplate, T, U, false, false, IsLRef&gt;
+<span class="lineNum">     125 </span>            :         { using type = terminal&lt;ExprTemplate, U&gt;; };
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T&gt;
+<span class="lineNum">     128 </span>            :         using operand_type_t = typename operand_type&lt;ExprTemplate, T&gt;::type;
+<span class="lineNum">     129 </span>            : 
+<span class="lineNum">     130 </span>            : 
+<span class="lineNum">     131 </span>            :         // make_operand
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     134 </span>            :         struct make_operand
+<a name="135"><span class="lineNum">     135 </span>            :         {</a>
+<span class="lineNum">     136 </span>            :             template &lt;typename U&gt;
+<span class="lineNum">     137 </span><span class="lineCov">        251 :             auto operator() (U &amp;&amp; u)</span>
+<span class="lineNum">     138 </span><span class="lineCov">        251 :             { return T{static_cast&lt;U &amp;&amp;&gt;(u)}; }</span>
+<span class="lineNum">     139 </span>            :         };
+<span class="lineNum">     140 </span>            : 
+<span class="lineNum">     141 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename Tuple&gt;
+<a name="142"><span class="lineNum">     142 </span>            :         struct make_operand&lt;ExprTemplate&lt;expr_kind::expr_ref, Tuple&gt;&gt;</a>
+<span class="lineNum">     143 </span>            :         {
+<span class="lineNum">     144 </span><span class="lineCov">         14 :             auto operator() (ExprTemplate&lt;expr_kind::expr_ref, Tuple&gt; expr)</span>
+<span class="lineNum">     145 </span><span class="lineCov">         14 :             { return expr; }</span>
+<a name="146"><span class="lineNum">     146 </span>            : </a>
+<span class="lineNum">     147 </span>            :             template &lt;typename U&gt;
+<span class="lineNum">     148 </span><span class="lineCov">        380 :             auto operator() (U &amp;&amp; u)</span>
+<span class="lineNum">     149 </span><span class="lineCov">        380 :             { return ExprTemplate&lt;expr_kind::expr_ref, Tuple&gt;{Tuple{std::addressof(u)}}; }</span>
+<span class="lineNum">     150 </span>            :         };
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            :         // free_binary_op_result
+<span class="lineNum">     154 </span>            : 
+<span class="lineNum">     155 </span>            :         template &lt;
+<span class="lineNum">     156 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     157 </span>            :             expr_kind OpKind,
+<span class="lineNum">     158 </span>            :             typename T,
+<span class="lineNum">     159 </span>            :             typename U,
+<span class="lineNum">     160 </span>            :             bool TNonExprUExpr = !is_expr&lt;T&gt;::value &amp;&amp; is_expr&lt;U&gt;::value,
+<span class="lineNum">     161 </span>            :             bool ULvalueRef = std::is_lvalue_reference&lt;U&gt;{}
+<span class="lineNum">     162 </span>            :         &gt;
+<span class="lineNum">     163 </span>            :         struct free_binary_op_result;
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span>            :         template &lt;
+<span class="lineNum">     166 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     167 </span>            :             expr_kind OpKind,
+<span class="lineNum">     168 </span>            :             typename T,
+<span class="lineNum">     169 </span>            :             typename U
+<span class="lineNum">     170 </span>            :         &gt;
+<span class="lineNum">     171 </span>            :         struct free_binary_op_result&lt;ExprTemplate, OpKind, T, U, true, true&gt;
+<span class="lineNum">     172 </span>            :         {
+<span class="lineNum">     173 </span>            :             using lhs_type = operand_type_t&lt;ExprTemplate, T&gt;;
+<span class="lineNum">     174 </span>            :             using rhs_type = expr_ref_t&lt;ExprTemplate, U&gt;;
+<span class="lineNum">     175 </span>            :             using rhs_tuple_type = expr_ref_tuple_t&lt;ExprTemplate, rhs_type&gt;;
+<span class="lineNum">     176 </span>            :             using type = ExprTemplate&lt;OpKind, hana::tuple&lt;lhs_type, rhs_type&gt;&gt;;
+<span class="lineNum">     177 </span>            :         };
+<span class="lineNum">     178 </span>            : 
+<span class="lineNum">     179 </span>            :         template &lt;
+<span class="lineNum">     180 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     181 </span>            :             expr_kind OpKind,
+<span class="lineNum">     182 </span>            :             typename T,
+<span class="lineNum">     183 </span>            :             typename U
+<span class="lineNum">     184 </span>            :         &gt;
+<span class="lineNum">     185 </span>            :         struct free_binary_op_result&lt;ExprTemplate, OpKind, T, U, true, false&gt;
+<span class="lineNum">     186 </span>            :         {
+<span class="lineNum">     187 </span>            :             using lhs_type = operand_type_t&lt;ExprTemplate, T&gt;;
+<span class="lineNum">     188 </span>            :             using rhs_type = remove_cv_ref_t&lt;U&gt;;
+<span class="lineNum">     189 </span>            :             using type = ExprTemplate&lt;OpKind, hana::tuple&lt;lhs_type, rhs_type&gt;&gt;;
+<span class="lineNum">     190 </span>            :         };
+<span class="lineNum">     191 </span>            : 
+<span class="lineNum">     192 </span>            :         template &lt;
+<span class="lineNum">     193 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     194 </span>            :             expr_kind OpKind,
+<span class="lineNum">     195 </span>            :             typename T,
+<span class="lineNum">     196 </span>            :             typename U,
+<span class="lineNum">     197 </span>            :             bool ULvalueRef
+<span class="lineNum">     198 </span>            :         &gt;
+<span class="lineNum">     199 </span>            :         struct free_binary_op_result&lt;ExprTemplate, OpKind, T, U, false, ULvalueRef&gt;
+<span class="lineNum">     200 </span>            :         {};
+<span class="lineNum">     201 </span>            : 
+<span class="lineNum">     202 </span>            :         template &lt;
+<span class="lineNum">     203 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     204 </span>            :             expr_kind OpKind,
+<span class="lineNum">     205 </span>            :             typename T,
+<span class="lineNum">     206 </span>            :             typename U
+<span class="lineNum">     207 </span>            :         &gt;
+<span class="lineNum">     208 </span>            :         using free_binary_op_result_t = typename free_binary_op_result&lt;
+<span class="lineNum">     209 </span>            :             ExprTemplate,
+<span class="lineNum">     210 </span>            :             OpKind,
+<span class="lineNum">     211 </span>            :             T,
+<span class="lineNum">     212 </span>            :             U
+<span class="lineNum">     213 </span>            :         &gt;::type;
+<span class="lineNum">     214 </span>            : 
+<span class="lineNum">     215 </span>            : 
+<span class="lineNum">     216 </span>            :         // ternary_op_result
+<span class="lineNum">     217 </span>            : 
+<span class="lineNum">     218 </span>            :         template &lt;
+<span class="lineNum">     219 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     220 </span>            :             typename T,
+<span class="lineNum">     221 </span>            :             typename U,
+<span class="lineNum">     222 </span>            :             typename V,
+<span class="lineNum">     223 </span>            :             bool Valid = is_expr&lt;T&gt;::value || is_expr&lt;U&gt;::value || is_expr&lt;V&gt;::value
+<span class="lineNum">     224 </span>            :         &gt;
+<span class="lineNum">     225 </span>            :         struct ternary_op_result;
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            :         template &lt;
+<span class="lineNum">     228 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     229 </span>            :             typename T,
+<span class="lineNum">     230 </span>            :             typename U,
+<span class="lineNum">     231 </span>            :             typename V
+<span class="lineNum">     232 </span>            :         &gt;
+<span class="lineNum">     233 </span>            :         struct ternary_op_result&lt;ExprTemplate, T, U, V, true&gt;
+<span class="lineNum">     234 </span>            :         {
+<span class="lineNum">     235 </span>            :             using cond_type = operand_type_t&lt;ExprTemplate, T&gt;;
+<span class="lineNum">     236 </span>            :             using then_type = operand_type_t&lt;ExprTemplate, U&gt;;
+<span class="lineNum">     237 </span>            :             using else_type = operand_type_t&lt;ExprTemplate, V&gt;;
+<span class="lineNum">     238 </span>            :             using type = ExprTemplate&lt;
+<span class="lineNum">     239 </span>            :                 expr_kind::if_else,
+<span class="lineNum">     240 </span>            :                 hana::tuple&lt;cond_type, then_type, else_type&gt;
+<span class="lineNum">     241 </span>            :             &gt;;
+<span class="lineNum">     242 </span>            :         };
+<span class="lineNum">     243 </span>            : 
+<span class="lineNum">     244 </span>            :         template &lt;
+<span class="lineNum">     245 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     246 </span>            :             typename T,
+<span class="lineNum">     247 </span>            :             typename U,
+<span class="lineNum">     248 </span>            :             typename V
+<span class="lineNum">     249 </span>            :         &gt;
+<span class="lineNum">     250 </span>            :         using ternary_op_result_t = typename ternary_op_result&lt;ExprTemplate, T, U, V&gt;::type;
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span>            :         // udt_any_ternary_op_result
+<span class="lineNum">     254 </span>            : 
+<span class="lineNum">     255 </span>            :         template &lt;
+<span class="lineNum">     256 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     257 </span>            :             typename T,
+<span class="lineNum">     258 </span>            :             typename U,
+<span class="lineNum">     259 </span>            :             typename V,
+<span class="lineNum">     260 </span>            :             template &lt;class&gt; class UdtTrait,
+<span class="lineNum">     261 </span>            :             bool Valid =
+<span class="lineNum">     262 </span>            :                 !is_expr&lt;T&gt;::value &amp;&amp; !is_expr&lt;U&gt;::value &amp;&amp; !is_expr&lt;V&gt;::value &amp;&amp;
+<span class="lineNum">     263 </span>            :                 (
+<span class="lineNum">     264 </span>            :                     UdtTrait&lt;remove_cv_ref_t&lt;T&gt;&gt;::value ||
+<span class="lineNum">     265 </span>            :                     UdtTrait&lt;remove_cv_ref_t&lt;U&gt;&gt;::value ||
+<span class="lineNum">     266 </span>            :                     UdtTrait&lt;remove_cv_ref_t&lt;V&gt;&gt;::value
+<span class="lineNum">     267 </span>            :                 )
+<span class="lineNum">     268 </span>            :         &gt;
+<span class="lineNum">     269 </span>            :         struct udt_any_ternary_op_result;
+<span class="lineNum">     270 </span>            : 
+<span class="lineNum">     271 </span>            :         template &lt;
+<span class="lineNum">     272 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     273 </span>            :             typename T,
+<span class="lineNum">     274 </span>            :             typename U,
+<span class="lineNum">     275 </span>            :             typename V,
+<span class="lineNum">     276 </span>            :             template &lt;class&gt; class UdtTrait
+<span class="lineNum">     277 </span>            :         &gt;
+<span class="lineNum">     278 </span>            :         struct udt_any_ternary_op_result&lt;ExprTemplate, T, U, V, UdtTrait, true&gt;
+<span class="lineNum">     279 </span>            :         {
+<span class="lineNum">     280 </span>            :             using cond_type = operand_type_t&lt;ExprTemplate, T&gt;;
+<span class="lineNum">     281 </span>            :             using then_type = operand_type_t&lt;ExprTemplate, U&gt;;
+<span class="lineNum">     282 </span>            :             using else_type = operand_type_t&lt;ExprTemplate, V&gt;;
+<span class="lineNum">     283 </span>            :             using type = ExprTemplate&lt;
+<span class="lineNum">     284 </span>            :                 expr_kind::if_else,
+<span class="lineNum">     285 </span>            :                 hana::tuple&lt;cond_type, then_type, else_type&gt;
+<span class="lineNum">     286 </span>            :             &gt;;
+<span class="lineNum">     287 </span>            :         };
+<span class="lineNum">     288 </span>            : 
+<span class="lineNum">     289 </span>            :         template &lt;
+<span class="lineNum">     290 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     291 </span>            :             typename T,
+<span class="lineNum">     292 </span>            :             typename U,
+<span class="lineNum">     293 </span>            :             typename V,
+<span class="lineNum">     294 </span>            :             template &lt;class&gt; class UdtTrait
+<span class="lineNum">     295 </span>            :         &gt;
+<span class="lineNum">     296 </span>            :         using udt_any_ternary_op_result_t = typename udt_any_ternary_op_result&lt;
+<span class="lineNum">     297 </span>            :             ExprTemplate,
+<span class="lineNum">     298 </span>            :             T,
+<span class="lineNum">     299 </span>            :             U,
+<span class="lineNum">     300 </span>            :             V,
+<span class="lineNum">     301 </span>            :             UdtTrait
+<span class="lineNum">     302 </span>            :         &gt;::type;
+<span class="lineNum">     303 </span>            : 
+<span class="lineNum">     304 </span>            : 
+<span class="lineNum">     305 </span>            :         // udt_unary_op_result
+<span class="lineNum">     306 </span>            : 
+<span class="lineNum">     307 </span>            :         template &lt;
+<span class="lineNum">     308 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     309 </span>            :             expr_kind OpKind,
+<span class="lineNum">     310 </span>            :             typename T,
+<span class="lineNum">     311 </span>            :             template &lt;class&gt; class UdtTrait,
+<span class="lineNum">     312 </span>            :             bool Valid = !is_expr&lt;T&gt;::value &amp;&amp; UdtTrait&lt;remove_cv_ref_t&lt;T&gt;&gt;::value
+<span class="lineNum">     313 </span>            :         &gt;
+<span class="lineNum">     314 </span>            :         struct udt_unary_op_result;
+<span class="lineNum">     315 </span>            : 
+<span class="lineNum">     316 </span>            :         template &lt;
+<span class="lineNum">     317 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     318 </span>            :             expr_kind OpKind,
+<span class="lineNum">     319 </span>            :             typename T,
+<span class="lineNum">     320 </span>            :             template &lt;class&gt; class UdtTrait
+<span class="lineNum">     321 </span>            :         &gt;
+<span class="lineNum">     322 </span>            :         struct udt_unary_op_result&lt;ExprTemplate, OpKind, T, UdtTrait, true&gt;
+<span class="lineNum">     323 </span>            :         {
+<span class="lineNum">     324 </span>            :             using x_type = operand_type_t&lt;ExprTemplate, T&gt;;
+<span class="lineNum">     325 </span>            :             using type = ExprTemplate&lt;OpKind, hana::tuple&lt;x_type&gt;&gt;;
+<span class="lineNum">     326 </span>            :         };
+<span class="lineNum">     327 </span>            : 
+<span class="lineNum">     328 </span>            :         template &lt;
+<span class="lineNum">     329 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     330 </span>            :             expr_kind OpKind,
+<span class="lineNum">     331 </span>            :             typename T,
+<span class="lineNum">     332 </span>            :             template &lt;class&gt; class UdtTrait
+<span class="lineNum">     333 </span>            :         &gt;
+<span class="lineNum">     334 </span>            :         using udt_unary_op_result_t = typename udt_unary_op_result&lt;
+<span class="lineNum">     335 </span>            :             ExprTemplate,
+<span class="lineNum">     336 </span>            :             OpKind,
+<span class="lineNum">     337 </span>            :             T,
+<span class="lineNum">     338 </span>            :             UdtTrait
+<span class="lineNum">     339 </span>            :         &gt;::type;
+<span class="lineNum">     340 </span>            : 
+<span class="lineNum">     341 </span>            : 
+<span class="lineNum">     342 </span>            :         // udt_udt_binary_op_result
+<span class="lineNum">     343 </span>            : 
+<span class="lineNum">     344 </span>            :         template &lt;typename T, template &lt;class&gt; class UdtTrait&gt;
+<span class="lineNum">     345 </span>            :         struct is_udt_arg
+<span class="lineNum">     346 </span>            :         { static bool const value = !is_expr&lt;T&gt;::value &amp;&amp; UdtTrait&lt;remove_cv_ref_t&lt;T&gt;&gt;::value; };
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span>            :         template &lt;
+<span class="lineNum">     349 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     350 </span>            :             expr_kind OpKind,
+<span class="lineNum">     351 </span>            :             typename T,
+<span class="lineNum">     352 </span>            :             typename U,
+<span class="lineNum">     353 </span>            :             template &lt;class&gt; class TUdtTrait,
+<span class="lineNum">     354 </span>            :             template &lt;class&gt; class UUdtTrait,
+<span class="lineNum">     355 </span>            :             bool Valid = is_udt_arg&lt;T, TUdtTrait&gt;::value &amp;&amp; is_udt_arg&lt;U, UUdtTrait&gt;::value
+<span class="lineNum">     356 </span>            :         &gt;
+<span class="lineNum">     357 </span>            :         struct udt_udt_binary_op_result;
+<span class="lineNum">     358 </span>            : 
+<span class="lineNum">     359 </span>            :         template &lt;
+<span class="lineNum">     360 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     361 </span>            :             expr_kind OpKind,
+<span class="lineNum">     362 </span>            :             typename T,
+<span class="lineNum">     363 </span>            :             typename U,
+<span class="lineNum">     364 </span>            :             template &lt;class&gt; class TUdtTrait,
+<span class="lineNum">     365 </span>            :             template &lt;class&gt; class UUdtTrait
+<span class="lineNum">     366 </span>            :         &gt;
+<span class="lineNum">     367 </span>            :         struct udt_udt_binary_op_result&lt;ExprTemplate, OpKind, T, U, TUdtTrait, UUdtTrait, true&gt;
+<span class="lineNum">     368 </span>            :         {
+<span class="lineNum">     369 </span>            :             using lhs_type = operand_type_t&lt;ExprTemplate, T&gt;;
+<span class="lineNum">     370 </span>            :             using rhs_type = operand_type_t&lt;ExprTemplate, U&gt;;
+<span class="lineNum">     371 </span>            :             using type = ExprTemplate&lt;OpKind, hana::tuple&lt;lhs_type, rhs_type&gt;&gt;;
+<span class="lineNum">     372 </span>            :         };
+<span class="lineNum">     373 </span>            : 
+<span class="lineNum">     374 </span>            :         template &lt;
+<span class="lineNum">     375 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     376 </span>            :             expr_kind OpKind,
+<span class="lineNum">     377 </span>            :             typename T,
+<span class="lineNum">     378 </span>            :             typename U,
+<span class="lineNum">     379 </span>            :             template &lt;class&gt; class TUdtTrait,
+<span class="lineNum">     380 </span>            :             template &lt;class&gt; class UUdtTrait
+<span class="lineNum">     381 </span>            :         &gt;
+<span class="lineNum">     382 </span>            :         using udt_udt_binary_op_result_t = typename udt_udt_binary_op_result&lt;
+<span class="lineNum">     383 </span>            :             ExprTemplate,
+<span class="lineNum">     384 </span>            :             OpKind,
+<span class="lineNum">     385 </span>            :             T,
+<span class="lineNum">     386 </span>            :             U,
+<span class="lineNum">     387 </span>            :             TUdtTrait,
+<span class="lineNum">     388 </span>            :             UUdtTrait
+<span class="lineNum">     389 </span>            :         &gt;::type;
+<span class="lineNum">     390 </span>            : 
+<span class="lineNum">     391 </span>            : 
+<span class="lineNum">     392 </span>            :         // udt_any_binary_op_result
+<span class="lineNum">     393 </span>            : 
+<span class="lineNum">     394 </span>            :         template &lt;
+<span class="lineNum">     395 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     396 </span>            :             expr_kind OpKind,
+<span class="lineNum">     397 </span>            :             typename T,
+<span class="lineNum">     398 </span>            :             typename U,
+<span class="lineNum">     399 </span>            :             template &lt;class&gt; class UdtTrait,
+<span class="lineNum">     400 </span>            :             bool Valid =
+<span class="lineNum">     401 </span>            :                 !is_expr&lt;T&gt;::value &amp;&amp; !is_expr&lt;U&gt;::value &amp;&amp;
+<span class="lineNum">     402 </span>            :                 (UdtTrait&lt;remove_cv_ref_t&lt;T&gt;&gt;::value || UdtTrait&lt;remove_cv_ref_t&lt;U&gt;&gt;::value)
+<span class="lineNum">     403 </span>            :         &gt;
+<span class="lineNum">     404 </span>            :         struct udt_any_binary_op_result;
+<span class="lineNum">     405 </span>            : 
+<span class="lineNum">     406 </span>            :         template &lt;
+<span class="lineNum">     407 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     408 </span>            :             expr_kind OpKind,
+<span class="lineNum">     409 </span>            :             typename T,
+<span class="lineNum">     410 </span>            :             typename U,
+<span class="lineNum">     411 </span>            :             template &lt;class&gt; class UdtTrait
+<span class="lineNum">     412 </span>            :         &gt;
+<span class="lineNum">     413 </span>            :         struct udt_any_binary_op_result&lt;ExprTemplate, OpKind, T, U, UdtTrait, true&gt;
+<span class="lineNum">     414 </span>            :         {
+<span class="lineNum">     415 </span>            :             using lhs_type = operand_type_t&lt;ExprTemplate, T&gt;;
+<span class="lineNum">     416 </span>            :             using rhs_type = operand_type_t&lt;ExprTemplate, U&gt;;
+<span class="lineNum">     417 </span>            :             using type = ExprTemplate&lt;OpKind, hana::tuple&lt;lhs_type, rhs_type&gt;&gt;;
+<span class="lineNum">     418 </span>            :         };
+<span class="lineNum">     419 </span>            : 
+<span class="lineNum">     420 </span>            :         template &lt;
+<span class="lineNum">     421 </span>            :             template &lt;expr_kind, class&gt; class ExprTemplate,
+<span class="lineNum">     422 </span>            :             expr_kind OpKind,
+<span class="lineNum">     423 </span>            :             typename T,
+<span class="lineNum">     424 </span>            :             typename U,
+<span class="lineNum">     425 </span>            :             template &lt;class&gt; class UdtTrait
+<span class="lineNum">     426 </span>            :         &gt;
+<span class="lineNum">     427 </span>            :         using udt_any_binary_op_result_t = typename udt_any_binary_op_result&lt;
+<span class="lineNum">     428 </span>            :             ExprTemplate,
+<span class="lineNum">     429 </span>            :             OpKind,
+<span class="lineNum">     430 </span>            :             T,
+<span class="lineNum">     431 </span>            :             U,
+<span class="lineNum">     432 </span>            :             UdtTrait
+<span class="lineNum">     433 </span>            :         &gt;::type;
+<span class="lineNum">     434 </span>            : 
+<span class="lineNum">     435 </span>            : 
+<span class="lineNum">     436 </span>            :         // expr_arity
+<span class="lineNum">     437 </span>            : 
+<span class="lineNum">     438 </span>            :         enum class expr_arity {
+<span class="lineNum">     439 </span>            :             invalid,
+<span class="lineNum">     440 </span>            :             one,
+<span class="lineNum">     441 </span>            :             two,
+<span class="lineNum">     442 </span>            :             three,
+<span class="lineNum">     443 </span>            :             n
+<span class="lineNum">     444 </span>            :         };
+<span class="lineNum">     445 </span>            : 
+<span class="lineNum">     446 </span>            :         template &lt;expr_kind Kind&gt;
+<span class="lineNum">     447 </span>            :         constexpr expr_arity arity_of ()
+<span class="lineNum">     448 </span>            :         {
+<span class="lineNum">     449 </span>            :             switch (Kind) {
+<span class="lineNum">     450 </span>            :             case expr_kind::expr_ref:
+<span class="lineNum">     451 </span>            : 
+<span class="lineNum">     452 </span>            :             case expr_kind::terminal:
+<span class="lineNum">     453 </span>            : 
+<span class="lineNum">     454 </span>            :             // unary
+<span class="lineNum">     455 </span>            :             case expr_kind::unary_plus: // +
+<span class="lineNum">     456 </span>            :             case expr_kind::negate: // -
+<span class="lineNum">     457 </span>            :             case expr_kind::dereference: // *
+<span class="lineNum">     458 </span>            :             case expr_kind::complement: // ~
+<span class="lineNum">     459 </span>            :             case expr_kind::address_of: // &amp;
+<span class="lineNum">     460 </span>            :             case expr_kind::logical_not: // !
+<span class="lineNum">     461 </span>            :             case expr_kind::pre_inc: // ++
+<span class="lineNum">     462 </span>            :             case expr_kind::pre_dec: // --
+<span class="lineNum">     463 </span>            :             case expr_kind::post_inc: // ++(int)
+<span class="lineNum">     464 </span>            :             case expr_kind::post_dec: // --(int)
+<span class="lineNum">     465 </span>            :                 return expr_arity::one;
+<span class="lineNum">     466 </span>            : 
+<span class="lineNum">     467 </span>            :             // binary
+<span class="lineNum">     468 </span>            :             case expr_kind::shift_left: // &lt;&lt;
+<span class="lineNum">     469 </span>            :             case expr_kind::shift_right: // &gt;&gt;
+<span class="lineNum">     470 </span>            :             case expr_kind::multiplies: // *
+<span class="lineNum">     471 </span>            :             case expr_kind::divides: // /
+<span class="lineNum">     472 </span>            :             case expr_kind::modulus: // %
+<span class="lineNum">     473 </span>            :             case expr_kind::plus: // +
+<span class="lineNum">     474 </span>            :             case expr_kind::minus: // -
+<span class="lineNum">     475 </span>            :             case expr_kind::less: // &lt;
+<span class="lineNum">     476 </span>            :             case expr_kind::greater: // &gt;
+<span class="lineNum">     477 </span>            :             case expr_kind::less_equal: // &lt;=
+<span class="lineNum">     478 </span>            :             case expr_kind::greater_equal: // &gt;=
+<span class="lineNum">     479 </span>            :             case expr_kind::equal_to: // ==
+<span class="lineNum">     480 </span>            :             case expr_kind::not_equal_to: // !=
+<span class="lineNum">     481 </span>            :             case expr_kind::logical_or: // ||
+<span class="lineNum">     482 </span>            :             case expr_kind::logical_and: // &amp;&amp;
+<span class="lineNum">     483 </span>            :             case expr_kind::bitwise_and: // &amp;
+<span class="lineNum">     484 </span>            :             case expr_kind::bitwise_or: // |
+<span class="lineNum">     485 </span>            :             case expr_kind::bitwise_xor: // ^
+<span class="lineNum">     486 </span>            :             case expr_kind::comma: // :
+<span class="lineNum">     487 </span>            :             case expr_kind::mem_ptr: // -&gt;*
+<span class="lineNum">     488 </span>            :             case expr_kind::assign: // =
+<span class="lineNum">     489 </span>            :             case expr_kind::shift_left_assign: // &lt;&lt;=
+<span class="lineNum">     490 </span>            :             case expr_kind::shift_right_assign: // &gt;&gt;=
+<span class="lineNum">     491 </span>            :             case expr_kind::multiplies_assign: // *=
+<span class="lineNum">     492 </span>            :             case expr_kind::divides_assign: // /=
+<span class="lineNum">     493 </span>            :             case expr_kind::modulus_assign: // %=
+<span class="lineNum">     494 </span>            :             case expr_kind::plus_assign: // +=
+<span class="lineNum">     495 </span>            :             case expr_kind::minus_assign: // -=
+<span class="lineNum">     496 </span>            :             case expr_kind::bitwise_and_assign: // &amp;=
+<span class="lineNum">     497 </span>            :             case expr_kind::bitwise_or_assign: // |=
+<span class="lineNum">     498 </span>            :             case expr_kind::bitwise_xor_assign: // ^=
+<span class="lineNum">     499 </span>            :             case expr_kind::subscript: // []
+<span class="lineNum">     500 </span>            :                 return expr_arity::two;
+<span class="lineNum">     501 </span>            : 
+<span class="lineNum">     502 </span>            :             // ternary
+<span class="lineNum">     503 </span>            :             case expr_kind::if_else: // (analogous to) ?:
+<span class="lineNum">     504 </span>            :                 return expr_arity::three;
+<span class="lineNum">     505 </span>            : 
+<span class="lineNum">     506 </span>            :             // n-ary
+<span class="lineNum">     507 </span>            :             case expr_kind::call: // ()
+<span class="lineNum">     508 </span>            :                 return expr_arity::n;
+<span class="lineNum">     509 </span>            : 
+<span class="lineNum">     510 </span>            :             default:
+<span class="lineNum">     511 </span>            :                 return expr_arity::invalid;
+<span class="lineNum">     512 </span>            :             }
+<span class="lineNum">     513 </span>            :         }
+<span class="lineNum">     514 </span>            : 
+<span class="lineNum">     515 </span>            : 
+<span class="lineNum">     516 </span>            :         // tag_for
+<span class="lineNum">     517 </span>            : 
+<span class="lineNum">     518 </span>            :         template &lt;expr_kind Kind&gt;
+<span class="lineNum">     519 </span>            :         constexpr auto tag_for ();
+<span class="lineNum">     520 </span>            : 
+<span class="lineNum">     521 </span>            : #define CASE(x)                                         \
+<span class="lineNum">     522 </span>            :         template &lt;&gt;                                     \
+<span class="lineNum">     523 </span>            :         constexpr auto tag_for&lt;expr_kind:: x&gt; ()        \
+<span class="lineNum">     524 </span>            :         { return x ## _tag{}; }
+<span class="lineNum">     525 </span>            : 
+<a name="526"><span class="lineNum">     526 </span>            :         CASE(expr_ref);</a>
+<span class="lineNum">     527 </span>            : 
+<span class="lineNum">     528 </span><span class="lineCov">        176 :         CASE(terminal);</span>
+<span class="lineNum">     529 </span>            : 
+<a name="530"><span class="lineNum">     530 </span>            :         // unary</a>
+<span class="lineNum">     531 </span>            :         CASE(unary_plus); // +
+<span class="lineNum">     532 </span><span class="lineCov">          6 :         CASE(negate); // -</span>
+<span class="lineNum">     533 </span>            :         CASE(dereference); // *
+<span class="lineNum">     534 </span>            :         CASE(complement); // ~
+<span class="lineNum">     535 </span>            :         CASE(address_of); // &amp;
+<span class="lineNum">     536 </span>            :         CASE(logical_not); // !
+<span class="lineNum">     537 </span>            :         CASE(pre_inc); // ++
+<span class="lineNum">     538 </span>            :         CASE(pre_dec); // --
+<span class="lineNum">     539 </span>            :         CASE(post_inc); // ++(int)
+<span class="lineNum">     540 </span>            :         CASE(post_dec); // --(int)
+<span class="lineNum">     541 </span>            : 
+<span class="lineNum">     542 </span>            :         // binary
+<span class="lineNum">     543 </span>            :         CASE(shift_left); // &lt;&lt;
+<span class="lineNum">     544 </span>            :         CASE(shift_right); // &gt;&gt;
+<span class="lineNum">     545 </span>            :         CASE(multiplies); // *
+<a name="546"><span class="lineNum">     546 </span>            :         CASE(divides); // /</a>
+<span class="lineNum">     547 </span>            :         CASE(modulus); // %
+<span class="lineNum">     548 </span><span class="lineCov">         16 :         CASE(plus); // +</span>
+<span class="lineNum">     549 </span>            :         CASE(minus); // -
+<span class="lineNum">     550 </span>            :         CASE(less); // &lt;
+<span class="lineNum">     551 </span>            :         CASE(greater); // &gt;
+<span class="lineNum">     552 </span>            :         CASE(less_equal); // &lt;=
+<span class="lineNum">     553 </span>            :         CASE(greater_equal); // &gt;=
+<span class="lineNum">     554 </span>            :         CASE(equal_to); // ==
+<span class="lineNum">     555 </span>            :         CASE(not_equal_to); // !=
+<span class="lineNum">     556 </span>            :         CASE(logical_or); // ||
+<span class="lineNum">     557 </span>            :         CASE(logical_and); // &amp;&amp;
+<span class="lineNum">     558 </span>            :         CASE(bitwise_and); // &amp;
+<span class="lineNum">     559 </span>            :         CASE(bitwise_or); // |
+<span class="lineNum">     560 </span>            :         CASE(bitwise_xor); // ^
+<span class="lineNum">     561 </span>            :         CASE(comma); // );
+<span class="lineNum">     562 </span>            :         CASE(mem_ptr); // -&gt;*
+<span class="lineNum">     563 </span>            :         CASE(assign); // =
+<span class="lineNum">     564 </span>            :         CASE(shift_left_assign); // &lt;&lt;=
+<span class="lineNum">     565 </span>            :         CASE(shift_right_assign); // &gt;&gt;=
+<span class="lineNum">     566 </span>            :         CASE(multiplies_assign); // *=
+<span class="lineNum">     567 </span>            :         CASE(divides_assign); // /=
+<span class="lineNum">     568 </span>            :         CASE(modulus_assign); // %=
+<span class="lineNum">     569 </span>            :         CASE(plus_assign); // +=
+<span class="lineNum">     570 </span>            :         CASE(minus_assign); // -=
+<span class="lineNum">     571 </span>            :         CASE(bitwise_and_assign); // &amp;=
+<span class="lineNum">     572 </span>            :         CASE(bitwise_or_assign); // |=
+<span class="lineNum">     573 </span>            :         CASE(bitwise_xor_assign); // ^=
+<span class="lineNum">     574 </span>            :         CASE(subscript); // []
+<a name="575"><span class="lineNum">     575 </span>            : </a>
+<span class="lineNum">     576 </span>            :         // ternary
+<span class="lineNum">     577 </span><span class="lineCov">          4 :         CASE(if_else); // (analogous to) ?:</span>
+<span class="lineNum">     578 </span>            : 
+<span class="lineNum">     579 </span>            :         // n-ary
+<span class="lineNum">     580 </span>            :         CASE(call); // ()
+<span class="lineNum">     581 </span>            : 
+<span class="lineNum">     582 </span>            : #undef CASE
+<span class="lineNum">     583 </span>            : 
+<span class="lineNum">     584 </span>            :     }
+<span class="lineNum">     585 </span>            : 
+<span class="lineNum">     586 </span>            : } }
+<span class="lineNum">     587 </span>            : 
+<span class="lineNum">     588 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

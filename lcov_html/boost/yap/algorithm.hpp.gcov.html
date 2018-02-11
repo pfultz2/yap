@@ -1,0 +1,839 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - stepcode_no_usr.lcov - boost/yap/algorithm.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">boost/yap</a> - algorithm.hpp<span style="font-size: 80%;"> (source / <a href="algorithm.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">stepcode_no_usr.lcov</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">75</td>
+            <td class="headerCovTableEntry">119</td>
+            <td class="headerCovTableEntryLo">63.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-02-10 21:13:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">785</td>
+            <td class="headerCovTableEntry">785</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #ifndef BOOST_YAP_ALGORITHM_HPP_INCLUDED</a>
+<span class="lineNum">       2 </span>            : #define BOOST_YAP_ALGORITHM_HPP_INCLUDED
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &lt;boost/yap/algorithm_fwd.hpp&gt;
+<span class="lineNum">       5 </span>            : #include &lt;boost/yap/user_macros.hpp&gt;
+<span class="lineNum">       6 </span>            : #include &lt;boost/yap/detail/algorithm.hpp&gt;
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span>            : #include &lt;boost/hana/size.hpp&gt;
+<span class="lineNum">       9 </span>            : #include &lt;boost/hana/comparing.hpp&gt;
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            : 
+<span class="lineNum">      12 </span>            : namespace boost { namespace yap {
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : #ifndef BOOST_YAP_DOXYGEN
+<span class="lineNum">      15 </span>            : 
+<span class="lineNum">      16 </span>            :     namespace adl_detail {
+<span class="lineNum">      17 </span>            : 
+<span class="lineNum">      18 </span>            :         template &lt;typename R, typename E, typename ...T&gt;
+<span class="lineNum">      19 </span>            :         constexpr decltype(auto) eval_expression_as (E const &amp; expr, hana::basic_type&lt;R&gt;, T &amp;&amp; ... args);
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            :         struct eval_expression_as_fn
+<a name="22"><span class="lineNum">      22 </span>            :         {</a>
+<span class="lineNum">      23 </span>            :             template &lt;typename R, typename E, typename ...T&gt;
+<span class="lineNum">      24 </span><span class="lineCov">         31 :             constexpr decltype(auto) operator() (E const &amp; expr, hana::basic_type&lt;R&gt; rtype, T &amp;&amp; ... args) const</span>
+<span class="lineNum">      25 </span><span class="lineCov">         31 :             { return eval_expression_as(expr, rtype, static_cast&lt;T &amp;&amp;&gt;(args)...); }</span>
+<span class="lineNum">      26 </span>            :         };
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            :     }
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span>            :     using adl_detail::eval_expression_as_fn;
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            :     inline namespace {
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            :         constexpr auto &amp; eval_expression_as = detail::static_const&lt;eval_expression_as_fn&gt;::value;
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            :     }
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : #endif
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : #ifdef BOOST_NO_CONSTEXPR_IF
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span>            :     namespace detail {
+<span class="lineNum">      43 </span>            : 
+<span class="lineNum">      44 </span>            :         template &lt;typename Expr, bool MutableRvalueRef&gt;
+<span class="lineNum">      45 </span>            :         struct deref_impl
+<span class="lineNum">      46 </span>            :         {
+<span class="lineNum">      47 </span>            :             decltype(auto) operator() (Expr &amp;&amp; expr)
+<span class="lineNum">      48 </span>            :             { return std::move(*expr.elements[hana::llong_c&lt;0&gt;]); }
+<span class="lineNum">      49 </span>            :         };
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            :         template &lt;typename Expr&gt;
+<a name="52"><span class="lineNum">      52 </span>            :         struct deref_impl&lt;Expr, false&gt;</a>
+<span class="lineNum">      53 </span>            :         {
+<span class="lineNum">      54 </span><span class="lineCov">        454 :             decltype(auto) operator() (Expr &amp;&amp; expr)</span>
+<span class="lineNum">      55 </span><span class="lineCov">        454 :             { return *expr.elements[hana::llong_c&lt;0&gt;]; }</span>
+<span class="lineNum">      56 </span>            :         };
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span>            :     }
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : #endif
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            :     /** &quot;Dereferences&quot; a reference-expression, forwarding its referent to the
+<a name="63"><span class="lineNum">      63 </span>            :         caller. */</a>
+<span class="lineNum">      64 </span>            :     template &lt;typename Expr&gt;
+<span class="lineNum">      65 </span><span class="lineCov">        454 :     decltype(auto) deref (Expr &amp;&amp; expr)</span>
+<span class="lineNum">      66 </span>            :     {
+<span class="lineNum">      67 </span>            :         static_assert(
+<span class="lineNum">      68 </span>            :             is_expr&lt;Expr&gt;::value,
+<span class="lineNum">      69 </span>            :             &quot;deref() is only defined for expressions.&quot;
+<span class="lineNum">      70 </span>            :         );
+<span class="lineNum">      71 </span>            : 
+<span class="lineNum">      72 </span>            :         static_assert(
+<span class="lineNum">      73 </span>            :             detail::remove_cv_ref_t&lt;Expr&gt;::kind == expr_kind::expr_ref,
+<span class="lineNum">      74 </span>            :             &quot;deref() is only defined for expr_ref-kind expressions.&quot;
+<span class="lineNum">      75 </span>            :         );
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            : #ifdef BOOST_NO_CONSTEXPR_IF
+<span class="lineNum">      78 </span>            :         return detail::deref_impl&lt;
+<span class="lineNum">      79 </span>            :             Expr,
+<span class="lineNum">      80 </span>            :             std::is_rvalue_reference&lt;Expr&gt;{} &amp;&amp;
+<span class="lineNum">      81 </span>            :             !std::is_const&lt;std::remove_reference_t&lt;Expr&gt;&gt;{}
+<span class="lineNum">      82 </span><span class="lineCov">        454 :         &gt;{}(static_cast&lt;Expr &amp;&amp;&gt;(expr));</span>
+<span class="lineNum">      83 </span>            : #else
+<span class="lineNum">      84 </span>            :         using namespace hana::literals;
+<span class="lineNum">      85 </span>            :         if constexpr (
+<span class="lineNum">      86 </span>            :             std::is_rvalue_reference&lt;Expr&gt;{} &amp;&amp;
+<span class="lineNum">      87 </span>            :             !std::is_const&lt;std::remove_reference_t&lt;Expr&gt;&gt;{}
+<span class="lineNum">      88 </span>            :         ) {
+<span class="lineNum">      89 </span>            :             return std::move(*expr.elements[0_c]);
+<span class="lineNum">      90 </span>            :         } else {
+<span class="lineNum">      91 </span>            :             return *expr.elements[0_c];
+<span class="lineNum">      92 </span>            :         }
+<span class="lineNum">      93 </span>            : #endif
+<span class="lineNum">      94 </span>            :     }
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span>            :     namespace detail {
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            : #ifdef BOOST_NO_CONSTEXPR_IF
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span>            :         template &lt;bool ValueOfTerminalsOnly, typename T&gt;
+<span class="lineNum">     101 </span>            :         decltype(auto) value_impl (T &amp;&amp; x);
+<span class="lineNum">     102 </span>            : 
+<span class="lineNum">     103 </span>            :         template &lt;typename T, bool IsExprRef, bool ValueOfTerminalsOnly, bool TakeValue, bool IsLvalueRef&gt;
+<span class="lineNum">     104 </span>            :         struct value_expr_impl;
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span>            :         template &lt;typename T, bool ValueOfTerminalsOnly, bool TakeValue, bool IsLvalueRef&gt;
+<a name="107"><span class="lineNum">     107 </span>            :         struct value_expr_impl&lt;T, true, ValueOfTerminalsOnly, TakeValue, IsLvalueRef&gt;</a>
+<span class="lineNum">     108 </span>            :         {
+<span class="lineNum">     109 </span><span class="lineCov">          8 :             decltype(auto) operator() (T &amp;&amp; x)</span>
+<span class="lineNum">     110 </span><span class="lineCov">          8 :             { return value_impl&lt;ValueOfTerminalsOnly&gt;(::boost::yap::deref(static_cast&lt;T &amp;&amp;&gt;(x))); }</span>
+<span class="lineNum">     111 </span>            :         };
+<span class="lineNum">     112 </span>            : 
+<span class="lineNum">     113 </span>            :         template &lt;typename T, bool ValueOfTerminalsOnly&gt;
+<a name="114"><span class="lineNum">     114 </span>            :         struct value_expr_impl&lt;T, false, ValueOfTerminalsOnly, true, true&gt;</a>
+<span class="lineNum">     115 </span>            :         {
+<span class="lineNum">     116 </span><span class="lineCov">        606 :             decltype(auto) operator() (T &amp;&amp; x)</span>
+<span class="lineNum">     117 </span><span class="lineCov">        606 :             { return x.elements[hana::llong_c&lt;0&gt;]; }</span>
+<span class="lineNum">     118 </span>            :         };
+<span class="lineNum">     119 </span>            : 
+<span class="lineNum">     120 </span>            :         template &lt;typename T, bool ValueOfTerminalsOnly&gt;
+<a name="121"><span class="lineNum">     121 </span>            :         struct value_expr_impl&lt;T, false, ValueOfTerminalsOnly, true, false&gt;</a>
+<span class="lineNum">     122 </span>            :         {
+<span class="lineNum">     123 </span><span class="lineCov">        150 :             decltype(auto) operator() (T &amp;&amp; x)</span>
+<span class="lineNum">     124 </span><span class="lineCov">        150 :             { return std::move(x.elements[hana::llong_c&lt;0&gt;]); }</span>
+<span class="lineNum">     125 </span>            :         };
+<span class="lineNum">     126 </span>            : 
+<span class="lineNum">     127 </span>            :         template &lt;typename T, bool ValueOfTerminalsOnly, bool IsLvalueRef&gt;
+<span class="lineNum">     128 </span>            :         struct value_expr_impl&lt;T, false, ValueOfTerminalsOnly, false, IsLvalueRef&gt;
+<span class="lineNum">     129 </span>            :         {
+<span class="lineNum">     130 </span>            :             decltype(auto) operator() (T &amp;&amp; x)
+<span class="lineNum">     131 </span>            :             { return static_cast&lt;T &amp;&amp;&gt;(x); }
+<span class="lineNum">     132 </span>            :         };
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span>            :         template &lt;typename T, bool IsExpr, bool ValueOfTerminalsOnly&gt;
+<a name="135"><span class="lineNum">     135 </span>            :         struct value_impl_t</a>
+<span class="lineNum">     136 </span>            :         {
+<span class="lineNum">     137 </span><span class="lineCov">        764 :             decltype(auto) operator() (T &amp;&amp; x)</span>
+<span class="lineNum">     138 </span>            :             {
+<span class="lineNum">     139 </span><span class="lineCov">        764 :                 constexpr expr_kind kind = detail::remove_cv_ref_t&lt;T&gt;::kind;</span>
+<span class="lineNum">     140 </span><span class="lineCov">        764 :                 constexpr detail::expr_arity arity = detail::arity_of&lt;kind&gt;();</span>
+<span class="lineNum">     141 </span>            :                 return value_expr_impl&lt;
+<span class="lineNum">     142 </span>            :                     T,
+<span class="lineNum">     143 </span>            :                     kind == expr_kind::expr_ref,
+<span class="lineNum">     144 </span>            :                     ValueOfTerminalsOnly,
+<span class="lineNum">     145 </span>            :                     (ValueOfTerminalsOnly &amp;&amp; kind == expr_kind::terminal) ||
+<span class="lineNum">     146 </span>            :                     (!ValueOfTerminalsOnly &amp;&amp; arity == detail::expr_arity::one),
+<span class="lineNum">     147 </span>            :                     std::is_lvalue_reference&lt;T&gt;{}
+<span class="lineNum">     148 </span><span class="lineCov">        764 :                 &gt;{}(static_cast&lt;T &amp;&amp;&gt;(x));</span>
+<span class="lineNum">     149 </span>            :             }
+<span class="lineNum">     150 </span>            :         };
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            :         template &lt;typename T, bool ValueOfTerminalsOnly&gt;
+<a name="153"><span class="lineNum">     153 </span>            :         struct value_impl_t&lt;T, false, ValueOfTerminalsOnly&gt;</a>
+<span class="lineNum">     154 </span>            :         {
+<span class="lineNum">     155 </span><span class="lineCov">         17 :             decltype(auto) operator() (T &amp;&amp; x)</span>
+<span class="lineNum">     156 </span><span class="lineCov">         17 :             { return static_cast&lt;T &amp;&amp;&gt;(x); }</span>
+<span class="lineNum">     157 </span>            :         };
+<a name="158"><span class="lineNum">     158 </span>            : </a>
+<span class="lineNum">     159 </span>            :         template &lt;bool ValueOfTerminalsOnly, typename T&gt;
+<span class="lineNum">     160 </span><span class="lineCov">        781 :         decltype(auto) value_impl (T &amp;&amp; x)</span>
+<span class="lineNum">     161 </span>            :         {
+<span class="lineNum">     162 </span><span class="lineCov">        781 :             return detail::value_impl_t&lt;T, is_expr&lt;T&gt;::value, ValueOfTerminalsOnly&gt;{}(</span>
+<span class="lineNum">     163 </span>            :                 static_cast&lt;T &amp;&amp;&gt;(x)
+<span class="lineNum">     164 </span><span class="lineCov">       1562 :             );</span>
+<span class="lineNum">     165 </span>            :         }
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span>            : #else
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            :         template &lt;bool ValueOfTerminalsOnly, typename T&gt;
+<span class="lineNum">     170 </span>            :         decltype(auto) value_impl (T &amp;&amp; x)
+<span class="lineNum">     171 </span>            :         {
+<span class="lineNum">     172 </span>            :             if constexpr (is_expr&lt;T&gt;::value) {
+<span class="lineNum">     173 </span>            :                 using namespace hana::literals;
+<span class="lineNum">     174 </span>            :                 constexpr expr_kind kind = remove_cv_ref_t&lt;T&gt;::kind;
+<span class="lineNum">     175 </span>            :                 constexpr expr_arity arity = arity_of&lt;kind&gt;();
+<span class="lineNum">     176 </span>            :                 if constexpr (kind == expr_kind::expr_ref) {
+<span class="lineNum">     177 </span>            :                     return value_impl&lt;ValueOfTerminalsOnly&gt;(
+<span class="lineNum">     178 </span>            :                         ::boost::yap::deref(static_cast&lt;T &amp;&amp;&gt;(x))
+<span class="lineNum">     179 </span>            :                     );
+<span class="lineNum">     180 </span>            :                 } else if constexpr ((ValueOfTerminalsOnly &amp;&amp; kind == expr_kind::terminal) ||
+<span class="lineNum">     181 </span>            :                                      (!ValueOfTerminalsOnly &amp;&amp; arity == expr_arity::one)) {
+<span class="lineNum">     182 </span>            :                     if constexpr (std::is_lvalue_reference&lt;T&gt;{}) {
+<span class="lineNum">     183 </span>            :                         return x.elements[0_c];
+<span class="lineNum">     184 </span>            :                     } else {
+<span class="lineNum">     185 </span>            :                         return std::move(x.elements[0_c]);
+<span class="lineNum">     186 </span>            :                     }
+<span class="lineNum">     187 </span>            :                 } else {
+<span class="lineNum">     188 </span>            :                     return static_cast&lt;T &amp;&amp;&gt;(x);
+<span class="lineNum">     189 </span>            :                 }
+<span class="lineNum">     190 </span>            :             } else {
+<span class="lineNum">     191 </span>            :                 return static_cast&lt;T &amp;&amp;&gt;(x);
+<span class="lineNum">     192 </span>            :             }
+<span class="lineNum">     193 </span>            :         }
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span>            : #endif
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span>            :     }
+<span class="lineNum">     198 </span>            : 
+<span class="lineNum">     199 </span>            :     /** Forwards the sole element of \a x to the caller, possibly calling
+<span class="lineNum">     200 </span>            :         &lt;code&gt;deref()&lt;/code&gt; first if \a x is a reference expression, or
+<span class="lineNum">     201 </span>            :         forwards \a x to the caller unchanged.
+<span class="lineNum">     202 </span>            : 
+<span class="lineNum">     203 </span>            :         More formally:
+<span class="lineNum">     204 </span>            : 
+<span class="lineNum">     205 </span>            :         - If \a x is not an expression, \a x is forwarded to the caller.
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span>            :         - Otherwise, if \a x is a reference expression, the result is
+<span class="lineNum">     208 </span>            :         &lt;code&gt;value(deref(x))&lt;/code&gt;.
+<span class="lineNum">     209 </span>            : 
+<span class="lineNum">     210 </span>            :         - Otherwise, if \a x is an expression with only one value (a unary
+<span class="lineNum">     211 </span>            :         expression or a terminal expression), the result is the forwarded
+<span class="lineNum">     212 </span>            :         first element of \a x.
+<span class="lineNum">     213 </span>            : 
+<a name="214"><span class="lineNum">     214 </span>            :         - Otherwise, \a x is forwarded to the caller. */</a>
+<span class="lineNum">     215 </span>            :     template &lt;typename T&gt;
+<span class="lineNum">     216 </span><span class="lineCov">        725 :     decltype(auto) value (T &amp;&amp; x)</span>
+<span class="lineNum">     217 </span><span class="lineCov">        725 :     { return detail::value_impl&lt;false&gt;(static_cast&lt;T &amp;&amp;&gt;(x)); }</span>
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span>            : #ifdef BOOST_NO_CONSTEXPR_IF
+<span class="lineNum">     220 </span>            : 
+<span class="lineNum">     221 </span>            :     template &lt;long long I, typename Expr&gt;
+<span class="lineNum">     222 </span>            :     decltype(auto) get (Expr &amp;&amp; expr, hana::llong&lt;I&gt; i);
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span>            :     namespace detail {
+<span class="lineNum">     225 </span>            : 
+<span class="lineNum">     226 </span>            :         template &lt;long long I, typename Expr, bool IsExpr, bool IsLvalueRef&gt;
+<span class="lineNum">     227 </span>            :         struct get_impl;
+<span class="lineNum">     228 </span>            : 
+<span class="lineNum">     229 </span>            :         template &lt;long long I, typename Expr, bool IsLvalueRef&gt;
+<span class="lineNum">     230 </span>            :         struct get_impl&lt;I, Expr, true, IsLvalueRef&gt;
+<span class="lineNum">     231 </span>            :         {
+<span class="lineNum">     232 </span>            :             decltype(auto) operator() (Expr &amp;&amp; expr, hana::llong&lt;I&gt; i)
+<span class="lineNum">     233 </span>            :             { return ::boost::yap::get(::boost::yap::deref(static_cast&lt;Expr &amp;&amp;&gt;(expr)), i); }
+<span class="lineNum">     234 </span>            :         };
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span>            :         template &lt;long long I, typename Expr&gt;
+<a name="237"><span class="lineNum">     237 </span>            :         struct get_impl&lt;I, Expr, false, true&gt;</a>
+<span class="lineNum">     238 </span>            :         {
+<span class="lineNum">     239 </span><span class="lineCov">        373 :             decltype(auto) operator() (Expr &amp;&amp; expr, hana::llong&lt;I&gt; i)</span>
+<span class="lineNum">     240 </span><span class="lineCov">        373 :             { return expr.elements[i]; }</span>
+<span class="lineNum">     241 </span>            :         };
+<span class="lineNum">     242 </span>            : 
+<span class="lineNum">     243 </span>            :         template &lt;long long I, typename Expr&gt;
+<span class="lineNum">     244 </span>            :         struct get_impl&lt;I, Expr, false, false&gt;
+<span class="lineNum">     245 </span>            :         {
+<span class="lineNum">     246 </span>            :             decltype(auto) operator() (Expr &amp;&amp; expr, hana::llong&lt;I&gt; i)
+<span class="lineNum">     247 </span>            :             { return std::move(expr.elements[i]); }
+<span class="lineNum">     248 </span>            :         };
+<span class="lineNum">     249 </span>            : 
+<span class="lineNum">     250 </span>            :     }
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span>            : #endif
+<span class="lineNum">     253 </span>            : 
+<span class="lineNum">     254 </span>            :     /** Forwards the &lt;i&gt;i&lt;/i&gt;-th element of \a expr to the caller.  If \a expr
+<span class="lineNum">     255 </span>            :         is a reference expression, the result is &lt;code&gt;get(deref(expr),
+<span class="lineNum">     256 </span>            :         i)&lt;/code&gt;.
+<span class="lineNum">     257 </span>            : 
+<span class="lineNum">     258 </span>            :         \note &lt;code&gt;get()&lt;/code&gt; is only valid if \a Expr is an expression.
+<a name="259"><span class="lineNum">     259 </span>            :     */</a>
+<span class="lineNum">     260 </span>            :     template &lt;long long I, typename Expr&gt;
+<span class="lineNum">     261 </span><span class="lineCov">        373 :     decltype(auto) get (Expr &amp;&amp; expr, hana::llong&lt;I&gt; i)</span>
+<span class="lineNum">     262 </span>            :     {
+<span class="lineNum">     263 </span>            :         static_assert(
+<span class="lineNum">     264 </span>            :             is_expr&lt;Expr&gt;::value,
+<span class="lineNum">     265 </span>            :             &quot;get() is only defined for expressions.&quot;
+<span class="lineNum">     266 </span>            :         );
+<span class="lineNum">     267 </span>            : 
+<span class="lineNum">     268 </span><span class="lineCov">        373 :         constexpr expr_kind kind = detail::remove_cv_ref_t&lt;Expr&gt;::kind;</span>
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span>            :         static_assert(
+<span class="lineNum">     271 </span>            :             kind == expr_kind::expr_ref ||
+<span class="lineNum">     272 </span>            :             (0 &lt;= I &amp;&amp; I &lt; decltype(hana::size(expr.elements))::value),
+<span class="lineNum">     273 </span>            :             &quot;In get(expr, I), I must be nonnegative, and less &quot;
+<span class="lineNum">     274 </span>            :             &quot;than hana::size(expr.elements).&quot;
+<span class="lineNum">     275 </span>            :         );
+<span class="lineNum">     276 </span>            : 
+<span class="lineNum">     277 </span>            : #ifdef BOOST_NO_CONSTEXPR_IF
+<span class="lineNum">     278 </span>            :         return detail::get_impl&lt;
+<span class="lineNum">     279 </span>            :             I,
+<span class="lineNum">     280 </span>            :             Expr,
+<span class="lineNum">     281 </span>            :             kind == expr_kind::expr_ref,
+<span class="lineNum">     282 </span>            :             std::is_lvalue_reference&lt;Expr&gt;{}
+<span class="lineNum">     283 </span><span class="lineCov">        373 :         &gt;{}(static_cast&lt;Expr &amp;&amp;&gt;(expr), i);</span>
+<span class="lineNum">     284 </span>            : #else
+<span class="lineNum">     285 </span>            :         using namespace hana::literals;
+<span class="lineNum">     286 </span>            :         if constexpr (kind == expr_kind::expr_ref) {
+<span class="lineNum">     287 </span>            :             return ::boost::yap::get(::boost::yap::deref(static_cast&lt;Expr &amp;&amp;&gt;(expr)), i);
+<span class="lineNum">     288 </span>            :         } else {
+<span class="lineNum">     289 </span>            :             if constexpr (std::is_lvalue_reference&lt;Expr&gt;{}) {
+<span class="lineNum">     290 </span>            :                 return expr.elements[i];
+<span class="lineNum">     291 </span>            :             } else {
+<span class="lineNum">     292 </span>            :                 return std::move(expr.elements[i]);
+<span class="lineNum">     293 </span>            :             }
+<span class="lineNum">     294 </span>            :         }
+<span class="lineNum">     295 </span>            : #endif
+<span class="lineNum">     296 </span>            :     }
+<span class="lineNum">     297 </span>            : 
+<span class="lineNum">     298 </span>            :     /** Returns &lt;code&gt;get(expr, boost::hana::llong_c&lt;I&gt;)&lt;/code&gt;. */
+<span class="lineNum">     299 </span>            :     template &lt;long long I, typename Expr&gt;
+<span class="lineNum">     300 </span>            :     decltype(auto) get_c (Expr &amp;&amp; expr)
+<span class="lineNum">     301 </span>            :     { return ::boost::yap::get(static_cast&lt;Expr &amp;&amp;&gt;(expr), hana::llong_c&lt;I&gt;); }
+<span class="lineNum">     302 </span>            : 
+<span class="lineNum">     303 </span>            :     /** Returns the left operand in a binary operator expression.
+<span class="lineNum">     304 </span>            : 
+<span class="lineNum">     305 </span>            :         Equivalent to &lt;code&gt;get(expr, 0_c)&lt;/code&gt;.
+<span class="lineNum">     306 </span>            : 
+<span class="lineNum">     307 </span>            :         \note &lt;code&gt;left()&lt;/code&gt; is only valid if \a Expr is a binary
+<span class="lineNum">     308 </span>            :         operator expression.
+<a name="309"><span class="lineNum">     309 </span>            :     */</a>
+<span class="lineNum">     310 </span>            :     template &lt;typename Expr&gt;
+<span class="lineNum">     311 </span><span class="lineCov">         94 :     decltype(auto) left (Expr &amp;&amp; expr)</span>
+<span class="lineNum">     312 </span>            :     {
+<span class="lineNum">     313 </span>            :         using namespace hana::literals;
+<span class="lineNum">     314 </span><span class="lineCov">         94 :         return ::boost::yap::get(static_cast&lt;Expr &amp;&amp;&gt;(expr), 0_c);</span>
+<span class="lineNum">     315 </span>            :         constexpr expr_kind kind = detail::remove_cv_ref_t&lt;Expr&gt;::kind;
+<span class="lineNum">     316 </span>            :         static_assert(
+<span class="lineNum">     317 </span>            :             kind == expr_kind::expr_ref ||
+<span class="lineNum">     318 </span>            :             detail::arity_of&lt;kind&gt;() == detail::expr_arity::two,
+<span class="lineNum">     319 </span>            :             &quot;left() is only defined for binary expressions.&quot;
+<span class="lineNum">     320 </span>            :         );
+<span class="lineNum">     321 </span>            :     }
+<span class="lineNum">     322 </span>            : 
+<span class="lineNum">     323 </span>            :     /** Returns the right operand in a binary operator expression.
+<span class="lineNum">     324 </span>            : 
+<span class="lineNum">     325 </span>            :         Equivalent to &lt;code&gt;get(expr, 1_c)&lt;/code&gt;.
+<span class="lineNum">     326 </span>            : 
+<span class="lineNum">     327 </span>            :         \note &lt;code&gt;right()&lt;/code&gt; is only valid if \a Expr is a binary
+<span class="lineNum">     328 </span>            :         operator expression.
+<a name="329"><span class="lineNum">     329 </span>            :     */</a>
+<span class="lineNum">     330 </span>            :     template &lt;typename Expr&gt;
+<span class="lineNum">     331 </span><span class="lineCov">         77 :     decltype(auto) right (Expr &amp;&amp; expr)</span>
+<span class="lineNum">     332 </span>            :     {
+<span class="lineNum">     333 </span>            :         using namespace hana::literals;
+<span class="lineNum">     334 </span><span class="lineCov">         77 :         return ::boost::yap::get(static_cast&lt;Expr &amp;&amp;&gt;(expr), 1_c);</span>
+<span class="lineNum">     335 </span>            :         constexpr expr_kind kind = detail::remove_cv_ref_t&lt;Expr&gt;::kind;
+<span class="lineNum">     336 </span>            :         static_assert(
+<span class="lineNum">     337 </span>            :             kind == expr_kind::expr_ref ||
+<span class="lineNum">     338 </span>            :             detail::arity_of&lt;kind&gt;() == detail::expr_arity::two,
+<span class="lineNum">     339 </span>            :             &quot;right() is only defined for binary expressions.&quot;
+<span class="lineNum">     340 </span>            :         );
+<span class="lineNum">     341 </span>            :     }
+<span class="lineNum">     342 </span>            : 
+<span class="lineNum">     343 </span>            :     /** Returns the condition expression in an if_else expression.
+<span class="lineNum">     344 </span>            : 
+<span class="lineNum">     345 </span>            :         Equivalent to &lt;code&gt;get(expr, 0_c)&lt;/code&gt;.
+<span class="lineNum">     346 </span>            : 
+<span class="lineNum">     347 </span>            :         \note &lt;code&gt;cond()&lt;/code&gt; is only valid if \a Expr is an
+<span class="lineNum">     348 </span>            :         &lt;code&gt;expr_kind::if_else&lt;/code&gt; expression.
+<a name="349"><span class="lineNum">     349 </span>            :     */</a>
+<span class="lineNum">     350 </span>            :     template &lt;typename Expr&gt;
+<span class="lineNum">     351 </span><span class="lineCov">          4 :     decltype(auto) cond (Expr &amp;&amp; expr)</span>
+<span class="lineNum">     352 </span>            :     {
+<span class="lineNum">     353 </span>            :         using namespace hana::literals;
+<span class="lineNum">     354 </span><span class="lineCov">          4 :         return ::boost::yap::get(static_cast&lt;Expr &amp;&amp;&gt;(expr), 0_c);</span>
+<span class="lineNum">     355 </span>            :         constexpr expr_kind kind = detail::remove_cv_ref_t&lt;Expr&gt;::kind;
+<span class="lineNum">     356 </span>            :         static_assert(
+<span class="lineNum">     357 </span>            :             kind == expr_kind::expr_ref || kind == expr_kind::if_else,
+<span class="lineNum">     358 </span>            :             &quot;cond() is only defined for if_else expressions.&quot;
+<span class="lineNum">     359 </span>            :         );
+<span class="lineNum">     360 </span>            :     }
+<span class="lineNum">     361 </span>            : 
+<span class="lineNum">     362 </span>            :     /** Returns the then-expression in an if_else expression.
+<span class="lineNum">     363 </span>            : 
+<span class="lineNum">     364 </span>            :         Equivalent to &lt;code&gt;get(expr, 1_c)&lt;/code&gt;.
+<span class="lineNum">     365 </span>            : 
+<span class="lineNum">     366 </span>            :         \note &lt;code&gt;then()&lt;/code&gt; is only valid if \a Expr is an
+<span class="lineNum">     367 </span>            :         &lt;code&gt;expr_kind::if_else&lt;/code&gt; expression.
+<a name="368"><span class="lineNum">     368 </span>            :     */</a>
+<span class="lineNum">     369 </span>            :     template &lt;typename Expr&gt;
+<span class="lineNum">     370 </span><span class="lineCov">          4 :     decltype(auto) then (Expr &amp;&amp; expr)</span>
+<span class="lineNum">     371 </span>            :     {
+<span class="lineNum">     372 </span>            :         using namespace hana::literals;
+<span class="lineNum">     373 </span><span class="lineCov">          4 :         return ::boost::yap::get(static_cast&lt;Expr &amp;&amp;&gt;(expr), 1_c);</span>
+<span class="lineNum">     374 </span>            :         constexpr expr_kind kind = detail::remove_cv_ref_t&lt;Expr&gt;::kind;
+<span class="lineNum">     375 </span>            :         static_assert(
+<span class="lineNum">     376 </span>            :             kind == expr_kind::expr_ref || kind == expr_kind::if_else,
+<span class="lineNum">     377 </span>            :             &quot;then() is only defined for if_else expressions.&quot;
+<span class="lineNum">     378 </span>            :         );
+<span class="lineNum">     379 </span>            :     }
+<span class="lineNum">     380 </span>            : 
+<span class="lineNum">     381 </span>            :     /** Returns the else-expression in an if_else expression.
+<span class="lineNum">     382 </span>            : 
+<span class="lineNum">     383 </span>            :         Equivalent to &lt;code&gt;get(expr, 2_c)&lt;/code&gt;.
+<span class="lineNum">     384 </span>            : 
+<span class="lineNum">     385 </span>            :         \note &lt;code&gt;else_()&lt;/code&gt; is only valid if \a Expr is an
+<span class="lineNum">     386 </span>            :         &lt;code&gt;expr_kind::if_else&lt;/code&gt; expression.
+<a name="387"><span class="lineNum">     387 </span>            :     */</a>
+<span class="lineNum">     388 </span>            :     template &lt;typename Expr&gt;
+<span class="lineNum">     389 </span><span class="lineCov">          6 :     decltype(auto) else_ (Expr &amp;&amp; expr)</span>
+<span class="lineNum">     390 </span>            :     {
+<span class="lineNum">     391 </span>            :         using namespace hana::literals;
+<span class="lineNum">     392 </span><span class="lineCov">          6 :         return ::boost::yap::get(static_cast&lt;Expr &amp;&amp;&gt;(expr), 2_c);</span>
+<span class="lineNum">     393 </span>            :         constexpr expr_kind kind = detail::remove_cv_ref_t&lt;Expr&gt;::kind;
+<span class="lineNum">     394 </span>            :         static_assert(
+<span class="lineNum">     395 </span>            :             kind == expr_kind::expr_ref || kind == expr_kind::if_else,
+<span class="lineNum">     396 </span>            :             &quot;else_() is only defined for if_else expressions.&quot;
+<span class="lineNum">     397 </span>            :         );
+<span class="lineNum">     398 </span>            :     }
+<span class="lineNum">     399 </span>            : 
+<span class="lineNum">     400 </span>            :     /** Returns the callable in a call expression.
+<span class="lineNum">     401 </span>            : 
+<span class="lineNum">     402 </span>            :         Equivalent to &lt;code&gt;get(expr, 0)&lt;/code&gt;.
+<span class="lineNum">     403 </span>            : 
+<span class="lineNum">     404 </span>            :         \note &lt;code&gt;callable()&lt;/code&gt; is only valid if \a Expr is an
+<span class="lineNum">     405 </span>            :         &lt;code&gt;expr_kind::call&lt;/code&gt; expression.
+<span class="lineNum">     406 </span>            :     */
+<span class="lineNum">     407 </span>            :     template &lt;typename Expr&gt;
+<span class="lineNum">     408 </span>            :     decltype(auto) callable (Expr &amp;&amp; expr)
+<span class="lineNum">     409 </span>            :     {
+<span class="lineNum">     410 </span>            :         return ::boost::yap::get(static_cast&lt;Expr &amp;&amp;&gt;(expr), hana::llong_c&lt;0&gt;);
+<span class="lineNum">     411 </span>            :         constexpr expr_kind kind = detail::remove_cv_ref_t&lt;Expr&gt;::kind;
+<span class="lineNum">     412 </span>            :         static_assert(
+<span class="lineNum">     413 </span>            :             kind == expr_kind::expr_ref ||
+<span class="lineNum">     414 </span>            :             detail::arity_of&lt;kind&gt;() == detail::expr_arity::n,
+<span class="lineNum">     415 </span>            :             &quot;callable() is only defined for call expressions.&quot;
+<span class="lineNum">     416 </span>            :         );
+<span class="lineNum">     417 </span>            :     }
+<span class="lineNum">     418 </span>            : 
+<span class="lineNum">     419 </span>            :     /** Returns the &lt;i&gt;i-th&lt;/i&gt; argument expression in a call expression.
+<span class="lineNum">     420 </span>            : 
+<span class="lineNum">     421 </span>            :         Equivalent to &lt;code&gt;get(expr, i + 1)&lt;/code&gt;.
+<span class="lineNum">     422 </span>            : 
+<span class="lineNum">     423 </span>            :         \note &lt;code&gt;argument()&lt;/code&gt; is only valid if \a Expr is an
+<span class="lineNum">     424 </span>            :         &lt;code&gt;expr_kind::call&lt;/code&gt; expression.
+<span class="lineNum">     425 </span>            :     */
+<span class="lineNum">     426 </span>            :     template &lt;long long I, typename Expr&gt;
+<span class="lineNum">     427 </span>            :     decltype(auto) argument (Expr &amp;&amp; expr, hana::llong&lt;I&gt; i)
+<span class="lineNum">     428 </span>            :     {
+<span class="lineNum">     429 </span>            :         return ::boost::yap::get(static_cast&lt;Expr &amp;&amp;&gt;(expr), hana::llong_c&lt;I + 1&gt;);
+<span class="lineNum">     430 </span>            :         constexpr expr_kind kind = detail::remove_cv_ref_t&lt;Expr&gt;::kind;
+<span class="lineNum">     431 </span>            :         static_assert(
+<span class="lineNum">     432 </span>            :             kind == expr_kind::expr_ref ||
+<span class="lineNum">     433 </span>            :             detail::arity_of&lt;kind&gt;() == detail::expr_arity::n,
+<span class="lineNum">     434 </span>            :             &quot;argument() is only defined for call expressions.&quot;
+<span class="lineNum">     435 </span>            :         );
+<span class="lineNum">     436 </span>            :         static_assert(
+<span class="lineNum">     437 </span>            :             kind == expr_kind::expr_ref ||
+<span class="lineNum">     438 </span>            :             (0 &lt;= I &amp;&amp; I &lt; decltype(hana::size(expr.elements))::value - 1),
+<span class="lineNum">     439 </span>            :             &quot;In argument(expr, I), I must be nonnegative, and less &quot;
+<span class="lineNum">     440 </span>            :             &quot;than hana::size(expr.elements).&quot;
+<span class="lineNum">     441 </span>            :         );
+<span class="lineNum">     442 </span>            :     }
+<span class="lineNum">     443 </span>            : 
+<span class="lineNum">     444 </span>            :     /** Makes a new expression instantiated from the expression template \a
+<span class="lineNum">     445 </span>            :         ExprTemplate, of kind \a Kind, with the given values as its elements.
+<span class="lineNum">     446 </span>            : 
+<span class="lineNum">     447 </span>            :         For each parameter P:
+<span class="lineNum">     448 </span>            : 
+<span class="lineNum">     449 </span>            :         - If P is an expression, P is moved into the result if P is an rvalue
+<span class="lineNum">     450 </span>            :         and captured by reference into the result otherwise.
+<span class="lineNum">     451 </span>            : 
+<span class="lineNum">     452 </span>            :         - Otherwise, P is wrapped in a terminal expression.
+<span class="lineNum">     453 </span>            : 
+<span class="lineNum">     454 </span>            :         \note &lt;code&gt;make_expression()&lt;/code&gt; is only valid if the number of
+<span class="lineNum">     455 </span>            :         parameters passed is appropriate for \a Kind.
+<a name="456"><span class="lineNum">     456 </span>            :     */</a>
+<span class="lineNum">     457 </span>            :     template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, expr_kind Kind, typename ...T&gt;
+<span class="lineNum">     458 </span><span class="lineCov">         14 :     auto make_expression (T &amp;&amp; ... t)</span>
+<span class="lineNum">     459 </span>            :     {
+<span class="lineNum">     460 </span><span class="lineCov">         14 :         constexpr detail::expr_arity arity = detail::arity_of&lt;Kind&gt;();</span>
+<span class="lineNum">     461 </span>            :         static_assert(
+<span class="lineNum">     462 </span>            :             (arity == detail::expr_arity::one &amp;&amp; sizeof...(T) == 1) ||
+<span class="lineNum">     463 </span>            :             (arity == detail::expr_arity::two &amp;&amp; sizeof...(T) == 2) ||
+<span class="lineNum">     464 </span>            :             (arity == detail::expr_arity::three &amp;&amp; sizeof...(T) == 3) ||
+<span class="lineNum">     465 </span>            :             arity == detail::expr_arity::n,
+<span class="lineNum">     466 </span>            :             &quot;The number of parameters passed to make_expression() must match the arity &quot;
+<span class="lineNum">     467 </span>            :             &quot;implied by the expr_kind template parameter.&quot;
+<span class="lineNum">     468 </span>            :         );
+<span class="lineNum">     469 </span>            :         using tuple_type = hana::tuple&lt;detail::operand_type_t&lt;ExprTemplate, T&gt;...&gt;;
+<span class="lineNum">     470 </span>            :         return ExprTemplate&lt;Kind, tuple_type&gt;{
+<span class="lineNum">     471 </span>            :             tuple_type{
+<span class="lineNum">     472 </span><span class="lineCov">         28 :                 detail::make_operand&lt;detail::operand_type_t&lt;ExprTemplate, T&gt;&gt;{}(static_cast&lt;T &amp;&amp;&gt;(t))...</span>
+<span class="lineNum">     473 </span>            :             }
+<span class="lineNum">     474 </span><span class="lineCov">         28 :         };</span>
+<span class="lineNum">     475 </span>            :     }
+<span class="lineNum">     476 </span>            : 
+<span class="lineNum">     477 </span>            :     /** Makes a new terminal expression instantiated from the expression
+<span class="lineNum">     478 </span>            :         template \a ExprTemplate, with the given value as its sole element.
+<span class="lineNum">     479 </span>            : 
+<span class="lineNum">     480 </span>            :         \note &lt;code&gt;make_terminal()&lt;/code&gt; is only valid if \a T is \b not an
+<span class="lineNum">     481 </span>            :         expression.
+<a name="482"><span class="lineNum">     482 </span>            :     */</a>
+<span class="lineNum">     483 </span>            :     template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T&gt;
+<span class="lineNum">     484 </span><span class="lineCov">        153 :     auto make_terminal (T &amp;&amp; t)</span>
+<span class="lineNum">     485 </span>            :     {
+<span class="lineNum">     486 </span>            :         static_assert(
+<span class="lineNum">     487 </span>            :             !is_expr&lt;T&gt;::value,
+<span class="lineNum">     488 </span>            :             &quot;make_terminal() is only defined for non expressions.&quot;
+<span class="lineNum">     489 </span>            :         );
+<span class="lineNum">     490 </span>            :         using result_type = detail::operand_type_t&lt;ExprTemplate, T&gt;;
+<span class="lineNum">     491 </span>            :         using tuple_type = decltype(std::declval&lt;result_type&gt;().elements);
+<span class="lineNum">     492 </span><span class="lineCov">        153 :         return result_type{tuple_type{static_cast&lt;T &amp;&amp;&gt;(t)}};</span>
+<span class="lineNum">     493 </span>            :     }
+<span class="lineNum">     494 </span>            : 
+<span class="lineNum">     495 </span>            : #ifdef BOOST_NO_CONSTEXPR_IF
+<span class="lineNum">     496 </span>            : 
+<span class="lineNum">     497 </span>            :     namespace detail {
+<span class="lineNum">     498 </span>            : 
+<span class="lineNum">     499 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T, bool IsExpr&gt;
+<a name="500"><span class="lineNum">     500 </span>            :         struct as_expr_impl</a>
+<span class="lineNum">     501 </span>            :         {
+<span class="lineNum">     502 </span><span class="lineCov">          3 :             decltype(auto) operator() (T &amp;&amp; t)</span>
+<span class="lineNum">     503 </span><span class="lineCov">          3 :             { return static_cast&lt;T &amp;&amp;&gt;(t); }</span>
+<span class="lineNum">     504 </span>            :         };
+<span class="lineNum">     505 </span>            : 
+<span class="lineNum">     506 </span>            :         template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T&gt;
+<a name="507"><span class="lineNum">     507 </span>            :         struct as_expr_impl&lt;ExprTemplate, T, false&gt;</a>
+<span class="lineNum">     508 </span>            :         {
+<span class="lineNum">     509 </span><span class="lineCov">          2 :             decltype(auto) operator() (T &amp;&amp; t)</span>
+<span class="lineNum">     510 </span><span class="lineCov">          2 :             { return make_terminal&lt;ExprTemplate&gt;(static_cast&lt;T &amp;&amp;&gt;(t)); }</span>
+<span class="lineNum">     511 </span>            :         };
+<span class="lineNum">     512 </span>            : 
+<span class="lineNum">     513 </span>            :     }
+<span class="lineNum">     514 </span>            : 
+<span class="lineNum">     515 </span>            : #endif
+<span class="lineNum">     516 </span>            : 
+<span class="lineNum">     517 </span>            :     /** Returns an expression formed from \a t as follows:
+<span class="lineNum">     518 </span>            : 
+<span class="lineNum">     519 </span>            :         - If \a t is an expression, \a t is forwarded to the caller.
+<span class="lineNum">     520 </span>            : 
+<span class="lineNum">     521 </span>            :         - Otherwise, \a t is wrapped in a terminal expression.
+<a name="522"><span class="lineNum">     522 </span>            :     */</a>
+<span class="lineNum">     523 </span>            :     template &lt;template &lt;expr_kind, class&gt; class ExprTemplate, typename T&gt;
+<span class="lineNum">     524 </span><span class="lineCov">          5 :     decltype(auto) as_expr (T &amp;&amp; t)</span>
+<span class="lineNum">     525 </span>            :     {
+<span class="lineNum">     526 </span>            : #ifdef BOOST_NO_CONSTEXPR_IF
+<span class="lineNum">     527 </span><span class="lineCov">          5 :         return detail::as_expr_impl&lt;ExprTemplate, T, is_expr&lt;T&gt;::value&gt;{}(</span>
+<span class="lineNum">     528 </span>            :             static_cast&lt;T &amp;&amp;&gt;(t)
+<span class="lineNum">     529 </span><span class="lineCov">         10 :         );</span>
+<span class="lineNum">     530 </span>            : #else
+<span class="lineNum">     531 </span>            :         if constexpr (is_expr&lt;T&gt;::value) {
+<span class="lineNum">     532 </span>            :             return static_cast&lt;T &amp;&amp;&gt;(t);
+<span class="lineNum">     533 </span>            :         } else {
+<span class="lineNum">     534 </span>            :             return make_terminal&lt;ExprTemplate&gt;(static_cast&lt;T &amp;&amp;&gt;(t));
+<span class="lineNum">     535 </span>            :         }
+<span class="lineNum">     536 </span>            : #endif
+<span class="lineNum">     537 </span>            :     }
+<span class="lineNum">     538 </span>            : 
+<span class="lineNum">     539 </span>            :     /** A callable type that evaluates its contained expression when called.
+<span class="lineNum">     540 </span>            : 
+<span class="lineNum">     541 </span>            :         \see &lt;code&gt;make_expression_function()&lt;/code&gt;
+<a name="542"><span class="lineNum">     542 </span>            :     */</a>
+<span class="lineNum">     543 </span>            :     template &lt;typename Expr&gt;
+<span class="lineNum">     544 </span><span class="lineCov">          3 :     struct expression_function</span>
+<a name="545"><span class="lineNum">     545 </span>            :     {</a>
+<span class="lineNum">     546 </span>            :         template &lt;typename ...U&gt;
+<span class="lineNum">     547 </span><span class="lineCov">         11 :         decltype(auto) operator() (U &amp;&amp; ... u)</span>
+<span class="lineNum">     548 </span><span class="lineCov">         11 :         { return ::boost::yap::evaluate(expr, static_cast&lt;U &amp;&amp;&gt;(u)...); }</span>
+<span class="lineNum">     549 </span>            : 
+<span class="lineNum">     550 </span>            :         Expr expr;
+<span class="lineNum">     551 </span>            :     };
+<span class="lineNum">     552 </span>            : 
+<span class="lineNum">     553 </span>            :     namespace detail {
+<span class="lineNum">     554 </span>            : 
+<span class="lineNum">     555 </span>            :         template &lt;expr_kind Kind, typename Tuple&gt;
+<span class="lineNum">     556 </span>            :         struct expression_function_expr
+<span class="lineNum">     557 </span>            :         {
+<span class="lineNum">     558 </span>            :             static const expr_kind kind = Kind;
+<span class="lineNum">     559 </span>            :             Tuple elements;
+<span class="lineNum">     560 </span>            :         };
+<span class="lineNum">     561 </span>            : 
+<span class="lineNum">     562 </span>            :     }
+<span class="lineNum">     563 </span>            : 
+<span class="lineNum">     564 </span>            :     /** Returns a callable object that \a expr has been forwarded into.  This
+<span class="lineNum">     565 </span>            :         is useful for using expressions as function objects.
+<span class="lineNum">     566 </span>            : 
+<span class="lineNum">     567 </span>            :         Lvalue expressions are stored in the result by reference; rvalue
+<span class="lineNum">     568 </span>            :         expressions are moved into the result.
+<span class="lineNum">     569 </span>            : 
+<span class="lineNum">     570 </span>            :         \note &lt;code&gt;make_expression_function()&lt;/code&gt; is only valid if \a
+<span class="lineNum">     571 </span>            :         Expr is an expression.
+<a name="572"><span class="lineNum">     572 </span>            :     */</a>
+<span class="lineNum">     573 </span>            :     template &lt;typename Expr&gt;
+<span class="lineNum">     574 </span><span class="lineCov">          3 :     auto make_expression_function (Expr &amp;&amp; expr)</span>
+<span class="lineNum">     575 </span>            :     {
+<span class="lineNum">     576 </span>            :         static_assert(
+<span class="lineNum">     577 </span>            :             is_expr&lt;Expr&gt;::value,
+<span class="lineNum">     578 </span>            :             &quot;make_expression_function() is only defined for expressions.&quot;
+<span class="lineNum">     579 </span>            :         );
+<span class="lineNum">     580 </span>            :         using stored_type =
+<span class="lineNum">     581 </span>            :             detail::operand_type_t&lt;detail::expression_function_expr, Expr &amp;&amp;&gt;;
+<span class="lineNum">     582 </span>            :         return expression_function&lt;stored_type&gt;{
+<span class="lineNum">     583 </span><span class="lineCov">          2 :             detail::make_operand&lt;stored_type&gt;{}(static_cast&lt;Expr &amp;&amp;&gt;(expr))</span>
+<span class="lineNum">     584 </span><span class="lineCov">          5 :         };</span>
+<span class="lineNum">     585 </span>            :     }
+<span class="lineNum">     586 </span>            : 
+<span class="lineNum">     587 </span>            : } }
+<span class="lineNum">     588 </span>            : 
+<span class="lineNum">     589 </span>            : #include &lt;boost/yap/detail/default_eval.hpp&gt;
+<span class="lineNum">     590 </span>            : 
+<span class="lineNum">     591 </span>            : namespace boost { namespace yap {
+<span class="lineNum">     592 </span>            : 
+<span class="lineNum">     593 </span>            :     /** Evaluates \a expr, substituting the subsequent parameters (if any)
+<span class="lineNum">     594 </span>            :         into \a expr's placeholder terminals.
+<span class="lineNum">     595 </span>            : 
+<span class="lineNum">     596 </span>            :         All customization points for the evaluation of expressions \b except
+<span class="lineNum">     597 </span>            :         &lt;code&gt;eval_expression_as()&lt;/code&gt; are used to evaluate the \a expr.
+<span class="lineNum">     598 </span>            :         If you've overridden any, that will be reflected in the result.
+<span class="lineNum">     599 </span>            : 
+<span class="lineNum">     600 </span>            :         \note &lt;code&gt;evaluate()&lt;/code&gt; is only valid if \a Expr is an
+<span class="lineNum">     601 </span>            :         expression, and &lt;code&gt;max_p &lt;= sizeof...(T)&lt;/code&gt;, where
+<span class="lineNum">     602 </span>            :         &lt;code&gt;max_p&lt;/code&gt; is the maximum placeholder index in \a expr.
+<a name="603"><span class="lineNum">     603 </span>            :     */</a>
+<span class="lineNum">     604 </span>            :     template &lt;typename Expr, typename ...T&gt;
+<span class="lineNum">     605 </span><span class="lineCov">        205 :     decltype(auto) evaluate (Expr &amp;&amp; expr, T &amp;&amp; ... t)</span>
+<span class="lineNum">     606 </span>            :     {
+<span class="lineNum">     607 </span>            :         static_assert(
+<span class="lineNum">     608 </span>            :             is_expr&lt;Expr&gt;::value,
+<span class="lineNum">     609 </span>            :             &quot;evaluate() is only defined for expressions.&quot;
+<span class="lineNum">     610 </span>            :         );
+<span class="lineNum">     611 </span><span class="lineCov">        205 :         return detail::default_eval_expr(static_cast&lt;Expr &amp;&amp;&gt;(expr), static_cast&lt;T &amp;&amp;&gt;(t)...);</span>
+<span class="lineNum">     612 </span>            :     }
+<span class="lineNum">     613 </span>            : 
+<span class="lineNum">     614 </span>            :     /** Evaluates \a expr, substituting the subsequent parameters (if any)
+<span class="lineNum">     615 </span>            :         into \a expr's placeholder terminals.  Evaluation is performed via the
+<span class="lineNum">     616 </span>            :         &lt;code&gt;eval_expression_as()&lt;/code&gt; customization point.
+<span class="lineNum">     617 </span>            : 
+<span class="lineNum">     618 </span>            :         Prefer this function to &lt;code&gt;evaluate()&lt;/code&gt; when you want
+<span class="lineNum">     619 </span>            :         evaluation to differ based on the result type.
+<span class="lineNum">     620 </span>            : 
+<span class="lineNum">     621 </span>            :         All customization points for the evaluation of expressions are used to
+<span class="lineNum">     622 </span>            :         evaluate the \a expr.  If you've overridden any, that will be
+<span class="lineNum">     623 </span>            :         reflected in the result.
+<span class="lineNum">     624 </span>            : 
+<span class="lineNum">     625 </span>            :         \note &lt;code&gt;evaluate()&lt;/code&gt; is only valid if \a Expr is an
+<span class="lineNum">     626 </span>            :         expression, and &lt;code&gt;max_p &lt;= sizeof...(T)&lt;/code&gt;, where
+<span class="lineNum">     627 </span>            :         &lt;code&gt;max_p&lt;/code&gt; is the maximum placeholder index in \a expr.
+<a name="628"><span class="lineNum">     628 </span>            :     */</a>
+<span class="lineNum">     629 </span>            :     template &lt;typename R, typename Expr, typename ...T&gt;
+<span class="lineNum">     630 </span><span class="lineCov">          6 :     decltype(auto) evaluate_as (Expr &amp;&amp; expr, T &amp;&amp; ... t)</span>
+<span class="lineNum">     631 </span>            :     {
+<span class="lineNum">     632 </span>            :         static_assert(
+<span class="lineNum">     633 </span>            :             is_expr&lt;Expr&gt;::value,
+<span class="lineNum">     634 </span>            :             &quot;evaluate_as() is only defined for expressions.&quot;
+<span class="lineNum">     635 </span>            :         );
+<span class="lineNum">     636 </span><span class="lineCov">          6 :         return eval_expression_as(static_cast&lt;Expr &amp;&amp;&gt;(expr), hana::basic_type&lt;R&gt;{}, static_cast&lt;T &amp;&amp;&gt;(t)...);</span>
+<span class="lineNum">     637 </span>            :     }
+<span class="lineNum">     638 </span>            : 
+<span class="lineNum">     639 </span>            : #ifdef BOOST_NO_CONSTEXPR_IF
+<span class="lineNum">     640 </span>            : 
+<span class="lineNum">     641 </span>            :     namespace detail {
+<span class="lineNum">     642 </span>            : 
+<span class="lineNum">     643 </span>            :         template &lt;typename Expr, typename Transform, bool IsExpr&gt;
+<a name="644"><span class="lineNum">     644 </span>            :         struct transform_impl</a>
+<span class="lineNum">     645 </span>            :         {
+<span class="lineNum">     646 </span><span class="lineCov">        330 :             decltype(auto) operator() (Expr &amp;&amp; expr, Transform &amp;&amp; transform)</span>
+<span class="lineNum">     647 </span>            :             {
+<span class="lineNum">     648 </span><span class="lineCov">        330 :                 constexpr expr_kind kind = detail::remove_cv_ref_t&lt;Expr&gt;::kind;</span>
+<span class="lineNum">     649 </span><span class="lineCov">        328 :                 return detail::default_transform_expression_tag&lt;Expr, Transform, detail::arity_of&lt;kind&gt;()&gt;{}(</span>
+<span class="lineNum">     650 </span>            :                     static_cast&lt;Expr &amp;&amp;&gt;(expr),
+<span class="lineNum">     651 </span>            :                     static_cast&lt;Transform &amp;&amp;&gt;(transform)
+<span class="lineNum">     652 </span><span class="lineCov">        658 :                 );</span>
+<span class="lineNum">     653 </span>            :             }
+<span class="lineNum">     654 </span>            :         };
+<span class="lineNum">     655 </span>            : 
+<span class="lineNum">     656 </span>            :         template &lt;typename Expr, typename Transform&gt;
+<a name="657"><span class="lineNum">     657 </span>            :         struct transform_impl&lt;Expr, Transform, false&gt;</a>
+<span class="lineNum">     658 </span>            :         {
+<span class="lineNum">     659 </span><span class="lineCov">         14 :             decltype(auto) operator() (Expr &amp;&amp; expr, Transform &amp;&amp; transform)</span>
+<span class="lineNum">     660 </span><span class="lineCov">         14 :             { return static_cast&lt;Expr &amp;&amp;&gt;(expr); }</span>
+<span class="lineNum">     661 </span>            :         };
+<span class="lineNum">     662 </span>            : 
+<span class="lineNum">     663 </span>            :     }
+<span class="lineNum">     664 </span>            : 
+<span class="lineNum">     665 </span>            : #endif
+<span class="lineNum">     666 </span>            : 
+<span class="lineNum">     667 </span>            :     /** Returns the result of transforming (all or part of) \a expr using
+<span class="lineNum">     668 </span>            :         whatever overloads of &lt;code&gt;Transform::operator()&lt;/code&gt; that match \a
+<span class="lineNum">     669 </span>            :         expr.
+<span class="lineNum">     670 </span>            : 
+<span class="lineNum">     671 </span>            :         \note Transformations can do anything: they may have side effects;
+<span class="lineNum">     672 </span>            :         they may mutate values; they may mutate types; and they may do any
+<span class="lineNum">     673 </span>            :         combination of these.
+<a name="674"><span class="lineNum">     674 </span>            :     */</a>
+<span class="lineNum">     675 </span>            :     template &lt;typename Expr, typename Transform&gt;
+<span class="lineNum">     676 </span><span class="lineCov">        344 :     decltype(auto) transform (Expr &amp;&amp; expr, Transform &amp;&amp; transform)</span>
+<span class="lineNum">     677 </span>            :     {
+<span class="lineNum">     678 </span>            : #ifdef BOOST_NO_CONSTEXPR_IF
+<span class="lineNum">     679 </span><span class="lineCov">        342 :         return detail::transform_impl&lt;Expr, Transform, is_expr&lt;Expr&gt;::value&gt;{}(</span>
+<span class="lineNum">     680 </span>            :             static_cast&lt;Expr &amp;&amp;&gt;(expr),
+<span class="lineNum">     681 </span>            :             static_cast&lt;Transform &amp;&amp;&gt;(transform)
+<span class="lineNum">     682 </span><span class="lineCov">        686 :         );</span>
+<span class="lineNum">     683 </span>            : #else
+<span class="lineNum">     684 </span>            :         if constexpr (is_expr&lt;Expr&gt;::value) {
+<span class="lineNum">     685 </span>            :             constexpr expr_kind kind = detail::remove_cv_ref_t&lt;Expr&gt;::kind;
+<span class="lineNum">     686 </span>            :             return detail::default_transform_expression_tag&lt;Expr, Transform, detail::arity_of&lt;kind&gt;()&gt;{}(
+<span class="lineNum">     687 </span>            :                 static_cast&lt;Expr &amp;&amp;&gt;(expr),
+<span class="lineNum">     688 </span>            :                 static_cast&lt;Transform &amp;&amp;&gt;(transform)
+<span class="lineNum">     689 </span>            :             );
+<span class="lineNum">     690 </span>            :         } else {
+<span class="lineNum">     691 </span>            :             return static_cast&lt;Expr &amp;&amp;&gt;(expr);
+<span class="lineNum">     692 </span>            :         }
+<span class="lineNum">     693 </span>            : #endif
+<span class="lineNum">     694 </span>            :     }
+<span class="lineNum">     695 </span>            : 
+<a name="696"><span class="lineNum">     696 </span>            :     /** Returns the &lt;code&gt;char const *&lt;/code&gt; string for the spelling of the</a>
+<span class="lineNum">     697 </span>            :         C++ operator associated with \a kind. */
+<span class="lineNum">     698 </span><span class="lineCov">          8 :     inline char const * op_string (expr_kind kind)</span>
+<span class="lineNum">     699 </span>            :     {
+<span class="lineNum">     700 </span><span class="lineCov">          8 :         switch (kind) {</span>
+<span class="lineNum">     701 </span><span class="lineNoCov">          0 :         case expr_kind::unary_plus: return &quot;+&quot;;</span>
+<span class="lineNum">     702 </span><span class="lineNoCov">          0 :         case expr_kind::negate: return &quot;-&quot;;</span>
+<span class="lineNum">     703 </span><span class="lineNoCov">          0 :         case expr_kind::dereference: return &quot;*&quot;;</span>
+<span class="lineNum">     704 </span><span class="lineNoCov">          0 :         case expr_kind::complement: return &quot;~&quot;;</span>
+<span class="lineNum">     705 </span><span class="lineNoCov">          0 :         case expr_kind::address_of: return &quot;&amp;&quot;;</span>
+<span class="lineNum">     706 </span><span class="lineNoCov">          0 :         case expr_kind::logical_not: return &quot;!&quot;;</span>
+<span class="lineNum">     707 </span><span class="lineNoCov">          0 :         case expr_kind::pre_inc: return &quot;++&quot;;</span>
+<span class="lineNum">     708 </span><span class="lineNoCov">          0 :         case expr_kind::pre_dec: return &quot;--&quot;;</span>
+<span class="lineNum">     709 </span><span class="lineNoCov">          0 :         case expr_kind::post_inc: return &quot;++(int)&quot;;</span>
+<span class="lineNum">     710 </span><span class="lineNoCov">          0 :         case expr_kind::post_dec: return &quot;--(int)&quot;;</span>
+<span class="lineNum">     711 </span>            : 
+<span class="lineNum">     712 </span><span class="lineNoCov">          0 :         case expr_kind::shift_left: return &quot;&lt;&lt;&quot;;</span>
+<span class="lineNum">     713 </span><span class="lineNoCov">          0 :         case expr_kind::shift_right: return &quot;&gt;&gt;&quot;;</span>
+<span class="lineNum">     714 </span><span class="lineNoCov">          0 :         case expr_kind::multiplies: return &quot;*&quot;;</span>
+<span class="lineNum">     715 </span><span class="lineNoCov">          0 :         case expr_kind::divides: return &quot;/&quot;;</span>
+<span class="lineNum">     716 </span><span class="lineNoCov">          0 :         case expr_kind::modulus: return &quot;%&quot;;</span>
+<span class="lineNum">     717 </span><span class="lineCov">          8 :         case expr_kind::plus: return &quot;+&quot;;</span>
+<span class="lineNum">     718 </span><span class="lineNoCov">          0 :         case expr_kind::minus: return &quot;-&quot;;</span>
+<span class="lineNum">     719 </span><span class="lineNoCov">          0 :         case expr_kind::less: return &quot;&lt;&quot;;</span>
+<span class="lineNum">     720 </span><span class="lineNoCov">          0 :         case expr_kind::greater: return &quot;&gt;&quot;;</span>
+<span class="lineNum">     721 </span><span class="lineNoCov">          0 :         case expr_kind::less_equal: return &quot;&lt;=&quot;;</span>
+<span class="lineNum">     722 </span><span class="lineNoCov">          0 :         case expr_kind::greater_equal: return &quot;&gt;=&quot;;</span>
+<span class="lineNum">     723 </span><span class="lineNoCov">          0 :         case expr_kind::equal_to: return &quot;==&quot;;</span>
+<span class="lineNum">     724 </span><span class="lineNoCov">          0 :         case expr_kind::not_equal_to: return &quot;!=&quot;;</span>
+<span class="lineNum">     725 </span><span class="lineNoCov">          0 :         case expr_kind::logical_or: return &quot;||&quot;;</span>
+<span class="lineNum">     726 </span><span class="lineNoCov">          0 :         case expr_kind::logical_and: return &quot;&amp;&amp;&quot;;</span>
+<span class="lineNum">     727 </span><span class="lineNoCov">          0 :         case expr_kind::bitwise_and: return &quot;&amp;&quot;;</span>
+<span class="lineNum">     728 </span><span class="lineNoCov">          0 :         case expr_kind::bitwise_or: return &quot;|&quot;;</span>
+<span class="lineNum">     729 </span><span class="lineNoCov">          0 :         case expr_kind::bitwise_xor: return &quot;^&quot;;</span>
+<span class="lineNum">     730 </span><span class="lineNoCov">          0 :         case expr_kind::comma: return &quot;,&quot;;</span>
+<span class="lineNum">     731 </span><span class="lineNoCov">          0 :         case expr_kind::mem_ptr: return &quot;-&gt;*&quot;;</span>
+<span class="lineNum">     732 </span><span class="lineNoCov">          0 :         case expr_kind::assign: return &quot;=&quot;;</span>
+<span class="lineNum">     733 </span><span class="lineNoCov">          0 :         case expr_kind::shift_left_assign: return &quot;&lt;&lt;=&quot;;</span>
+<span class="lineNum">     734 </span><span class="lineNoCov">          0 :         case expr_kind::shift_right_assign: return &quot;&gt;&gt;=&quot;;</span>
+<span class="lineNum">     735 </span><span class="lineNoCov">          0 :         case expr_kind::multiplies_assign: return &quot;*=&quot;;</span>
+<span class="lineNum">     736 </span><span class="lineNoCov">          0 :         case expr_kind::divides_assign: return &quot;/=&quot;;</span>
+<span class="lineNum">     737 </span><span class="lineNoCov">          0 :         case expr_kind::modulus_assign: return &quot;%=&quot;;</span>
+<span class="lineNum">     738 </span><span class="lineNoCov">          0 :         case expr_kind::plus_assign: return &quot;+=&quot;;</span>
+<span class="lineNum">     739 </span><span class="lineNoCov">          0 :         case expr_kind::minus_assign: return &quot;-=&quot;;</span>
+<span class="lineNum">     740 </span><span class="lineNoCov">          0 :         case expr_kind::bitwise_and_assign: return &quot;&amp;=&quot;;</span>
+<span class="lineNum">     741 </span><span class="lineNoCov">          0 :         case expr_kind::bitwise_or_assign: return &quot;|=&quot;;</span>
+<span class="lineNum">     742 </span><span class="lineNoCov">          0 :         case expr_kind::bitwise_xor_assign: return &quot;^=&quot;;</span>
+<span class="lineNum">     743 </span><span class="lineNoCov">          0 :         case expr_kind::subscript: return &quot;[]&quot;;</span>
+<span class="lineNum">     744 </span>            : 
+<span class="lineNum">     745 </span><span class="lineNoCov">          0 :         case expr_kind::if_else: return &quot;?:&quot;;</span>
+<span class="lineNum">     746 </span>            : 
+<span class="lineNum">     747 </span><span class="lineNoCov">          0 :         case expr_kind::call: return &quot;()&quot;;</span>
+<span class="lineNum">     748 </span>            : 
+<span class="lineNum">     749 </span><span class="lineNoCov">          0 :         default: return &quot;** ERROR: UNKNOWN OPERATOR! **&quot;;</span>
+<span class="lineNum">     750 </span>            :         }
+<span class="lineNum">     751 </span>            :     }
+<span class="lineNum">     752 </span>            : 
+<span class="lineNum">     753 </span>            :     namespace adl_detail {
+<a name="754"><span class="lineNum">     754 </span>            : </a>
+<span class="lineNum">     755 </span>            :         template &lt;typename R, typename E, typename ...T&gt;
+<span class="lineNum">     756 </span><span class="lineCov">         18 :         constexpr decltype(auto) eval_expression_as (E const &amp; expr, hana::basic_type&lt;R&gt;, T &amp;&amp; ... args)</span>
+<span class="lineNum">     757 </span><span class="lineCov">         18 :         { return static_cast&lt;R&gt;(detail::default_eval_expr(expr, static_cast&lt;T &amp;&amp;&gt;(args)...)); }</span>
+<span class="lineNum">     758 </span>            : 
+<span class="lineNum">     759 </span>            :     }
+<span class="lineNum">     760 </span>            : 
+<span class="lineNum">     761 </span>            : } }
+<span class="lineNum">     762 </span>            : 
+<span class="lineNum">     763 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

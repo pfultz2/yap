@@ -1,0 +1,436 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - stepcode_no_usr.lcov - boost/yap/operators.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">boost/yap</a> - operators.hpp<span style="font-size: 80%;"> (source / <a href="operators.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">stepcode_no_usr.lcov</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-02-10 21:13:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">106</td>
+            <td class="headerCovTableEntry">106</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #ifndef BOOST_YAP_OPERATORS_HPP_INCLUDED</a>
+<span class="lineNum">       2 </span>            : #define BOOST_YAP_OPERATORS_HPP_INCLUDED
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            : namespace boost { namespace yap {
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            : #ifndef BOOST_YAP_DOXYGEN
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            : #define BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(expr)                        \
+<span class="lineNum">      10 </span>            :     noexcept(noexcept(expr)) -&gt; decltype(expr) { return expr; }
+<span class="lineNum">      11 </span>            : 
+<span class="lineNum">      12 </span>            :     namespace adl_detail {
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : #define BOOST_YAP_UNARY_OPERATOR(op, op_name)                           \
+<span class="lineNum">      15 </span>            :         template &lt;typename T&gt;                                           \
+<span class="lineNum">      16 </span>            :         constexpr auto eval_ ## op_name (T &amp;&amp; t) BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN( \
+<span class="lineNum">      17 </span>            :             op static_cast&lt;T &amp;&amp;&gt;(t)                                     \
+<span class="lineNum">      18 </span>            :         )                                                               \
+<span class="lineNum">      19 </span>            :         struct eval_ ## op_name ## _fn                                  \
+<span class="lineNum">      20 </span>            :         {                                                               \
+<span class="lineNum">      21 </span>            :             template &lt;typename T&gt;                                       \
+<span class="lineNum">      22 </span>            :             constexpr auto operator() (T &amp;&amp; t) const BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN( \
+<span class="lineNum">      23 </span>            :                 eval_ ## op_name(static_cast&lt;T &amp;&amp;&gt;(t))                  \
+<span class="lineNum">      24 </span>            :             )                                                           \
+<a name="25"><span class="lineNum">      25 </span>            :         };</a>
+<a name="26"><span class="lineNum">      26 </span>            : </a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineCov">          6 :         BOOST_YAP_UNARY_OPERATOR(+, unary_plus) // +</span></a>
+<a name="28"><span class="lineNum">      28 </span><span class="lineCov">         12 :         BOOST_YAP_UNARY_OPERATOR(-, negate) // -</span></a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineCov">          6 :         BOOST_YAP_UNARY_OPERATOR(*, dereference) // *</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineCov">          6 :         BOOST_YAP_UNARY_OPERATOR(~, complement) // ~</span></a>
+<a name="31"><span class="lineNum">      31 </span><span class="lineCov">          6 :         BOOST_YAP_UNARY_OPERATOR(&amp;, address_of) // &amp;</span></a>
+<span class="lineNum">      32 </span><span class="lineCov">          6 :         BOOST_YAP_UNARY_OPERATOR(!, logical_not) // !</span>
+<span class="lineNum">      33 </span><span class="lineCov">          4 :         BOOST_YAP_UNARY_OPERATOR(++, pre_inc) // ++</span>
+<span class="lineNum">      34 </span>            :         BOOST_YAP_UNARY_OPERATOR(--, pre_dec) // --
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">      37 </span>            :         constexpr auto eval_post_inc (T &amp;&amp; t) BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(
+<span class="lineNum">      38 </span>            :             static_cast&lt;T &amp;&amp;&gt;(t) ++
+<span class="lineNum">      39 </span>            :         )
+<span class="lineNum">      40 </span>            :         struct eval_post_inc_fn
+<span class="lineNum">      41 </span>            :         {
+<span class="lineNum">      42 </span>            :             template &lt;typename T&gt;
+<span class="lineNum">      43 </span>            :             constexpr auto operator() (T &amp;&amp; t) const BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(
+<span class="lineNum">      44 </span>            :                 eval_post_inc(static_cast&lt;T &amp;&amp;&gt;(t))
+<span class="lineNum">      45 </span>            :             )
+<span class="lineNum">      46 </span>            :         };
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">      49 </span>            :         constexpr auto eval_post_dec (T &amp;&amp; t) BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(
+<span class="lineNum">      50 </span>            :             static_cast&lt;T &amp;&amp;&gt;(t) --
+<span class="lineNum">      51 </span>            :         )
+<span class="lineNum">      52 </span>            :         struct eval_post_dec_fn
+<span class="lineNum">      53 </span>            :         {
+<span class="lineNum">      54 </span>            :             template &lt;typename T&gt;
+<span class="lineNum">      55 </span>            :             constexpr auto operator() (T &amp;&amp; t) const BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(
+<span class="lineNum">      56 </span>            :                 eval_post_dec(static_cast&lt;T &amp;&amp;&gt;(t))
+<span class="lineNum">      57 </span>            :             )
+<span class="lineNum">      58 </span>            :         };
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : #undef BOOST_YAP_UNARY_OPERATOR
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            : #define BOOST_YAP_BINARY_OPERATOR(op, op_name)                          \
+<span class="lineNum">      63 </span>            :         template &lt;typename T, typename U&gt;                               \
+<span class="lineNum">      64 </span>            :         constexpr auto eval_ ## op_name (T &amp;&amp; t, U &amp;&amp; u) BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN( \
+<span class="lineNum">      65 </span>            :             static_cast&lt;T &amp;&amp;&gt;(t) op static_cast&lt;U &amp;&amp;&gt;(u)                \
+<span class="lineNum">      66 </span>            :         )                                                               \
+<span class="lineNum">      67 </span>            :         struct eval_ ## op_name ## _fn                                  \
+<span class="lineNum">      68 </span>            :         {                                                               \
+<span class="lineNum">      69 </span>            :             template &lt;typename T, typename U&gt;                           \
+<span class="lineNum">      70 </span>            :             constexpr auto operator() (T &amp;&amp; t, U &amp;&amp; u) const BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN( \
+<span class="lineNum">      71 </span>            :                 eval_ ## op_name(static_cast&lt;T &amp;&amp;&gt;(t), static_cast&lt;U &amp;&amp;&gt;(u)) \
+<span class="lineNum">      72 </span>            :             )                                                           \
+<span class="lineNum">      73 </span>            :         };
+<span class="lineNum">      74 </span>            : 
+<a name="75"><span class="lineNum">      75 </span>            :         BOOST_YAP_BINARY_OPERATOR(&lt;&lt;, shift_left) // &lt;&lt;</a>
+<a name="76"><span class="lineNum">      76 </span>            :         BOOST_YAP_BINARY_OPERATOR(&gt;&gt;, shift_right) // &gt;&gt;</a>
+<span class="lineNum">      77 </span><span class="lineCov">         60 :         BOOST_YAP_BINARY_OPERATOR(*, multiplies) // *</span>
+<a name="78"><span class="lineNum">      78 </span><span class="lineCov">         20 :         BOOST_YAP_BINARY_OPERATOR(/, divides) // /</span></a>
+<a name="79"><span class="lineNum">      79 </span>            :         BOOST_YAP_BINARY_OPERATOR(%, modulus) // %</a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineCov">        446 :         BOOST_YAP_BINARY_OPERATOR(+, plus) // +</span></a>
+<span class="lineNum">      81 </span><span class="lineCov">         65 :         BOOST_YAP_BINARY_OPERATOR(-, minus) // -</span>
+<span class="lineNum">      82 </span><span class="lineCov">         24 :         BOOST_YAP_BINARY_OPERATOR(&lt;, less) // &lt;</span>
+<span class="lineNum">      83 </span>            :         BOOST_YAP_BINARY_OPERATOR(&gt;, greater) // &gt;
+<span class="lineNum">      84 </span>            :         BOOST_YAP_BINARY_OPERATOR(&lt;=, less_equal) // &lt;=
+<span class="lineNum">      85 </span>            :         BOOST_YAP_BINARY_OPERATOR(&gt;=, greater_equal) // &gt;=
+<span class="lineNum">      86 </span>            :         BOOST_YAP_BINARY_OPERATOR(==, equal_to) // ==
+<span class="lineNum">      87 </span>            :         BOOST_YAP_BINARY_OPERATOR(!=, not_equal_to) // !=
+<span class="lineNum">      88 </span>            :         BOOST_YAP_BINARY_OPERATOR(||, logical_or) // ||
+<span class="lineNum">      89 </span>            :         BOOST_YAP_BINARY_OPERATOR(&amp;&amp;, logical_and) // &amp;&amp;
+<span class="lineNum">      90 </span>            :         BOOST_YAP_BINARY_OPERATOR(&amp;, bitwise_and) // &amp;
+<span class="lineNum">      91 </span>            :         BOOST_YAP_BINARY_OPERATOR(|, bitwise_or) // |
+<span class="lineNum">      92 </span>            :         BOOST_YAP_BINARY_OPERATOR(^, bitwise_xor) // ^
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">      95 </span>            :         constexpr auto eval_comma (T &amp;&amp; t, U &amp;&amp; u) BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(
+<span class="lineNum">      96 </span>            :             (static_cast&lt;T &amp;&amp;&gt;(t) , static_cast&lt;U &amp;&amp;&gt;(u))
+<span class="lineNum">      97 </span>            :         )
+<span class="lineNum">      98 </span>            :         struct eval_comma_fn
+<span class="lineNum">      99 </span>            :         {
+<span class="lineNum">     100 </span>            :             template &lt;typename T, typename U&gt;
+<span class="lineNum">     101 </span>            :             constexpr auto operator() (T &amp;&amp; t, U &amp;&amp; u) const BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(
+<span class="lineNum">     102 </span>            :                 eval_comma(static_cast&lt;T &amp;&amp;&gt;(t), static_cast&lt;U &amp;&amp;&gt;(u))
+<span class="lineNum">     103 </span>            :             )
+<span class="lineNum">     104 </span>            :         };
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span>            :         BOOST_YAP_BINARY_OPERATOR(-&gt;*, mem_ptr) // -&gt;*
+<span class="lineNum">     107 </span>            :         BOOST_YAP_BINARY_OPERATOR(=, assign) // =
+<span class="lineNum">     108 </span>            :         BOOST_YAP_BINARY_OPERATOR(&lt;&lt;=, shift_left_assign) // &lt;&lt;=
+<span class="lineNum">     109 </span>            :         BOOST_YAP_BINARY_OPERATOR(&gt;&gt;=, shift_right_assign) // &gt;&gt;=
+<span class="lineNum">     110 </span>            :         BOOST_YAP_BINARY_OPERATOR(*=, multiplies_assign) // *=
+<span class="lineNum">     111 </span>            :         BOOST_YAP_BINARY_OPERATOR(/=, divides_assign) // /=
+<span class="lineNum">     112 </span>            :         BOOST_YAP_BINARY_OPERATOR(%=, modulus_assign) // %=
+<span class="lineNum">     113 </span>            :         BOOST_YAP_BINARY_OPERATOR(+=, plus_assign) // +=
+<span class="lineNum">     114 </span>            :         BOOST_YAP_BINARY_OPERATOR(-=, minus_assign) // -=
+<span class="lineNum">     115 </span>            :         BOOST_YAP_BINARY_OPERATOR(&amp;=, bitwise_and_assign) // &amp;=
+<span class="lineNum">     116 </span>            :         BOOST_YAP_BINARY_OPERATOR(|=, bitwise_or_assign) // |=
+<span class="lineNum">     117 </span>            :         BOOST_YAP_BINARY_OPERATOR(^=, bitwise_xor_assign) // ^=
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     120 </span>            :         constexpr auto eval_subscript (T &amp;&amp; t, U &amp;&amp; u) BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(
+<span class="lineNum">     121 </span>            :             static_cast&lt;T &amp;&amp;&gt;(t)[static_cast&lt;U &amp;&amp;&gt;(u)]
+<span class="lineNum">     122 </span>            :         )
+<span class="lineNum">     123 </span>            :         struct eval_subscript_fn
+<span class="lineNum">     124 </span>            :         {
+<span class="lineNum">     125 </span>            :             template &lt;typename T, typename U&gt;
+<span class="lineNum">     126 </span>            :             constexpr auto operator() (T &amp;&amp; t, U &amp;&amp; u) const BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(
+<span class="lineNum">     127 </span>            :                 eval_subscript(static_cast&lt;T &amp;&amp;&gt;(t), static_cast&lt;U &amp;&amp;&gt;(u))
+<span class="lineNum">     128 </span>            :             )
+<span class="lineNum">     129 </span>            :         };
+<span class="lineNum">     130 </span>            : 
+<span class="lineNum">     131 </span>            : #undef BOOST_YAP_BINARY_OPERATOR
+<a name="132"><span class="lineNum">     132 </span>            : </a>
+<span class="lineNum">     133 </span>            :         template &lt;typename T, typename U, typename V&gt;
+<span class="lineNum">     134 </span><span class="lineCov">         12 :         constexpr auto eval_if_else (T &amp;&amp; t, U &amp;&amp; u, V &amp;&amp; v) BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(</span>
+<span class="lineNum">     135 </span>            :             static_cast&lt;T &amp;&amp;&gt;(t) ? static_cast&lt;U &amp;&amp;&gt;(u) : static_cast&lt;V &amp;&amp;&gt;(v)
+<span class="lineNum">     136 </span>            :         )
+<span class="lineNum">     137 </span>            :         struct eval_if_else_fn
+<a name="138"><span class="lineNum">     138 </span>            :         {</a>
+<span class="lineNum">     139 </span>            :             template &lt;typename T, typename U, typename V&gt;
+<span class="lineNum">     140 </span><span class="lineCov">         12 :             constexpr auto operator() (T &amp;&amp; t, U &amp;&amp; u, V &amp;&amp; v) const BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(</span>
+<span class="lineNum">     141 </span>            :                 eval_if_else(static_cast&lt;T &amp;&amp;&gt;(t), static_cast&lt;U &amp;&amp;&gt;(u), static_cast&lt;V &amp;&amp;&gt;(v))
+<span class="lineNum">     142 </span>            :             )
+<span class="lineNum">     143 </span>            :         };
+<a name="144"><span class="lineNum">     144 </span>            : </a>
+<span class="lineNum">     145 </span>            :         template &lt;typename F, typename ...T&gt;
+<span class="lineNum">     146 </span><span class="lineCov">         19 :         constexpr auto eval_call (F &amp;&amp; f, T &amp;&amp; ... t) BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(</span>
+<span class="lineNum">     147 </span>            :             static_cast&lt;F &amp;&amp;&gt;(f)(static_cast&lt;T &amp;&amp;&gt;(t)...)
+<span class="lineNum">     148 </span>            :         )
+<span class="lineNum">     149 </span>            :         struct eval_call_fn
+<a name="150"><span class="lineNum">     150 </span>            :         {</a>
+<span class="lineNum">     151 </span>            :             template &lt;typename F, typename ...T&gt;
+<span class="lineNum">     152 </span><span class="lineCov">         21 :             constexpr auto operator() (F &amp;&amp; f, T &amp;&amp; ... t) const BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN(</span>
+<span class="lineNum">     153 </span>            :                 eval_call(static_cast&lt;F &amp;&amp;&gt;(f), static_cast&lt;T &amp;&amp;&gt;(t)...)
+<span class="lineNum">     154 </span>            :             )
+<span class="lineNum">     155 </span>            :         };
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span>            :     }
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span>            : #undef BOOST_YAP_NOEXCEPT_DECLTYPE_RETURN
+<span class="lineNum">     160 </span>            : 
+<span class="lineNum">     161 </span>            :     using adl_detail::eval_unary_plus_fn; // +
+<span class="lineNum">     162 </span>            :     using adl_detail::eval_negate_fn; // -
+<span class="lineNum">     163 </span>            :     using adl_detail::eval_dereference_fn; // *
+<span class="lineNum">     164 </span>            :     using adl_detail::eval_complement_fn; // ~
+<span class="lineNum">     165 </span>            :     using adl_detail::eval_address_of_fn; // &amp;
+<span class="lineNum">     166 </span>            :     using adl_detail::eval_logical_not_fn; // !
+<span class="lineNum">     167 </span>            :     using adl_detail::eval_pre_inc_fn; // ++
+<span class="lineNum">     168 </span>            :     using adl_detail::eval_pre_dec_fn; // --
+<span class="lineNum">     169 </span>            :     using adl_detail::eval_post_inc_fn; // ++(int)
+<span class="lineNum">     170 </span>            :     using adl_detail::eval_post_dec_fn; // --(int)
+<span class="lineNum">     171 </span>            :     using adl_detail::eval_shift_left_fn; // &lt;&lt;
+<span class="lineNum">     172 </span>            :     using adl_detail::eval_shift_right_fn; // &gt;&gt;
+<span class="lineNum">     173 </span>            :     using adl_detail::eval_multiplies_fn; // *
+<span class="lineNum">     174 </span>            :     using adl_detail::eval_divides_fn; // /
+<span class="lineNum">     175 </span>            :     using adl_detail::eval_modulus_fn; // %
+<span class="lineNum">     176 </span>            :     using adl_detail::eval_plus_fn; // +
+<span class="lineNum">     177 </span>            :     using adl_detail::eval_minus_fn; // -
+<span class="lineNum">     178 </span>            :     using adl_detail::eval_less_fn; // &lt;
+<span class="lineNum">     179 </span>            :     using adl_detail::eval_greater_fn; // &gt;
+<span class="lineNum">     180 </span>            :     using adl_detail::eval_less_equal_fn; // &lt;=
+<span class="lineNum">     181 </span>            :     using adl_detail::eval_greater_equal_fn; // &gt;=
+<span class="lineNum">     182 </span>            :     using adl_detail::eval_equal_to_fn; // ==
+<span class="lineNum">     183 </span>            :     using adl_detail::eval_not_equal_to_fn; // !=
+<span class="lineNum">     184 </span>            :     using adl_detail::eval_logical_or_fn; // ||
+<span class="lineNum">     185 </span>            :     using adl_detail::eval_logical_and_fn; // &amp;&amp;
+<span class="lineNum">     186 </span>            :     using adl_detail::eval_bitwise_and_fn; // &amp;
+<span class="lineNum">     187 </span>            :     using adl_detail::eval_bitwise_or_fn; // |
+<span class="lineNum">     188 </span>            :     using adl_detail::eval_bitwise_xor_fn; // ^
+<span class="lineNum">     189 </span>            :     using adl_detail::eval_comma_fn; // ,
+<span class="lineNum">     190 </span>            :     using adl_detail::eval_mem_ptr_fn; // -&gt;*
+<span class="lineNum">     191 </span>            :     using adl_detail::eval_assign_fn; // =
+<span class="lineNum">     192 </span>            :     using adl_detail::eval_shift_left_assign_fn; // &lt;&lt;=
+<span class="lineNum">     193 </span>            :     using adl_detail::eval_shift_right_assign_fn; // &gt;&gt;=
+<span class="lineNum">     194 </span>            :     using adl_detail::eval_multiplies_assign_fn; // *=
+<span class="lineNum">     195 </span>            :     using adl_detail::eval_divides_assign_fn; // /=
+<span class="lineNum">     196 </span>            :     using adl_detail::eval_modulus_assign_fn; // %=
+<span class="lineNum">     197 </span>            :     using adl_detail::eval_plus_assign_fn; // +=
+<span class="lineNum">     198 </span>            :     using adl_detail::eval_minus_assign_fn; // -=
+<span class="lineNum">     199 </span>            :     using adl_detail::eval_bitwise_and_assign_fn; // &amp;=
+<span class="lineNum">     200 </span>            :     using adl_detail::eval_bitwise_or_assign_fn; // |=
+<span class="lineNum">     201 </span>            :     using adl_detail::eval_bitwise_xor_assign_fn; // ^=
+<span class="lineNum">     202 </span>            :     using adl_detail::eval_subscript_fn; // []
+<span class="lineNum">     203 </span>            :     using adl_detail::eval_if_else_fn; // (analogous to) ?:
+<span class="lineNum">     204 </span>            :     using adl_detail::eval_call_fn; // ()
+<span class="lineNum">     205 </span>            : 
+<span class="lineNum">     206 </span>            :     inline namespace {
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span>            :         constexpr auto &amp; eval_unary_plus = detail::static_const&lt;eval_unary_plus_fn&gt;::value; // +
+<span class="lineNum">     209 </span>            :         constexpr auto &amp; eval_negate = detail::static_const&lt;eval_negate_fn&gt;::value; // -
+<span class="lineNum">     210 </span>            :         constexpr auto &amp; eval_dereference = detail::static_const&lt;eval_dereference_fn&gt;::value; // *
+<span class="lineNum">     211 </span>            :         constexpr auto &amp; eval_complement = detail::static_const&lt;eval_complement_fn&gt;::value; // ~
+<span class="lineNum">     212 </span>            :         constexpr auto &amp; eval_address_of = detail::static_const&lt;eval_address_of_fn&gt;::value; // &amp;
+<span class="lineNum">     213 </span>            :         constexpr auto &amp; eval_logical_not = detail::static_const&lt;eval_logical_not_fn&gt;::value; // !
+<span class="lineNum">     214 </span>            :         constexpr auto &amp; eval_pre_inc = detail::static_const&lt;eval_pre_inc_fn&gt;::value; // ++
+<span class="lineNum">     215 </span>            :         constexpr auto &amp; eval_pre_dec = detail::static_const&lt;eval_pre_dec_fn&gt;::value; // --
+<span class="lineNum">     216 </span>            :         constexpr auto &amp; eval_post_inc = detail::static_const&lt;eval_post_inc_fn&gt;::value; // ++(int)
+<span class="lineNum">     217 </span>            :         constexpr auto &amp; eval_post_dec = detail::static_const&lt;eval_post_dec_fn&gt;::value; // --(int)
+<span class="lineNum">     218 </span>            :         constexpr auto &amp; eval_shift_left = detail::static_const&lt;eval_shift_left_fn&gt;::value; // &lt;&lt;
+<span class="lineNum">     219 </span>            :         constexpr auto &amp; eval_shift_right = detail::static_const&lt;eval_shift_right_fn&gt;::value; // &gt;&gt;
+<span class="lineNum">     220 </span>            :         constexpr auto &amp; eval_multiplies = detail::static_const&lt;eval_multiplies_fn&gt;::value; // *
+<span class="lineNum">     221 </span>            :         constexpr auto &amp; eval_divides = detail::static_const&lt;eval_divides_fn&gt;::value; // /
+<span class="lineNum">     222 </span>            :         constexpr auto &amp; eval_modulus = detail::static_const&lt;eval_modulus_fn&gt;::value; // %
+<span class="lineNum">     223 </span>            :         constexpr auto &amp; eval_plus = detail::static_const&lt;eval_plus_fn&gt;::value; // +
+<span class="lineNum">     224 </span>            :         constexpr auto &amp; eval_minus = detail::static_const&lt;eval_minus_fn&gt;::value; // -
+<span class="lineNum">     225 </span>            :         constexpr auto &amp; eval_less = detail::static_const&lt;eval_less_fn&gt;::value; // &lt;
+<span class="lineNum">     226 </span>            :         constexpr auto &amp; eval_greater = detail::static_const&lt;eval_greater_fn&gt;::value; // &gt;
+<span class="lineNum">     227 </span>            :         constexpr auto &amp; eval_less_equal = detail::static_const&lt;eval_less_equal_fn&gt;::value; // &lt;=
+<span class="lineNum">     228 </span>            :         constexpr auto &amp; eval_greater_equal = detail::static_const&lt;eval_greater_equal_fn&gt;::value; // &gt;=
+<span class="lineNum">     229 </span>            :         constexpr auto &amp; eval_equal_to = detail::static_const&lt;eval_equal_to_fn&gt;::value; // ==
+<span class="lineNum">     230 </span>            :         constexpr auto &amp; eval_not_equal_to = detail::static_const&lt;eval_not_equal_to_fn&gt;::value; // !=
+<span class="lineNum">     231 </span>            :         constexpr auto &amp; eval_logical_or = detail::static_const&lt;eval_logical_or_fn&gt;::value; // ||
+<span class="lineNum">     232 </span>            :         constexpr auto &amp; eval_logical_and = detail::static_const&lt;eval_logical_and_fn&gt;::value; // &amp;&amp;
+<span class="lineNum">     233 </span>            :         constexpr auto &amp; eval_bitwise_and = detail::static_const&lt;eval_bitwise_and_fn&gt;::value; // &amp;
+<span class="lineNum">     234 </span>            :         constexpr auto &amp; eval_bitwise_or = detail::static_const&lt;eval_bitwise_or_fn&gt;::value; // |
+<span class="lineNum">     235 </span>            :         constexpr auto &amp; eval_bitwise_xor = detail::static_const&lt;eval_bitwise_xor_fn&gt;::value; // ^
+<span class="lineNum">     236 </span>            :         constexpr auto &amp; eval_comma = detail::static_const&lt;eval_comma_fn&gt;::value; // ,
+<span class="lineNum">     237 </span>            :         constexpr auto &amp; eval_mem_ptr = detail::static_const&lt;eval_mem_ptr_fn&gt;::value; // -&gt;*
+<span class="lineNum">     238 </span>            :         constexpr auto &amp; eval_assign = detail::static_const&lt;eval_assign_fn&gt;::value; // =
+<span class="lineNum">     239 </span>            :         constexpr auto &amp; eval_shift_left_assign = detail::static_const&lt;eval_shift_left_assign_fn&gt;::value; // &lt;&lt;=
+<span class="lineNum">     240 </span>            :         constexpr auto &amp; eval_shift_right_assign = detail::static_const&lt;eval_shift_right_assign_fn&gt;::value; // &gt;&gt;=
+<span class="lineNum">     241 </span>            :         constexpr auto &amp; eval_multiplies_assign = detail::static_const&lt;eval_multiplies_assign_fn&gt;::value; // *=
+<span class="lineNum">     242 </span>            :         constexpr auto &amp; eval_divides_assign = detail::static_const&lt;eval_divides_assign_fn&gt;::value; // /=
+<span class="lineNum">     243 </span>            :         constexpr auto &amp; eval_modulus_assign = detail::static_const&lt;eval_modulus_assign_fn&gt;::value; // %=
+<span class="lineNum">     244 </span>            :         constexpr auto &amp; eval_plus_assign = detail::static_const&lt;eval_plus_assign_fn&gt;::value; // +=
+<span class="lineNum">     245 </span>            :         constexpr auto &amp; eval_minus_assign = detail::static_const&lt;eval_minus_assign_fn&gt;::value; // -=
+<span class="lineNum">     246 </span>            :         constexpr auto &amp; eval_bitwise_and_assign = detail::static_const&lt;eval_bitwise_and_assign_fn&gt;::value; // &amp;=
+<span class="lineNum">     247 </span>            :         constexpr auto &amp; eval_bitwise_or_assign = detail::static_const&lt;eval_bitwise_or_assign_fn&gt;::value; // |=
+<span class="lineNum">     248 </span>            :         constexpr auto &amp; eval_bitwise_xor_assign = detail::static_const&lt;eval_bitwise_xor_assign_fn&gt;::value; // ^=
+<span class="lineNum">     249 </span>            :         constexpr auto &amp; eval_subscript = detail::static_const&lt;eval_subscript_fn&gt;::value; // []
+<span class="lineNum">     250 </span>            :         constexpr auto &amp; eval_if_else = detail::static_const&lt;eval_if_else_fn&gt;::value; // (analogous to) ?:
+<span class="lineNum">     251 </span>            :         constexpr auto &amp; eval_call = detail::static_const&lt;eval_call_fn&gt;::value; // ()
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span>            :     }
+<span class="lineNum">     254 </span>            : 
+<span class="lineNum">     255 </span>            : #else // BOOST_YAP_DOXYGEN
+<span class="lineNum">     256 </span>            : 
+<span class="lineNum">     257 </span>            :     namespace function_objects {
+<span class="lineNum">     258 </span>            : 
+<span class="lineNum">     259 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     260 </span>            :         constexpr auto transform_expression (T &amp;&amp; t);
+<span class="lineNum">     261 </span>            : 
+<span class="lineNum">     262 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     263 </span>            :         constexpr auto eval_unary_plus (T &amp;&amp; t);
+<span class="lineNum">     264 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     265 </span>            :         constexpr auto eval_negate (T &amp;&amp; t);
+<span class="lineNum">     266 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     267 </span>            :         constexpr auto eval_dereference (T &amp;&amp; t);
+<span class="lineNum">     268 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     269 </span>            :         constexpr auto eval_complement (T &amp;&amp; t);
+<span class="lineNum">     270 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     271 </span>            :         constexpr auto eval_address_of (T &amp;&amp; t);
+<span class="lineNum">     272 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     273 </span>            :         constexpr auto eval_logical_not (T &amp;&amp; t);
+<span class="lineNum">     274 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     275 </span>            :         constexpr auto eval_pre_inc (T &amp;&amp; t);
+<span class="lineNum">     276 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     277 </span>            :         constexpr auto eval_pre_dec (T &amp;&amp; t);
+<span class="lineNum">     278 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     279 </span>            :         constexpr auto eval_post_inc (T &amp;&amp; t);
+<span class="lineNum">     280 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     281 </span>            :         constexpr auto eval_post_dec (T &amp;&amp; t);
+<span class="lineNum">     282 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     283 </span>            :         constexpr auto eval_shift_left (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     284 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     285 </span>            :         constexpr auto eval_shift_right (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     286 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     287 </span>            :         constexpr auto eval_multiplies (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     288 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     289 </span>            :         constexpr auto eval_divides (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     290 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     291 </span>            :         constexpr auto eval_modulus (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     292 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     293 </span>            :         constexpr auto eval_plus (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     294 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     295 </span>            :         constexpr auto eval_minus (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     296 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     297 </span>            :         constexpr auto eval_less (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     298 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     299 </span>            :         constexpr auto eval_greater (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     300 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     301 </span>            :         constexpr auto eval_less_equal (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     302 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     303 </span>            :         constexpr auto eval_greater_equal (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     304 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     305 </span>            :         constexpr auto eval_equal_to (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     306 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     307 </span>            :         constexpr auto eval_not_equal_to (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     308 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     309 </span>            :         constexpr auto eval_logical_or (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     310 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     311 </span>            :         constexpr auto eval_logical_and (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     312 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     313 </span>            :         constexpr auto eval_bitwise_and (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     314 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     315 </span>            :         constexpr auto eval_bitwise_or (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     316 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     317 </span>            :         constexpr auto eval_bitwise_xor (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     318 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     319 </span>            :         constexpr auto eval_comma (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     320 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     321 </span>            :         constexpr auto eval_mem_ptr (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     322 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     323 </span>            :         constexpr auto eval_assign (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     324 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     325 </span>            :         constexpr auto eval_shift_left_assign (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     326 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     327 </span>            :         constexpr auto eval_shift_right_assign (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     328 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     329 </span>            :         constexpr auto eval_multiplies_assign (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     330 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     331 </span>            :         constexpr auto eval_divides_assign (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     332 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     333 </span>            :         constexpr auto eval_modulus_assign (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     334 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     335 </span>            :         constexpr auto eval_plus_assign (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     336 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     337 </span>            :         constexpr auto eval_minus_assign (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     338 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     339 </span>            :         constexpr auto eval_bitwise_and_assign (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     340 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     341 </span>            :         constexpr auto eval_bitwise_or_assign (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     342 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     343 </span>            :         constexpr auto eval_bitwise_xor_assign (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     344 </span>            :         template &lt;typename T, typename U&gt;
+<span class="lineNum">     345 </span>            :         constexpr auto eval_subscript (T &amp;&amp; t, U &amp;&amp; u);
+<span class="lineNum">     346 </span>            :         template &lt;typename T, typename U, typename V&gt;
+<span class="lineNum">     347 </span>            :         constexpr auto eval_if_else (T &amp;&amp; t, U &amp;&amp; u, V &amp;&amp; v);
+<span class="lineNum">     348 </span>            :         template &lt;typename F, typename ...T&gt;
+<span class="lineNum">     349 </span>            :         constexpr auto eval_call (F &amp;&amp; f, T &amp;&amp; ... t);
+<span class="lineNum">     350 </span>            : 
+<span class="lineNum">     351 </span>            :         template &lt;typename R, typename E, typename ...T&gt;
+<span class="lineNum">     352 </span>            :         constexpr decltype(auto) eval_expression_as (E const &amp; expr, hana::basic_type&lt;R&gt;, T &amp;&amp; ... args);
+<span class="lineNum">     353 </span>            : 
+<span class="lineNum">     354 </span>            :     }
+<span class="lineNum">     355 </span>            : 
+<span class="lineNum">     356 </span>            : #endif // BOOST_YAP_DOXYGEN
+<span class="lineNum">     357 </span>            : 
+<span class="lineNum">     358 </span>            : } }
+<span class="lineNum">     359 </span>            : 
+<span class="lineNum">     360 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - stepcode_no_usr.lcov - boost/yap/algorithm_fwd.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../index.html">top level</a> - <a href="index.html">boost/yap</a> - algorithm_fwd.hpp<span style="font-size: 80%;"> (source / <a href="algorithm_fwd.hpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">stepcode_no_usr.lcov</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-02-10 21:13:47</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntry">6</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #ifndef BOOST_YAP_ALGORITHM_FWD_HPP_INCLUDED</a>
+<span class="lineNum">       2 </span>            : #define BOOST_YAP_ALGORITHM_FWD_HPP_INCLUDED
+<span class="lineNum">       3 </span>            : 
+<span class="lineNum">       4 </span>            : #include &lt;boost/yap/config.hpp&gt;
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : #include &lt;boost/hana/integral_constant.hpp&gt;
+<span class="lineNum">       7 </span>            : #include &lt;boost/hana/tuple.hpp&gt;
+<span class="lineNum">       8 </span>            : #include &lt;boost/hana/core/is_a.hpp&gt;
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            : namespace boost { namespace yap {
+<span class="lineNum">      12 </span>            : 
+<span class="lineNum">      13 </span>            :     /** The enumeration representing all the kinds of expressions supported in
+<span class="lineNum">      14 </span>            :         YAP.
+<span class="lineNum">      15 </span>            :     */
+<span class="lineNum">      16 </span>            :     enum class expr_kind {
+<span class="lineNum">      17 </span>            :         expr_ref, ///&lt; An (possibly \c const) reference to another expression.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :         terminal, ///&lt; A terminal expression.
+<span class="lineNum">      20 </span>            : 
+<span class="lineNum">      21 </span>            :         // unary
+<span class="lineNum">      22 </span>            :         unary_plus, ///&lt; \c +
+<span class="lineNum">      23 </span>            :         negate, ///&lt; \c -
+<span class="lineNum">      24 </span>            :         dereference, ///&lt; \c *
+<span class="lineNum">      25 </span>            :         complement, ///&lt; \c ~
+<span class="lineNum">      26 </span>            :         address_of, ///&lt; \c &amp;
+<span class="lineNum">      27 </span>            :         logical_not, ///&lt; \c !
+<span class="lineNum">      28 </span>            :         pre_inc, ///&lt; \c ++
+<span class="lineNum">      29 </span>            :         pre_dec, ///&lt; \c --
+<span class="lineNum">      30 </span>            :         post_inc, ///&lt; \c ++(int)
+<span class="lineNum">      31 </span>            :         post_dec, ///&lt; \c --(int)
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            :         // binary
+<span class="lineNum">      34 </span>            :         shift_left, ///&lt; \c &lt;&lt;
+<span class="lineNum">      35 </span>            :         shift_right, ///&lt; \c &gt;&gt;
+<span class="lineNum">      36 </span>            :         multiplies, ///&lt; \c *
+<span class="lineNum">      37 </span>            :         divides, ///&lt; \c /
+<span class="lineNum">      38 </span>            :         modulus, ///&lt; \c %
+<span class="lineNum">      39 </span>            :         plus, ///&lt; \c +
+<span class="lineNum">      40 </span>            :         minus, ///&lt; \c -
+<span class="lineNum">      41 </span>            :         less, ///&lt; \c &lt;
+<span class="lineNum">      42 </span>            :         greater, ///&lt; \c &gt;
+<span class="lineNum">      43 </span>            :         less_equal, ///&lt; \c &lt;=
+<span class="lineNum">      44 </span>            :         greater_equal, ///&lt; \c &gt;=
+<span class="lineNum">      45 </span>            :         equal_to, ///&lt; \c ==
+<span class="lineNum">      46 </span>            :         not_equal_to, ///&lt; \c !=
+<span class="lineNum">      47 </span>            :         logical_or, ///&lt; \c ||
+<span class="lineNum">      48 </span>            :         logical_and, ///&lt; \c &amp;&amp;
+<span class="lineNum">      49 </span>            :         bitwise_and, ///&lt; \c &amp;
+<span class="lineNum">      50 </span>            :         bitwise_or, ///&lt; \c |
+<span class="lineNum">      51 </span>            :         bitwise_xor, ///&lt; \c ^
+<span class="lineNum">      52 </span>            :         comma, ///&lt; \c ,
+<span class="lineNum">      53 </span>            :         mem_ptr, ///&lt; \c -&gt;*
+<span class="lineNum">      54 </span>            :         assign, ///&lt; \c =
+<span class="lineNum">      55 </span>            :         shift_left_assign, ///&lt; \c &lt;&lt;=
+<span class="lineNum">      56 </span>            :         shift_right_assign, ///&lt; \c &gt;&gt;=
+<span class="lineNum">      57 </span>            :         multiplies_assign, ///&lt; \c *=
+<span class="lineNum">      58 </span>            :         divides_assign, ///&lt; \c /=
+<span class="lineNum">      59 </span>            :         modulus_assign, ///&lt; \c %=
+<span class="lineNum">      60 </span>            :         plus_assign, ///&lt; \c +=
+<span class="lineNum">      61 </span>            :         minus_assign, ///&lt; \c -=
+<span class="lineNum">      62 </span>            :         bitwise_and_assign, ///&lt; \c &amp;=
+<span class="lineNum">      63 </span>            :         bitwise_or_assign, ///&lt; \c |=
+<span class="lineNum">      64 </span>            :         bitwise_xor_assign, ///&lt; \c ^=
+<span class="lineNum">      65 </span>            :         subscript, ///&lt; \c []
+<span class="lineNum">      66 </span>            : 
+<span class="lineNum">      67 </span>            :         // ternary
+<span class="lineNum">      68 </span>            :         if_else, ///&lt; Analogous to \c ?: .
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span>            :         // n-ary
+<span class="lineNum">      71 </span>            :         call ///&lt; \c ()
+<span class="lineNum">      72 </span>            :     };
+<span class="lineNum">      73 </span>            : 
+<a name="74"><span class="lineNum">      74 </span>            :     /** The type used to represent the index of a placeholder terminal. */</a>
+<span class="lineNum">      75 </span>            :     template &lt;long long I&gt;
+<span class="lineNum">      76 </span><span class="lineCov">         19 :     struct placeholder : hana::llong&lt;I&gt; {};</span>
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span>            : #ifdef BOOST_YAP_DOXYGEN
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span>            :     /** A metafunction that evaluates to std::true_type if \a Expr is an
+<span class="lineNum">      81 </span>            :         Expression, and std::false_type otherwise. */
+<span class="lineNum">      82 </span>            :     template &lt;typename Expr&gt;
+<span class="lineNum">      83 </span>            :     struct is_expr;
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span>            : #else
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span>            :     template &lt;expr_kind Kind, typename Tuple&gt;
+<span class="lineNum">      88 </span>            :     struct expression;
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            :     namespace detail {
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            :         // void_t
+<span class="lineNum">      93 </span>            : 
+<span class="lineNum">      94 </span>            :         template &lt;class...&gt; using void_t = void;
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span>            :         // remove_cv_ref
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">      99 </span>            :         struct remove_cv_ref : std::remove_cv&lt;std::remove_reference_t&lt;T&gt;&gt;
+<span class="lineNum">     100 </span>            :         {};
+<span class="lineNum">     101 </span>            : 
+<span class="lineNum">     102 </span>            :         template &lt;typename T&gt;
+<span class="lineNum">     103 </span>            :         using remove_cv_ref_t = typename remove_cv_ref&lt;T&gt;::type;
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span>            :     }
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            :     template &lt;typename Expr, typename = detail::void_t&lt;&gt;, typename = detail::void_t&lt;&gt;&gt;
+<span class="lineNum">     108 </span>            :     struct is_expr : std::false_type {};
+<span class="lineNum">     109 </span>            : 
+<span class="lineNum">     110 </span>            :     template &lt;typename Expr&gt;
+<span class="lineNum">     111 </span>            :     struct is_expr&lt;
+<span class="lineNum">     112 </span>            :         Expr,
+<span class="lineNum">     113 </span>            :         detail::void_t&lt;decltype(detail::remove_cv_ref_t&lt;Expr&gt;::kind)&gt;,
+<span class="lineNum">     114 </span>            :         detail::void_t&lt;decltype(std::declval&lt;Expr&gt;().elements)&gt;
+<span class="lineNum">     115 </span>            :     &gt; : std::integral_constant&lt;
+<span class="lineNum">     116 </span>            :         bool,
+<span class="lineNum">     117 </span>            :         std::is_same&lt;std::remove_cv_t&lt;decltype(detail::remove_cv_ref_t&lt;Expr&gt;::kind)&gt;, expr_kind&gt;{} &amp;&amp;
+<span class="lineNum">     118 </span>            :         hana::is_a&lt;hana::tuple_tag, decltype(std::declval&lt;Expr&gt;().elements)&gt;()
+<span class="lineNum">     119 </span>            :     &gt; {};
+<span class="lineNum">     120 </span>            : 
+<span class="lineNum">     121 </span>            : #endif // BOOST_YAP_DOXYGEN
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            :     /** A convenience alias for a terminal expression holding a \a T,
+<span class="lineNum">     124 </span>            :         instantiated from expression template \a expr_template. */
+<span class="lineNum">     125 </span>            :     template &lt;template &lt;expr_kind, class&gt; class expr_template, typename T&gt;
+<span class="lineNum">     126 </span>            :     using terminal = expr_template&lt;expr_kind::terminal, hana::tuple&lt;T&gt;&gt;;
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span>            :     /** A convenience alias for a reference expression holding an expression
+<span class="lineNum">     129 </span>            :         \a T, instantiated from expression template \a expr_template. */
+<span class="lineNum">     130 </span>            :     template &lt;template &lt;expr_kind, class&gt; class expr_template, typename T&gt;
+<span class="lineNum">     131 </span>            :     using expression_ref = expr_template&lt;expr_kind::expr_ref, hana::tuple&lt;std::remove_reference_t&lt;T&gt; *&gt;&gt;;
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span>            : #ifndef BOOST_YAP_DOXYGEN
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span>            :     template &lt;typename Expr, typename ...T&gt;
+<span class="lineNum">     136 </span>            :     decltype(auto) evaluate (Expr &amp;&amp; expr, T &amp;&amp; ... t);
+<span class="lineNum">     137 </span>            : 
+<span class="lineNum">     138 </span>            :     template &lt;typename R, typename Expr, typename ...T&gt;
+<span class="lineNum">     139 </span>            :     decltype(auto) evaluate_as (Expr &amp;&amp; expr, T &amp;&amp; ... t);
+<span class="lineNum">     140 </span>            : 
+<span class="lineNum">     141 </span>            :     template &lt;typename Expr, typename Transform&gt;
+<span class="lineNum">     142 </span>            :     decltype(auto) transform (Expr &amp;&amp; expr, Transform &amp;&amp; transform);
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span>            :     template &lt;typename T&gt;
+<span class="lineNum">     145 </span>            :     decltype(auto) deref (T &amp;&amp; x);
+<span class="lineNum">     146 </span>            : 
+<span class="lineNum">     147 </span>            :     template &lt;typename Expr&gt;
+<span class="lineNum">     148 </span>            :     decltype(auto) value (Expr &amp;&amp; expr);
+<span class="lineNum">     149 </span>            : 
+<span class="lineNum">     150 </span>            : #endif // BOOST_YAP_DOXYGEN
+<span class="lineNum">     151 </span>            : 
+<span class="lineNum">     152 </span>            :     namespace literals {
+<span class="lineNum">     153 </span>            : 
+<a name="154"><span class="lineNum">     154 </span>            :         /** Creates literal placeholders.  Placeholder indices are 1-based. */</a>
+<span class="lineNum">     155 </span>            :         template &lt;char ...c&gt;
+<span class="lineNum">     156 </span><span class="lineCov">         19 :         constexpr auto operator&quot;&quot; _p ()</span>
+<span class="lineNum">     157 </span>            :         {
+<span class="lineNum">     158 </span>            :             using i = hana::llong&lt;hana::ic_detail::parse&lt;sizeof...(c)&gt;({c...})&gt;;
+<span class="lineNum">     159 </span>            :             static_assert(1 &lt;= i::value, &quot;Placeholders must be &gt;= 1.&quot;);
+<span class="lineNum">     160 </span><span class="lineCov">         19 :             return expression&lt;expr_kind::terminal, hana::tuple&lt;placeholder&lt;i::value&gt;&gt;&gt;{};</span>
+<span class="lineNum">     161 </span>            :         }
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span>            :     }
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span>            : #ifndef BOOST_YAP_DOXYGEN
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span>            :     // Tag types -- one per expr_kind:
+<span class="lineNum">     168 </span>            : 
+<span class="lineNum">     169 </span>            :     struct expr_ref_tag {};
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span>            :     struct terminal_tag {};
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span>            :     // unary
+<span class="lineNum">     174 </span>            :     struct unary_plus_tag {}; // +
+<span class="lineNum">     175 </span>            :     struct negate_tag {}; // -
+<span class="lineNum">     176 </span>            :     struct dereference_tag {}; // *
+<span class="lineNum">     177 </span>            :     struct complement_tag {}; // ~
+<span class="lineNum">     178 </span>            :     struct address_of_tag {}; // &amp;
+<span class="lineNum">     179 </span>            :     struct logical_not_tag {}; // !
+<span class="lineNum">     180 </span>            :     struct pre_inc_tag {}; // ++
+<span class="lineNum">     181 </span>            :     struct pre_dec_tag {}; // --
+<span class="lineNum">     182 </span>            :     struct post_inc_tag {}; // ++(int)
+<span class="lineNum">     183 </span>            :     struct post_dec_tag {}; // --(int)
+<span class="lineNum">     184 </span>            : 
+<span class="lineNum">     185 </span>            :     // binary
+<span class="lineNum">     186 </span>            :     struct shift_left_tag {}; // &lt;&lt;
+<span class="lineNum">     187 </span>            :     struct shift_right_tag {}; // &gt;&gt;
+<span class="lineNum">     188 </span>            :     struct multiplies_tag {}; // *
+<span class="lineNum">     189 </span>            :     struct divides_tag {}; // /
+<span class="lineNum">     190 </span>            :     struct modulus_tag {}; // %
+<span class="lineNum">     191 </span>            :     struct plus_tag {}; // +
+<span class="lineNum">     192 </span>            :     struct minus_tag {}; // -
+<span class="lineNum">     193 </span>            :     struct less_tag {}; // &lt;
+<span class="lineNum">     194 </span>            :     struct greater_tag {}; // &gt;
+<span class="lineNum">     195 </span>            :     struct less_equal_tag {}; // &lt;=
+<span class="lineNum">     196 </span>            :     struct greater_equal_tag {}; // &gt;=
+<span class="lineNum">     197 </span>            :     struct equal_to_tag {}; // ==
+<span class="lineNum">     198 </span>            :     struct not_equal_to_tag {}; // !=
+<span class="lineNum">     199 </span>            :     struct logical_or_tag {}; // ||
+<span class="lineNum">     200 </span>            :     struct logical_and_tag {}; // &amp;&amp;
+<span class="lineNum">     201 </span>            :     struct bitwise_and_tag {}; // &amp;
+<span class="lineNum">     202 </span>            :     struct bitwise_or_tag {}; // |
+<span class="lineNum">     203 </span>            :     struct bitwise_xor_tag {}; // ^
+<span class="lineNum">     204 </span>            :     struct comma_tag {}; // _tag {};
+<span class="lineNum">     205 </span>            :     struct mem_ptr_tag {}; // -&gt;*
+<span class="lineNum">     206 </span>            :     struct assign_tag {}; // =
+<span class="lineNum">     207 </span>            :     struct shift_left_assign_tag {}; // &lt;&lt;=
+<span class="lineNum">     208 </span>            :     struct shift_right_assign_tag {}; // &gt;&gt;=
+<span class="lineNum">     209 </span>            :     struct multiplies_assign_tag {}; // *=
+<span class="lineNum">     210 </span>            :     struct divides_assign_tag {}; // /=
+<span class="lineNum">     211 </span>            :     struct modulus_assign_tag {}; // %=
+<span class="lineNum">     212 </span>            :     struct plus_assign_tag {}; // +=
+<span class="lineNum">     213 </span>            :     struct minus_assign_tag {}; // -=
+<span class="lineNum">     214 </span>            :     struct bitwise_and_assign_tag {}; // &amp;=
+<span class="lineNum">     215 </span>            :     struct bitwise_or_assign_tag {}; // |=
+<span class="lineNum">     216 </span>            :     struct bitwise_xor_assign_tag {}; // ^=
+<span class="lineNum">     217 </span>            :     struct subscript_tag {}; // []
+<span class="lineNum">     218 </span>            : 
+<span class="lineNum">     219 </span>            :     // ternary
+<span class="lineNum">     220 </span>            :     struct if_else_tag {}; // Analogous to ?:
+<span class="lineNum">     221 </span>            : 
+<span class="lineNum">     222 </span>            :     // n-ary
+<span class="lineNum">     223 </span>            :     struct call_tag {}; // ()
+<span class="lineNum">     224 </span>            : 
+<span class="lineNum">     225 </span>            : #endif // BOOST_YAP_DOXYGEN
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            : } }
+<span class="lineNum">     228 </span>            : 
+<span class="lineNum">     229 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.12</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
