@@ -20,17 +20,15 @@ ctest_start(lcov)
 ctest_empty_binary_directory(${CTEST_BINARY_DIRECTORY})
 message("configuring...")
 ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" OPTIONS "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_CURRENT_LIST_DIR}/cget/cget/cget.cmake;-DCMAKE_CXX_FLAGS=-fprofile-arcs -ftest-coverage")
-# ctest_configure(BUILD "${CTEST_BINARY_DIRECTORY}" OPTIONS "-DBUILD_DEV=On;-DCMAKE_CXX_FLAGS=-fprofile-arcs -ftest-coverage")
 message("lcov: resetting counters...")
 execute_process(COMMAND lcov -z -d ${CTEST_BINARY_DIRECTORY}
   WORKING_DIRECTORY ${CTEST_BINARY_DIRECTORY} OUTPUT_QUIET)
 
 message("building...")
-ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}" FLAGS -j${N} TARGET tests)
+ctest_build(BUILD "${CTEST_BINARY_DIRECTORY}" FLAGS -j${N})
 
 message("running tests...")
-# ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}" PARALLEL_LEVEL ${N})
-ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}")
+ctest_test(BUILD "${CTEST_BINARY_DIRECTORY}/test" PARALLEL_LEVEL ${N})
 
 message("analyzing profiling data using lcov...")
 execute_process(COMMAND lcov -c -d ${CTEST_BINARY_DIRECTORY} -o ${CTEST_BINARY_DIRECTORY}/stepcode.lcov
