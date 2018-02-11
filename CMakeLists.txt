@@ -62,6 +62,6 @@ target_link_libraries(yap INTERFACE boost)
 target_compile_definitions(yap INTERFACE ${constexpr_if_define})
 
 add_subdirectory(test)
-add_subdirectory(example)
+# add_subdirectory(example)
 add_subdirectory(perf)
 add_subdirectory(doc) # Doesn't build docs, just the snippets files.

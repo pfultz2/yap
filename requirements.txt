@@ -1,16 +1,17 @@
 # This is the list of dependencies for cget, otherwise can safely be ignored
-boostorg/hana
+boostorg/hana@boost-1.66.0
 # Additonal dependencies required for type_index
-boostorg/align -X header
-boostorg/assert -X header
-boostorg/core -X header
-boostorg/mpl -X header
-boostorg/predef -X header
-boostorg/preprocessor -X header
-boostorg/smart_ptr -X header
-boostorg/static_assert -X header
-boostorg/throw_exception -X header
-boostorg/type_index -X header
-boostorg/type_traits -X header
-boostorg/typeof -X header
-boostorg/utility -X header
+boostorg/align@boost-1.66.0 -X header
+boostorg/assert@boost-1.66.0 -X header
+boostorg/container_hash@boost-1.66.0 -X header
+boostorg/core@boost-1.66.0 -X header
+boostorg/mpl@boost-1.66.0 -X header
+boostorg/predef@boost-1.66.0 -X header
+boostorg/preprocessor@boost-1.66.0 -X header
+boostorg/smart_ptr@boost-1.66.0 -X header
+boostorg/static_assert@boost-1.66.0 -X header
+boostorg/throw_exception@boost-1.66.0 -X header
+boostorg/type_index@boost-1.66.0 -X header
+boostorg/type_traits@boost-1.66.0 -X header
+boostorg/typeof@boost-1.66.0 -X header
+boostorg/utility@boost-1.66.0 -X header
